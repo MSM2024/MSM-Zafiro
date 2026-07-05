@@ -201,32 +201,31 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
 
       {/* Messages */}
       <div className="chat-messages" style={{
-        flex: 1, overflowY: "auto", padding: fullScreen ? "16px" : "8px",
-        display: "flex", flexDirection: "column", gap: 8, position: "relative", zIndex: 2,
+        flex: 1, overflowY: "auto", padding: fullScreen ? "14px" : "6px",
+        display: "flex", flexDirection: "column", gap: 6, position: "relative", zIndex: 2,
       }}>
         {messages.length === 0 && (
           <div className="chat-empty" style={{
-            textAlign: "center", padding: "36px 16px",
-            color: "var(--muted)", fontSize: 13, lineHeight: 1.6,
+            textAlign: "center", padding: fullScreen ? "36px 16px" : "16px 8px",
+            color: "var(--muted)", fontSize: fullScreen ? 13 : 11, lineHeight: 1.5,
           }}>
-            {/* Animated orbit rings */}
             <div style={{
-              position: "relative", width: 80, height: 80, margin: "0 auto 16px",
+              position: "relative", width: fullScreen ? 80 : 44, height: fullScreen ? 80 : 44, margin: "0 auto 12px",
             }}>
               <div className="neon-glow" style={{
-                position: "absolute", inset: 8, borderRadius: "50%",
+                position: "absolute", inset: fullScreen ? 8 : 4, borderRadius: "50%",
                 background: "url(/assets/ai-logo.svg) center / cover no-repeat",
                 boxShadow: "0 0 30px rgba(0,212,255,0.4), 0 0 60px rgba(124,58,237,0.2)",
                 animation: "neonPulse 2s ease-in-out infinite",
                 zIndex: 2,
               }} />
               <div style={{
-                position: "absolute", inset: 0, borderRadius: "50%",
+                position: "absolute", inset: fullScreen ? 0 : -2, borderRadius: "50%",
                 border: "1px solid rgba(0,212,255,0.15)",
                 animation: "spin 4s linear infinite",
               }} />
               <div style={{
-                position: "absolute", inset: -6, borderRadius: "50%",
+                position: "absolute", inset: fullScreen ? -6 : -5, borderRadius: "50%",
                 border: "1px dashed rgba(124,58,237,0.1)",
                 animation: "spin 6s linear infinite reverse",
               }} />
@@ -235,52 +234,48 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
               display: "block", marginBottom: 4,
               background: "linear-gradient(135deg, #00d4ff, #7c3aed, #d946ef)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              fontSize: 17, letterSpacing: 2, textTransform: "uppercase",
+              fontSize: fullScreen ? 17 : 13, letterSpacing: fullScreen ? 2 : 1, textTransform: "uppercase",
             }}>
               <span className="glitch-text">ELIANA</span>
             </strong>
-            <p style={{ margin: "0 auto", maxWidth: 260, color: "rgba(255,255,255,0.4)", fontSize: 12 }}>
-              Terminal de conocimiento cuántico activada. Pregunta lo que quieras saber.
-            </p>
+            {fullScreen && <p style={{ margin: "0 auto", maxWidth: 260, color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Terminal de conocimiento cuántico activada.</p>}
           </div>
         )}
 
         {messages.map((msg, i) => (
           <div key={i} style={{
             alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-            maxWidth: "85%",
-            padding: "10px 14px",
-            borderRadius: msg.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+            maxWidth: fullScreen ? "85%" : "92%",
+            padding: fullScreen ? "10px 14px" : "6px 10px",
+            borderRadius: msg.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
             background: msg.role === "user"
               ? "linear-gradient(135deg, #2563ff, #7c3aed)"
               : "rgba(10,14,30,0.7)",
             border: msg.role === "eliana" ? "1px solid rgba(0,212,255,0.1)" : "none",
-            boxShadow: msg.role === "eliana" ? "0 0 20px rgba(0,212,255,0.03)" : "none",
             color: msg.role === "user" ? "#fff" : "var(--text)",
-            fontSize: 13,
-            lineHeight: 1.5,
-            position: "relative",
+            fontSize: fullScreen ? 13 : 12,
+            lineHeight: 1.4,
             animation: "fadeIn 0.3s ease-out",
           }}>
             {msg.role === "eliana" && (
               <div style={{
-                display: "flex", alignItems: "center", gap: 6, marginBottom: 6,
-                paddingBottom: 4, borderBottom: "1px solid rgba(0,212,255,0.06)",
+                display: "flex", alignItems: "center", gap: 4, marginBottom: 4,
+                paddingBottom: 3, borderBottom: "1px solid rgba(0,212,255,0.06)",
               }}>
-                <Sparkles className="w-3 h-3" style={{ color: "#00d4ff" }} />
+                <Sparkles className="w-2.5 h-2.5" style={{ color: "#00d4ff" }} />
                 <strong style={{
-                  fontSize: 10, textTransform: "uppercase", letterSpacing: 1.5,
+                  fontSize: 9, textTransform: "uppercase", letterSpacing: 1,
                   background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 }}>
-                  ELIANA v2.0
+                  ELIANA
                 </strong>
-                <span style={{ marginLeft: "auto", fontSize: 9, color: "rgba(0,212,255,0.3)" }}>
+                <span style={{ marginLeft: "auto", fontSize: 8, color: "rgba(0,212,255,0.3)" }}>
                   {new Date(msg.timestamp).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
             )}
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontFamily: msg.role === "eliana" ? "'Inter', monospace" : "inherit" }}>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontSize: fullScreen ? 13 : 12 }}>
               {msg.role === "eliana" ? renderElianaText(msg, i) : msg.text}
             </p>
           </div>
@@ -289,19 +284,18 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
         {loading && (
           <div style={{
             alignSelf: "flex-start",
-            padding: "14px 18px",
-            borderRadius: "18px 18px 18px 4px",
+            padding: fullScreen ? "14px 18px" : "8px 12px",
+            borderRadius: "14px 14px 14px 4px",
             background: "rgba(10,14,30,0.7)",
             border: "1px solid rgba(0,212,255,0.08)",
-            display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "var(--muted)",
+            display: "flex", alignItems: "center", gap: 8, fontSize: fullScreen ? 13 : 11, color: "var(--muted)",
             animation: "borderGlow 1.5s ease-in-out infinite",
-            fontFamily: "monospace",
           }}>
-            <Loader2 className="w-4 h-4 animate-spin" style={{ color: "#00d4ff" }} />
+            <Loader2 className="w-3 h-3 animate-spin" style={{ color: "#00d4ff" }} />
             <span style={{
               background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              fontSize: 11, letterSpacing: 1,
+              fontSize: fullScreen ? 11 : 9, letterSpacing: 1,
             }}>
               PROCESANDO...
             </span>
@@ -313,9 +307,9 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
 
       {/* Input */}
       <div className="chat-input-area" style={{
-        padding: fullScreen ? "12px" : "8px",
+        padding: fullScreen ? "12px" : "6px",
         borderTop: "1px solid rgba(0,212,255,0.06)",
-        display: "flex", gap: 6, alignItems: "center",
+        display: "flex", gap: 4, alignItems: "center",
         background: "rgba(0,0,0,0.2)",
         position: "relative", zIndex: 2,
       }}>
@@ -323,15 +317,15 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
           onClick={listening ? stopListening : startListening}
           title={listening ? "Detener" : "Hablar por voz"}
           style={{
-            width: 38, height: 38, border: listening ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(0,212,255,0.15)", borderRadius: 12,
+            width: fullScreen ? 38 : 30, height: fullScreen ? 38 : 30,
+            border: listening ? "1px solid rgba(239,68,68,0.3)" : "1px solid rgba(0,212,255,0.15)", borderRadius: 10,
             background: listening ? "rgba(239,68,68,0.1)" : "rgba(0,212,255,0.05)",
             color: listening ? "#ef4444" : "rgba(0,212,255,0.6)", cursor: "pointer",
             display: "grid", placeItems: "center", flex: "0 0 auto",
             animation: listening ? "pulse 1s infinite" : "none",
-            transition: "all 0.2s",
           }}
         >
-          {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+          {listening ? <MicOff className={fullScreen ? "w-4 h-4" : "w-3 h-3"} /> : <Mic className={fullScreen ? "w-4 h-4" : "w-3 h-3"} />}
         </button>
 
         <input
@@ -340,45 +334,32 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend() } }}
-          placeholder={listening ? "Escuchando..." : "Señal neuronal detectada. Transmite tu pregunta..."}
+          placeholder={listening ? "Escuchando..." : "Pregúntale a ELIANA..."}
           disabled={listening}
           style={{
             flex: 1, minWidth: 0,
-            padding: "10px 14px", border: "1px solid rgba(0,212,255,0.08)", borderRadius: 14,
+            padding: fullScreen ? "10px 14px" : "7px 10px",
+            border: "1px solid rgba(0,212,255,0.08)", borderRadius: 12,
             background: "rgba(0,0,0,0.3)", color: "var(--text)",
-            outline: "none", fontSize: 12, fontFamily: "'Inter', monospace",
-            transition: "border-color 0.3s, box-shadow 0.3s",
+            outline: "none", fontSize: fullScreen ? 12 : 11,
+            transition: "border-color 0.3s",
           }}
-          onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(0,212,255,0.3)"; e.currentTarget.style.boxShadow = "0 0 15px rgba(0,212,255,0.05)" }}
-          onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(0,212,255,0.08)"; e.currentTarget.style.boxShadow = "none" }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(0,212,255,0.3)" }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(0,212,255,0.08)" }}
         />
-
-        <button
-          onClick={() => setVoiceEnabled(!voiceEnabled)}
-          title={voiceEnabled ? "Silenciar" : "Activar voz"}
-          style={{
-            width: 38, height: 38, border: "1px solid rgba(0,212,255,0.15)", borderRadius: 12,
-            background: "rgba(0,212,255,0.05)",
-            color: voiceEnabled ? "#00d4ff" : "rgba(255,255,255,0.2)", cursor: "pointer",
-            display: "grid", placeItems: "center", flex: "0 0 auto",
-            transition: "all 0.2s",
-          }}
-        >
-          {speaking ? <Loader2 className="w-4 h-4 animate-spin" /> : voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-        </button>
 
         <button
           onClick={() => handleSend()}
           disabled={!input.trim() || loading}
           style={{
-            width: 38, height: 38, border: 0, borderRadius: 12,
+            width: fullScreen ? 38 : 30, height: fullScreen ? 38 : 30,
+            border: 0, borderRadius: 10,
             background: input.trim() ? "linear-gradient(135deg, #2563ff, #7c3aed)" : "rgba(255,255,255,0.05)",
             color: input.trim() ? "#fff" : "rgba(255,255,255,0.2)", cursor: input.trim() ? "pointer" : "default",
             display: "grid", placeItems: "center", flex: "0 0 auto",
-            transition: "all 0.2s",
           }}
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {loading ? <Loader2 className={`${fullScreen ? "w-4 h-4" : "w-3 h-3"} animate-spin`} /> : <Send className={fullScreen ? "w-4 h-4" : "w-3 h-3"} />}
         </button>
       </div>
 
