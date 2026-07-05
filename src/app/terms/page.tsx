@@ -91,97 +91,45 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">9. Licencia de Uso</h2>
-            <p>MSM Zafiro te otorga una licencia limitada, no exclusiva, no transferible y revocable para acceder y usar la Plataforma de acuerdo con estos términos. No está permitido:</p>
-            <ul className="space-y-1 pl-4 mt-2">
-              <li>Reproducir, distribuir o modificar la Plataforma sin autorización</li>
-              <li>Usar la Plataforma para actividades ilegales o fraudulentas</li>
-              <li>Realizar ingeniería inversa, extraer datos masivamente (scraping) o interferir con el funcionamiento de la Plataforma</li>
-              <li>Crear cuentas automatizadas o bots sin autorización expresa</li>
-            </ul>
+            <h2 className="text-xl font-semibold text-white mb-3">9. Limitación de Responsabilidad</h2>
+            <p className="text-amber-400/80 text-xs mb-3">⚠️ No podemos garantizar seguridad absoluta de los datos transmitidos por internet.</p>
+            <p>9.1. LA PLATAFORMA SE PROPORCIONA "TAL CUAL" Y "SEGÚN DISPONIBILIDAD", SIN GARANTÍAS DE NINGÚN TIPO, EXPRESAS O IMPLÍCITAS.</p>
+            <p className="mt-2">9.2. EN LA MÁXIMA MEDIDA PERMITIDA POR LA LEY APLICABLE, MSM MY STORE LLC NO SERÁ RESPONSABLE POR DAÑOS INDIRECTOS, INCIDENTALES, ESPECIALES O CONSECUENTES DERIVADOS DEL USO DE LA PLATAFORMA.</p>
+            <p className="mt-2">9.3. La Compañía no es responsable del contenido publicado por terceros usuarios ni de las respuestas generadas por IA, conforme a las protecciones aplicables bajo la Sección 230 de la Communications Decency Act de Estados Unidos, en la medida en que la ley lo permita.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">10. Contenido Generado por Usuarios</h2>
-            <p>Los usuarios retienen la propiedad intelectual de su contenido. Al publicar en la Plataforma, otorgas a MSM Zafiro una licencia mundial, gratuita y no exclusiva para mostrar, distribuir y reproducir tu contenido dentro de la Plataforma con el fin de operar y mejorar el servicio. Puedes eliminar tu contenido en cualquier momento, y dejaremos de mostrarlo públicamente en un plazo razonable.</p>
+            <h2 className="text-xl font-semibold text-white mb-3">10. Indemnización</h2>
+            <p>El usuario acepta indemnizar y mantener indemne a MSM MY STORE LLC, sus directivos y empleados, frente a cualquier reclamo derivado del uso indebido de la Plataforma o violación de estos Términos.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">11. IA y Contenido Generado por ELIANA</h2>
-            <p>Las respuestas generadas por ELIANA (inteligencia artificial) son asistidas por modelos de lenguaje y no constituyen asesoramiento profesional, médico, legal ni financiero. Características importantes:</p>
-            <ul className="space-y-1 pl-4 mt-2">
-              <li>ELIANA puede cometer errores. Verifica siempre la información con fuentes especializadas.</li>
-              <li>No almacenamos conversaciones de IA para entrenar modelos externos sin tu consentimiento.</li>
-              <li>Las conversaciones con ELIANA pueden ser revisadas para mejorar la calidad del servicio.</li>
-              <li>ELIANA no reemplaza el juicio humano ni la validación de expertos en la plataforma.</li>
-              <li>El uso de la IA se rige por límites de créditos según tu plan (Free, Plus o Pro).</li>
-            </ul>
+            <h2 className="text-xl font-semibold text-white mb-3">11. Suspensión y Terminación</h2>
+            <p>La Compañía puede suspender o terminar cuentas que violen estos Términos, incluyendo pero no limitado a: cuentas falsas, manipulación del sistema de reputación, contenido ilegal, o abuso del sistema de IA.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">12. Monetización y Planes</h2>
-            <p>La Plataforma ofrece planes Free (gratuito), Plus y Pro (suscripción). Los pagos se procesan a través de Stripe. Las suscripciones se renuevan automáticamente a menos que se cancelen 24 horas antes del próximo período de facturación. No ofrecemos reembolsos por períodos parciales. Los precios están en USD y pueden incluir impuestos aplicables.</p>
+            <h2 className="text-xl font-semibold text-white mb-3">12. Modificaciones</h2>
+            <p>La Compañía puede modificar estos Términos en cualquier momento. Los cambios materiales serán notificados a los usuarios mediante la Plataforma o correo electrónico registrado.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">13. Sistema de Seguidores y Reputación</h2>
-            <p>Los usuarios pueden seguir a otros usuarios. El sistema de seguidores es público y visible en los perfiles. El Zafiro Score es un indicador de reputación basado en la calidad de las contribuciones. El score no tiene valor monetario y puede fluctuar según la actividad del usuario.</p>
+            <h2 className="text-xl font-semibold text-white mb-3">13. Ley Aplicable y Jurisdicción</h2>
+            <p>13.1. Estos Términos y Condiciones se rigen e interpretan de acuerdo con las leyes del Estado de Florida, Estados Unidos, sin dar efecto a sus disposiciones sobre conflicto de leyes.</p>
+            <p className="mt-2">13.2. Jurisdicción exclusiva: Cualquier disputa, reclamo, controversia o demanda que surja de o esté relacionada con estos Términos, el uso de la Plataforma, o los servicios ofrecidos por MSM MY STORE LLC, deberá presentarse exclusivamente ante los tribunales estatales o federales ubicados en el Condado de Osceola, Florida (Kissimmee), Estados Unidos. El usuario acepta expresamente someterse a la jurisdicción personal de dichos tribunales y renuncia a cualquier objeción basada en jurisdicción inconveniente (forum non conveniens).</p>
+            <p className="mt-2">13.3. Renuncia a acción colectiva: En la máxima medida permitida por la ley, el usuario acepta que cualquier reclamo se resolverá de forma individual, y renuncia a su derecho a participar en una demanda colectiva (class action) contra la Compañía.</p>
+            <p className="mt-2">13.4. Arbitraje (opcional, recomendado): La Compañía podrá requerir que las disputas se resuelvan mediante arbitraje vinculante individual antes de recurrir a los tribunales, conforme a las reglas de la American Arbitration Association (AAA), como paso adicional para reducir litigios costosos.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-white mb-3">14. Conducta del Usuario</h2>
-            <p>Los usuarios se comprometen a:</p>
-            <ul className="space-y-1 pl-4 mt-2">
-              <li>Publicar contenido respetuoso y constructivo</li>
-              <li>No acosar, discriminar o amenazar a otros usuarios</li>
-              <li>No publicar información falsa, engañosa o difamatoria</li>
-              <li>No compartir contenido ilegal, violento, sexualmente explícito o que infrinja derechos de autor</li>
-              <li>No realizar spam, phishing o actividades fraudulentas</li>
-              <li>No manipular votos, puntuaciones o el sistema de reputación</li>
-            </ul>
-            <p className="mt-2">El incumplimiento puede resultar en suspensión temporal o eliminación permanente de la cuenta sin previo aviso.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">15. Limitación de Responsabilidad</h2>
-            <p>MSM Zafiro no se hace responsable por:</p>
-            <ul className="space-y-1 pl-4 mt-2">
-              <li>Daños indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de usar la Plataforma</li>
-              <li>Pérdida de datos, ingresos o oportunidades de negocio</li>
-              <li>El contenido generado por usuarios o por la IA</li>
-              <li>Interrupciones del servicio por mantenimiento, problemas técnicos o casos de fuerza mayor</li>
-              <li>Actuaciones de terceros (proveedores de servicio, otros usuarios, etc.)</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">16. Modificaciones</h2>
-            <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios serán notificados con al menos 15 días de anticipación mediante:</p>
-            <ul className="space-y-1 pl-4 mt-2">
-              <li>Publicación en la Plataforma</li>
-              <li>Notificación push o por WhatsApp (si está habilitado)</li>
-              <li>Correo electrónico (si lo proporcionaste)</li>
-            </ul>
-            <p className="mt-2">Si no estás de acuerdo con los cambios, puedes cancelar tu cuenta antes de que entren en vigor.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">17. Terminación</h2>
-            <p>Puedes eliminar tu cuenta en cualquier momento desde la configuración de perfil. MSM Zafiro puede suspender o eliminar tu cuenta si violas estos términos. Al terminar la relación, perderás acceso a tu contenido y datos personales, los cuales serán eliminados en un plazo máximo de 30 días, salvo obligación legal de retenerlos.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">18. Ley Aplicable y Jurisdicción</h2>
-            <p>Estos términos se rigen por las leyes de México. Cualquier disputa será resuelta en los tribunales competentes de la Ciudad de México, renunciando a cualquier otro fuero que pudiera corresponder.</p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">19. Contacto</h2>
-            <p>MSM Zafiro opera con inteligencia artificial internacional. No hay correos humanos, no hay oficinas, no hay burocracia. Todo el sistema es gestionado por IA. Disfruta la plataforma.</p>
+            <h2 className="text-xl font-semibold text-white mb-3">14. Contacto</h2>
+            <p>MSM MY STORE LLC</p>
+            <p>Condado de Osceola, Florida (Kissimmee), Estados Unidos</p>
+            <p className="mt-2 text-white/40">MSM Zafiro — Inteligencia Artificial Internacional</p>
           </section>
 
           <div className="pt-8 border-t border-white/10 text-sm text-white/40">
-            <p>MSM Zafiro — Inteligencia Artificial Internacional</p>
+            <p>MSM MY STORE LLC &copy; 2026. Todos los derechos reservados.</p>
             <p className="mt-2">&ldquo;Cada pregunta construye el futuro.&rdquo;</p>
           </div>
         </div>
