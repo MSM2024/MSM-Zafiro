@@ -28,7 +28,7 @@ export default function CommunitiesPage() {
         </div>
       </div>
 
-      <div className="question-layout" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 330px", gap: 18, alignItems: "start" }}>
+      <div className="question-layout responsive-sidebar" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 330px", gap: 18, alignItems: "start" }}>
         <article className="panel question-main" style={{ padding: 24, border: "1px solid var(--border)", borderRadius: 24, background: "var(--surface)", boxShadow: "0 18px 60px var(--shadow)", backdropFilter: "blur(22px)" }}>
           <h2 style={{ margin: "0 0 8px" }}>Create a community</h2>
           <p className="answer" style={{ color: "var(--muted)", lineHeight: 1.55, fontSize: 14 }}>Cada comunidad tiene preguntas, IA propia, expertos, retos, resumen semanal y reputación interna.</p>
@@ -50,7 +50,7 @@ export default function CommunitiesPage() {
         </aside>
       </div>
 
-      <div className="wall" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
+      <div className="wall responsive-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
         {[
           { meta: "Universidad · Global", title: "AI Research Circle", desc: "Researchers and students improving open questions about artificial intelligence." },
           { meta: "Builders · Public", title: "Inventors Lab", desc: "Ideas, prototypes, patents, feedback and collaboration for new inventions." },
@@ -72,9 +72,9 @@ export default function CommunitiesPage() {
         </div>
       </div>
 
-      <div className="knowledge-map" style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(0, 1fr))", gap: 10 }}>
+      <div className="knowledge-map" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {["Pregunta central", "Respuestas IA", "Aportes humanos", "Expertos", "Resumen final", "Retos", "Guías", "Fuentes", "Traducciones", "Top miembros"].map((node, i) => (
-          <button key={node} className={`map-node ${i === 0 ? "hot" : ""}`} style={{ minHeight: 88, display: "grid", placeItems: "center", padding: 12, border: i === 0 ? "transparent" : "1px solid var(--border)", borderRadius: 22, background: i === 0 ? "linear-gradient(135deg, #2563ff, #7c3aed)" : "var(--surface-strong)", textAlign: "center", color: i === 0 ? "#fff" : "var(--muted)", fontSize: 12, cursor: "pointer", borderColor: "var(--border)" }}>{node}</button>
+          <button key={node} className={`map-node ${i === 0 ? "hot" : ""}`} style={{ minHeight: 80, minWidth: 110, display: "grid", placeItems: "center", padding: 12, border: i === 0 ? "transparent" : "1px solid var(--border)", borderRadius: 22, background: i === 0 ? "linear-gradient(135deg, #2563ff, #7c3aed)" : "var(--surface-strong)", textAlign: "center", color: i === 0 ? "#fff" : "var(--muted)", fontSize: 12, cursor: "pointer", borderColor: "var(--border)" }}>{node}</button>
         ))}
       </div>
     </>

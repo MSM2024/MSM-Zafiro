@@ -55,9 +55,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <SponsorTicker />
-          <div className="shell" style={{ width: "min(1220px, calc(100% - 32px))", margin: "0 auto", padding: "18px 0 112px" }}>
+          <div className="shell">
             <Header />
-            <main style={{ display: "grid", gap: "46px", paddingTop: "54px" }}>
+            <main className="main-content" style={{ display: "grid", gap: "46px", paddingTop: "54px" }}>
               {children}
             </main>
             <footer className="terms-footer" style={{ marginTop: 36, padding: 18, border: "1px solid var(--border)", borderRadius: 24, background: "var(--surface)", color: "var(--muted)", fontSize: 13, lineHeight: 1.5 }}>

@@ -92,7 +92,7 @@ export default function AdminPage() {
 
         {tab === 'overview' && (
           <>
-            <div className="grid grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {STATS.map((stat) => {
                 const Icon = stat.icon
                 return (
@@ -115,7 +115,7 @@ export default function AdminPage() {
               })}
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-5">
                 <h2 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-rose-400" />

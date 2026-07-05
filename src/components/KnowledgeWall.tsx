@@ -27,7 +27,7 @@ const DEMO_CARDS = [
 
 export function KnowledgeWall() {
   return (
-    <section className="wall" aria-label="Muro vivo de conocimiento" style={{
+    <section className="wall responsive-grid-3" aria-label="Muro vivo de conocimiento" style={{
       display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16,
     }}>
       {DEMO_CARDS.map((card) => (

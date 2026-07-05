@@ -68,8 +68,8 @@ export default function SettingsPage() {
 
         <h1 className="text-2xl font-bold text-white mb-8">Configuración</h1>
 
-        <div className="flex gap-8">
-          <nav className="w-56 shrink-0 space-y-1">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <nav className="w-full lg:w-56 shrink-0 space-y-1 flex flex-row lg:flex-col overflow-x-auto">
             {TABS.map((tab) => {
               const Icon = tab.icon
               return (

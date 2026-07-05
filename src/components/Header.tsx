@@ -33,12 +33,12 @@ export function Header() {
           <img className="mark" src="/assets/ai-logo.svg" alt="" style={{ width: 38, height: 38, borderRadius: 14, objectFit: "cover", boxShadow: "0 18px 50px rgba(37,99,255,0.3)" }} />
           <span style={{ fontSize: 15 }}>Zafiro by MSM</span>
         </Link>
-        <span className="global-chip" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 11px", border: "1px solid rgba(37,99,255,0.25)", borderRadius: 999, background: "rgba(37,99,255,0.08)", fontSize: 13, fontWeight: 700 }}>
-          Global knowledge network
+        <span className="global-chip header-brand-chip" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 11px", border: "1px solid rgba(37,99,255,0.25)", borderRadius: 999, background: "rgba(37,99,255,0.08)", fontSize: 13, fontWeight: 700 }}>
+          Global
         </span>
       </div>
 
-      <nav aria-label="Principal" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+      <nav className="header-nav" aria-label="Principal" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -59,7 +59,7 @@ export function Header() {
         ))}
       </nav>
 
-      <div className="actions" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div className="actions header-actions" style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <Link
           href="/search"
           className="icon-button"

@@ -2,7 +2,7 @@ import { QuestionComposer } from "./QuestionComposer";
 
 export function FutureStage() {
   return (
-    <section className="future-stage" aria-label="Pantalla completa Zafiro" style={{
+    <section className="future-stage responsive-stack hide-mobile" aria-label="Pantalla completa Zafiro" style={{
       minHeight: "calc(100vh - 130px)", display: "grid",
       gridTemplateColumns: "250px minmax(0, 1fr) 310px", gap: 16, alignItems: "stretch",
     }}>
