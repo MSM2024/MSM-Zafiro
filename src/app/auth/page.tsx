@@ -38,7 +38,7 @@ export default function AuthPage() {
         </p>
         <p className="text-center mt-3">
           <Link href="/recover" className="text-xs text-indigo-400 hover:text-indigo-300">
-            ¿Olvidaste tu contraseña? Recupera con tu teléfono
+            ¿Perdiste acceso a tu cuenta? Recupérala aquí
           </Link>
         </p>
       </div>

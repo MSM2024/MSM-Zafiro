@@ -35,8 +35,7 @@ export default function NewQuestionPage() {
     await createQuestion({
       title,
       body,
-      category,
-      tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
+      categoryId: category || undefined,
     })
     setIsSubmitting(false)
     setSubmitted(true)
