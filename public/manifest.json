@@ -1,7 +1,7 @@
 {
   "name": "MSM Zafiro",
   "short_name": "Zafiro",
-  "description": "Red social del conocimiento + IA. Pregunta cualquier cosa, aprende junto a la comunidad.",
+  "description": "Zafiro es la red social donde el conocimiento se comparte, la IA responde, los expertos validan y la comunidad construye futuro.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070314",

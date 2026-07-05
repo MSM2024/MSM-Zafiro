@@ -1,54 +1,17 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    @keyframes sapphirePulse {
-      0%, 100% { opacity: 0.88; transform: scale(0.985); }
-      50% { opacity: 1; transform: scale(1.018); }
-    }
-
-    @keyframes sapphireHalo {
-      0%, 100% { opacity: 0.35; }
-      50% { opacity: 0.82; }
-    }
-
-    @keyframes sapphireSpark {
-      0%, 64%, 100% { opacity: 0.25; transform: translate(0, 0) scale(0.78); }
-      72% { opacity: 1; transform: translate(2px, -2px) scale(1.16); }
-      82% { opacity: 0.42; transform: translate(0, 0) scale(0.92); }
-    }
-
-    .sapphire-core {
-      animation: sapphirePulse 3.4s ease-in-out infinite;
-      transform-origin: 256px 236px;
-    }
-
-    .sapphire-halo {
-      animation: sapphireHalo 3.4s ease-in-out infinite;
-      transform-origin: 256px 236px;
-    }
-
-    .sapphire-spark {
-      animation: sapphireSpark 3.4s ease-in-out infinite;
-      transform-origin: 224px 205px;
-    }
-  </style>
-
   <rect width="512" height="512" rx="144" fill="#080A12"/>
   <rect x="18" y="18" width="476" height="476" rx="126" stroke="url(#frame)" stroke-width="2" opacity="0.75"/>
-
   <g filter="url(#outerGlow)">
     <path d="M256 92C176.471 92 112 156.471 112 236C112 315.529 176.471 380 256 380C335.529 380 400 315.529 400 236C400 156.471 335.529 92 256 92Z" fill="url(#coreRing)"/>
     <path d="M256 124C194.144 124 144 174.144 144 236C144 297.856 194.144 348 256 348C317.856 348 368 297.856 368 236C368 174.144 317.856 124 256 124Z" fill="#080A12" fill-opacity="0.78"/>
   </g>
-
   <path d="M174 235C174 189.713 210.713 153 256 153C301.287 153 338 189.713 338 235C338 280.287 301.287 317 256 317" stroke="url(#ring)" stroke-width="22" stroke-linecap="round"/>
   <path d="M256 317C238.327 317 224 331.327 224 349C224 366.673 238.327 381 256 381C273.673 381 288 366.673 288 349C288 331.327 273.673 317 256 317Z" fill="url(#node)"/>
-
-  <g class="sapphire-halo" filter="url(#sapphireHaloFilter)">
+  <g filter="url(#sapphireHaloFilter)">
     <ellipse cx="256" cy="237" rx="72" ry="68" fill="#004CFF" fill-opacity="0.42"/>
     <ellipse cx="256" cy="237" rx="48" ry="45" fill="#00D4FF" fill-opacity="0.18"/>
   </g>
-
-  <g class="sapphire-core" filter="url(#sapphireGemGlow)">
+  <g filter="url(#sapphireGemGlow)">
     <path d="M256 174L315 212L291 264L256 300L221 264L197 212L256 174Z" fill="url(#sapphireBase)"/>
     <path d="M256 174L226 213H197L256 174Z" fill="#7DDCFF" fill-opacity="0.82"/>
     <path d="M256 174L286 213H315L256 174Z" fill="#2D5BFF" fill-opacity="0.95"/>
@@ -64,76 +27,42 @@
     <path d="M256 174L315 212L291 264L256 300L221 264L197 212L256 174Z" stroke="#9BE8FF" stroke-width="3" stroke-linejoin="round" opacity="0.78"/>
     <path d="M226 213H286M221 264H291M256 174V300M197 212H315" stroke="#67E8F9" stroke-width="1.15" opacity="0.34"/>
   </g>
-
-  <g class="sapphire-spark" filter="url(#sparkGlow)">
+  <g filter="url(#sparkGlow)">
     <path d="M224 197L227 207L237 211L227 215L224 225L221 215L211 211L221 207L224 197Z" fill="#B8F3FF"/>
     <circle cx="237" cy="224" r="2" fill="#7DDCFF"/>
   </g>
-
-  <path d="M257 443C309.467 443 357.369 423.197 393.601 390.658" stroke="url(#tail)" stroke-width="16" stroke-linecap="round"/>
-  <path d="M374 397L412 375L406 418" stroke="#00D4FF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-
   <defs>
     <filter id="outerGlow" x="62" y="42" width="388" height="388" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feGaussianBlur stdDeviation="25" result="blur"/>
       <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.12 0 0 0 0 0.38 0 0 0 0 1 0 0 0 0.58 0"/>
       <feBlend in="SourceGraphic" mode="normal"/>
     </filter>
-
-    <filter id="sapphireHaloFilter" x="154" y="135" width="204" height="204" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="18"/>
-    </filter>
-
+    <filter id="sapphireHaloFilter" x="154" y="135" width="204" height="204" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="18"/></filter>
     <filter id="sapphireGemGlow" x="165" y="142" width="182" height="190" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#00D4FF" flood-opacity="0.88"/>
       <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#0011A8" flood-opacity="0.62"/>
     </filter>
-
     <filter id="sparkGlow" x="186" y="174" width="78" height="76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#8BE9FF" flood-opacity="0.75"/>
       <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#00D4FF" flood-opacity="0.82"/>
     </filter>
-
     <linearGradient id="frame" x1="72" y1="34" x2="440" y2="478" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00D4FF"/>
-      <stop offset="0.55" stop-color="#2563FF"/>
-      <stop offset="1" stop-color="#D946EF"/>
+      <stop stop-color="#00D4FF"/><stop offset="0.55" stop-color="#2563FF"/><stop offset="1" stop-color="#D946EF"/>
     </linearGradient>
-
     <linearGradient id="coreRing" x1="130" y1="116" x2="380" y2="362" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00D4FF"/>
-      <stop offset="0.48" stop-color="#2563FF"/>
-      <stop offset="1" stop-color="#D946EF"/>
+      <stop stop-color="#00D4FF"/><stop offset="0.48" stop-color="#2563FF"/><stop offset="1" stop-color="#D946EF"/>
     </linearGradient>
-
     <linearGradient id="ring" x1="174" y1="153" x2="338" y2="317" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00D4FF"/>
-      <stop offset="0.52" stop-color="#2563FF"/>
-      <stop offset="1" stop-color="#7C3AED"/>
+      <stop stop-color="#00D4FF"/><stop offset="0.52" stop-color="#2563FF"/><stop offset="1" stop-color="#7C3AED"/>
     </linearGradient>
-
     <linearGradient id="node" x1="224" y1="317" x2="288" y2="381" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#2563FF"/>
-      <stop offset="1" stop-color="#D946EF"/>
+      <stop stop-color="#2563FF"/><stop offset="1" stop-color="#D946EF"/>
     </linearGradient>
-
     <radialGradient id="sapphireBase" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(245 210) rotate(64.2) scale(107 95)">
-      <stop stop-color="#7DDCFF"/>
-      <stop offset="0.18" stop-color="#00B8FF"/>
-      <stop offset="0.5" stop-color="#004CFF"/>
-      <stop offset="0.82" stop-color="#001C9E"/>
-      <stop offset="1" stop-color="#00072D"/>
+      <stop stop-color="#7DDCFF"/><stop offset="0.18" stop-color="#00B8FF"/><stop offset="0.5" stop-color="#004CFF"/><stop offset="0.82" stop-color="#001C9E"/><stop offset="1" stop-color="#00072D"/>
     </radialGradient>
-
     <linearGradient id="sapphireCenter" x1="221" y1="213" x2="291" y2="264" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#25D9FF"/>
-      <stop offset="0.48" stop-color="#004DFF"/>
-      <stop offset="1" stop-color="#05005F"/>
-    </linearGradient>
-
-    <linearGradient id="tail" x1="257" y1="443" x2="394" y2="391" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C3AED"/>
-      <stop offset="1" stop-color="#00D4FF"/>
+      <stop stop-color="#25D9FF"/><stop offset="0.48" stop-color="#004DFF"/><stop offset="1" stop-color="#05005F"/>
     </linearGradient>
   </defs>
 </svg>

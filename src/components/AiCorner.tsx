@@ -1,97 +1,141 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
-
-const ACTIONS = [
-  { href: "/", label: "Inicio" },
-  { href: "/question/new", label: "Preguntar" },
-  { href: "/communities", label: "Comunidades" },
-  { href: "/membership", label: "Plan" },
-];
+import { Sparkles, X, Maximize2 } from "lucide-react";
+import Link from "next/link";
+import { ElianaChat } from "./ElianaChat";
 
 export function AiCorner() {
-  const [collapsed, setCollapsed] = useState(true);
-  const [message] = useState("Hola, soy ELIANA. ¿En qué puedo ayudarte?");
-
-  useEffect(() => {
-    if (collapsed) return;
-    const t = setTimeout(() => setCollapsed(true), 6000);
-    return () => clearTimeout(t);
-  }, [collapsed]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!collapsed) return;
-      setCollapsed(false);
-      setTimeout(() => setCollapsed(true), 3000);
-    }, 20000);
+      setOpen(true);
+      setTimeout(() => setOpen(false), 6000);
+    }, 25000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="Abrir ELIANA"
+        className="neon-glow"
+        style={{
+          position: "fixed", right: 12, bottom: 88, zIndex: 30,
+          width: 48, height: 48, borderRadius: 18, border: "1px solid rgba(0,212,255,0.35)",
+          background: "linear-gradient(135deg, rgba(37,99,255,0.25), rgba(124,58,237,0.25))",
+          backdropFilter: "blur(20px)", cursor: "pointer",
+          display: "grid", placeItems: "center",
+          boxShadow: "0 0 20px rgba(0,212,255,0.2), 0 0 40px rgba(124,58,237,0.1)",
+          transition: "all 0.3s",
+        }}
+      >
+        {/* Orbiting rings */}
+        <div style={{ position: "absolute", inset: -4, borderRadius: "50%", border: "1px solid rgba(0,212,255,0.12)", animation: "spin 4s linear infinite" }} />
+        <div style={{ position: "absolute", inset: -10, borderRadius: "50%", border: "1px dashed rgba(124,58,237,0.08)", animation: "spin 6s linear infinite reverse" }} />
+        <div style={{ position: "absolute", inset: -16, borderRadius: "50%", border: "1px dotted rgba(0,212,255,0.05)", animation: "spin 8s linear infinite" }} />
+
+        <span className="ai-orb neon-glow" style={{
+          width: 24, height: 24, borderRadius: 8,
+          background: "url(/assets/ai-logo.svg) center / cover no-repeat",
+          animation: "neonPulse 2s ease-in-out infinite",
+          position: "relative",
+        }} />
+        <span style={{ position: "absolute", top: 2, left: 2, width: 4, height: 4, borderRadius: "50%", background: "#00d4ff", opacity: 0.6 }} />
+        <span style={{ position: "absolute", bottom: 2, right: 2, width: 4, height: 4, borderRadius: "50%", background: "#7c3aed", opacity: 0.6 }} />
+        <span style={{ position: "absolute", top: 2, right: 2, width: 3, height: 3, borderRadius: "50%", background: "#d946ef", opacity: 0.4 }} />
+        <span style={{ position: "absolute", bottom: 2, left: 2, width: 3, height: 3, borderRadius: "50%", background: "#00d4ff", opacity: 0.4 }} />
+      </button>
+    );
+  }
 
   return (
     <aside
-      className="ai-corner"
-      aria-label="Asistente IA"
+      className="ai-corner-open"
       style={{
         position: "fixed", right: 12, bottom: 88, zIndex: 30,
-        width: collapsed ? "auto" : "min(300px, calc(100% - 24px))",
-        border: "1px solid var(--border)", borderRadius: collapsed ? 20 : 24,
-        background: "var(--surface)", boxShadow: "0 18px 60px var(--shadow)",
+        width: "min(360px, calc(100% - 24px))",
+        height: "min(520px, calc(100vh - 120px))",
+        border: "1px solid rgba(0,212,255,0.15)", borderRadius: 24,
+        background: "linear-gradient(180deg, rgba(8,10,20,0.98), rgba(12,15,25,0.95))",
+        boxShadow: "0 18px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,212,255,0.06)",
         backdropFilter: "blur(26px)", overflow: "hidden",
+        display: "flex", flexDirection: "column",
+        animation: "fadeInScale 0.25s ease-out",
       }}
     >
-      <div className="ai-corner-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "8px 10px" }}>
-        <div className="ai-corner-title" style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, fontWeight: 700, cursor: "pointer" }} onClick={() => setCollapsed(!collapsed)}>
-          <span className="ai-orb" aria-hidden="true" style={{
-            width: 24, height: 24, borderRadius: 8,
-            background: "url(/assets/ai-logo.svg) center / cover no-repeat",
-            boxShadow: "0 0 0 0 rgba(0, 212, 255, 0.55)",
-            animation: "pulse 1.5s infinite", flex: "0 0 auto",
-          }} />
-          {!collapsed && <span style={{ fontSize: 13 }}>ELIANA</span>}
+      {/* Holographic header */}
+      <div className="holographic-bg" style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 8, padding: "10px 14px",
+        borderBottom: "1px solid rgba(0,212,255,0.08)",
+        position: "relative", overflow: "hidden",
+      }}>
+        {/* Scan overlay */}
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.02) 2px, rgba(0,212,255,0.02) 4px)",
+        }} />
+        <div style={{
+          position: "absolute", left: 0, right: 0, top: 0, height: "1px",
+          background: "linear-gradient(90deg, transparent, #00d4ff, transparent)",
+          opacity: 0.3,
+        }} />
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, position: "relative", zIndex: 1 }}>
+          {/* Orb with rings */}
+          <div style={{ position: "relative", width: 32, height: 32 }}>
+            <div style={{ position: "absolute", inset: -4, borderRadius: "50%", border: "1px solid rgba(0,212,255,0.1)", animation: "spin 3s linear infinite" }} />
+            <span className="neon-glow" style={{
+              position: "absolute", inset: 1, borderRadius: 8,
+              background: "url(/assets/ai-logo.svg) center / cover no-repeat",
+              boxShadow: "0 0 15px rgba(0,212,255,0.3)",
+              animation: "neonPulse 2s ease-in-out infinite",
+            }} />
+          </div>
+          <div>
+            <strong style={{
+              fontSize: 12, color: "#fff", display: "block",
+              letterSpacing: 1.5, textTransform: "uppercase",
+              background: "linear-gradient(135deg, #00d4ff, #7c3aed)",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            }}>
+              ELIANA
+            </strong>
+            <span style={{ fontSize: 9, color: "rgba(0,212,255,0.5)", display: "flex", alignItems: "center", gap: 4, fontFamily: "monospace" }}>
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10b981", display: "inline-block", animation: "pulse 2s infinite" }} />
+              SYSTEM ONLINE
+            </span>
+          </div>
         </div>
-        <button
-          className="icon-button"
-          onClick={() => setCollapsed(!collapsed)}
-          aria-label="Minimizar IA"
-          style={{
-            width: 30, height: 30, border: "1px solid var(--border)", borderRadius: 10,
-            background: "var(--surface-strong)", color: "var(--muted)", cursor: "pointer", fontSize: 14,
-            display: "grid", placeItems: "center", flex: "0 0 auto", lineHeight: 1,
-          }}
-        >
-          {collapsed ? "⌄" : "×"}
-        </button>
+        <div style={{ display: "flex", gap: 4, position: "relative", zIndex: 1 }}>
+          <Link href="/ai" aria-label="Pantalla completa"
+            style={{
+              width: 28, height: 28, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10,
+              background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer",
+              display: "grid", placeItems: "center", textDecoration: "none",
+            }}>
+            <Maximize2 className="w-3 h-3" />
+          </Link>
+          <button onClick={() => setOpen(false)}
+            style={{
+              width: 28, height: 28, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10,
+              background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer",
+              display: "grid", placeItems: "center",
+            }}>
+            <X className="w-3 h-3" />
+          </button>
+        </div>
       </div>
-      {!collapsed && (
-        <div className="ai-corner-body" style={{ display: "grid", gap: 8, padding: "0 10px 10px" }}>
-          <div className="ai-message" style={{
-            padding: 10, border: "1px solid rgba(37,99,255,0.18)", borderRadius: 14,
-            background: "rgba(37,99,255,0.08)", color: "var(--muted)", fontSize: 12, lineHeight: 1.4,
-          }}>
-            {message}
-          </div>
-          <div className="ai-actions" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-            {ACTIONS.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className="mini-action"
-                style={{
-                  minHeight: 34, border: "1px solid var(--border)", borderRadius: 12,
-                  color: "var(--text)", background: "var(--surface-strong)",
-                  fontSize: 11, fontWeight: 600, cursor: "pointer",
-                  display: "grid", placeItems: "center", textDecoration: "none",
-                }}
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+
+      <ElianaChat />
+
+      <style>{`
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </aside>
   );
 }

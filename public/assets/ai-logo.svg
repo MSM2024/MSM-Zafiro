@@ -17,17 +17,17 @@
     }
 
     .sapphire-core {
-      animation: sapphirePulse 3.4s ease-in-out infinite;
+      animation: sapphirePulse 3s ease-in-out infinite;
       transform-origin: 256px 236px;
     }
 
     .sapphire-halo {
-      animation: sapphireHalo 3.4s ease-in-out infinite;
+      animation: sapphireHalo 3s ease-in-out infinite;
       transform-origin: 256px 236px;
     }
 
     .sapphire-spark {
-      animation: sapphireSpark 3.4s ease-in-out infinite;
+      animation: sapphireSpark 3s ease-in-out infinite;
       transform-origin: 224px 205px;
     }
   </style>
@@ -70,8 +70,11 @@
     <circle cx="237" cy="224" r="2" fill="#7DDCFF"/>
   </g>
 
-  <path d="M257 443C309.467 443 357.369 423.197 393.601 390.658" stroke="url(#tail)" stroke-width="16" stroke-linecap="round"/>
-  <path d="M374 397L412 375L406 418" stroke="#00D4FF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <g filter="url(#arrowGlow)">
+    <path d="M256 415L256 455M256 415L240 431M256 415L272 431" stroke="url(#arrowGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="256" y="490" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="700" fill="url(#msmGrad)" letter-spacing="4" opacity="0.85">by MSM</text>
 
   <defs>
     <filter id="outerGlow" x="62" y="42" width="388" height="388" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
@@ -92,6 +95,10 @@
     <filter id="sparkGlow" x="186" y="174" width="78" height="76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#8BE9FF" flood-opacity="0.75"/>
       <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#00D4FF" flood-opacity="0.82"/>
+    </filter>
+
+    <filter id="arrowGlow" x="220" y="395" width="72" height="80" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00D4FF" flood-opacity="0.6"/>
     </filter>
 
     <linearGradient id="frame" x1="72" y1="34" x2="440" y2="478" gradientUnits="userSpaceOnUse">
@@ -117,6 +124,17 @@
       <stop offset="1" stop-color="#D946EF"/>
     </linearGradient>
 
+    <linearGradient id="arrowGrad" x1="240" y1="415" x2="256" y2="455" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00D4FF"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+
+    <linearGradient id="msmGrad" x1="200" y1="490" x2="312" y2="490" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00D4FF"/>
+      <stop offset="0.5" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#D946EF"/>
+    </linearGradient>
+
     <radialGradient id="sapphireBase" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(245 210) rotate(64.2) scale(107 95)">
       <stop stop-color="#7DDCFF"/>
       <stop offset="0.18" stop-color="#00B8FF"/>
@@ -129,11 +147,6 @@
       <stop stop-color="#25D9FF"/>
       <stop offset="0.48" stop-color="#004DFF"/>
       <stop offset="1" stop-color="#05005F"/>
-    </linearGradient>
-
-    <linearGradient id="tail" x1="257" y1="443" x2="394" y2="391" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C3AED"/>
-      <stop offset="1" stop-color="#00D4FF"/>
     </linearGradient>
   </defs>
 </svg>

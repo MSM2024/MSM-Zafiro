@@ -1,6 +1,7 @@
 export const SITE_NAME = "Zafiro by MSM";
 export const SITE_TAGLINE = "La red social del conocimiento + IA";
-export const SITE_DESCRIPTION = "Pregunta cualquier cosa. Recibe una respuesta inicial de IA. Mejórala con personas reales. Conserva conocimiento útil para todos.";
+export const SITE_DESCRIPTION = "Zafiro es la red social donde el conocimiento se comparte, la IA responde, los expertos validan y la comunidad construye futuro.";
+export const SITE_LEMA = "Cada pregunta construye el futuro.";
 
 export const CATEGORIES = [
   { name: "Tecnología", color: "blue" },
@@ -29,13 +30,13 @@ export const SPONSOR_MESSAGES = [
 ];
 
 export const CORNER_MESSAGES: Record<string, string> = {
-  home: "Este es el corazón: una gran pregunta, IA primero y conocimiento vivo debajo.",
-  explore: "Explore organiza la curiosidad mundial por categorías.",
-  question: "Aquí vive la conversación entre IA, comunidad y expertos.",
+  home: "Cada pregunta construye el futuro. ¿Qué quieres saber hoy?",
+  explore: "Explora la curiosidad mundial organizada por categorías.",
+  question: "Pregunta. IA responde. Expertos validan. Comunidad construye.",
   communities: "Comunidades inteligentes con IA propia, expertos y mapas de conocimiento.",
-  ai: "ELIANA responde, resume, traduce, compara y detecta duplicados.",
-  profile: "Reputación, especialidades, preguntas, respuestas e insignias.",
-  membership: "Membresías, créditos, comunidades premium y patrocinios.",
+  ai: "ELIANA responde, resume, traduce y detecta duplicados.",
+  profile: "Zafiro Score, reputación, especialidades, preguntas e insignias.",
+  membership: "Planes Free, Plus y Pro. Créditos IA, comunidades premium y patrocinios.",
   sponsor: "Sponsors autoservicio: IA revisa, autoriza, Stripe cobra.",
-  auth: "Crea tu cuenta: email, teléfono o login social.",
+  auth: "Regístrate con tu WhatsApp. Tu teléfono es tu identidad en Zafiro.",
 };

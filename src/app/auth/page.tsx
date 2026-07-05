@@ -23,18 +23,23 @@ export default function AuthPage() {
             </div>
             <h1 className="text-2xl font-bold text-white">MSM Zafiro</h1>
             <p className="text-white/50 text-sm mt-1">
-              Únete a la red social del conocimiento + IA
+              Cada pregunta construye el futuro
             </p>
           </div>
 
           <AuthForm />
         </div>
 
-        <p className="text-center text-xs text-white/30 mt-6">
+        <p className="text-center text-xs text-white/30 mt-4">
           Al continuar, aceptas nuestros{' '}
           <Link href="/terms" className="text-indigo-400 hover:text-indigo-300">Términos</Link>
           {' '}y{' '}
           <Link href="/terms" className="text-indigo-400 hover:text-indigo-300">Política de Privacidad</Link>
+        </p>
+        <p className="text-center mt-3">
+          <Link href="/recover" className="text-xs text-indigo-400 hover:text-indigo-300">
+            ¿Olvidaste tu contraseña? Recupera con tu teléfono
+          </Link>
         </p>
       </div>
     </div>

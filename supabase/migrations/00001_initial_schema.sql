@@ -17,12 +17,23 @@ CREATE TABLE core.users (
   bio TEXT,
   locale TEXT DEFAULT 'es',
   country TEXT,
-  phone TEXT,
+  email TEXT UNIQUE,
+  email_verified BOOLEAN DEFAULT false,
+  phone TEXT UNIQUE,
+  phone_verified BOOLEAN DEFAULT false,
+  google_id TEXT UNIQUE,
+  facebook_id TEXT UNIQUE,
+  password_hash TEXT,
   reputation_score INTEGER DEFAULT 0,
   level INTEGER DEFAULT 1,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_users_email ON core.users(email);
+CREATE INDEX IF NOT EXISTS idx_users_phone ON core.users(phone);
+CREATE INDEX IF NOT EXISTS idx_users_google ON core.users(google_id);
+CREATE INDEX IF NOT EXISTS idx_users_facebook ON core.users(facebook_id);
 
 CREATE TABLE core.user_specialties (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -343,6 +354,19 @@ CREATE TABLE knowledge.sponsor_campaigns (
   ends_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Followers
+CREATE TABLE core.followers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  follower_id UUID NOT NULL REFERENCES core.users(id) ON DELETE CASCADE,
+  following_id UUID NOT NULL REFERENCES core.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(follower_id, following_id),
+  CHECK(follower_id <> following_id)
+);
+
+CREATE INDEX idx_followers_follower ON core.followers(follower_id);
+CREATE INDEX idx_followers_following ON core.followers(following_id);
 
 -- Indices
 CREATE INDEX idx_questions_created ON knowledge.questions(created_at DESC);

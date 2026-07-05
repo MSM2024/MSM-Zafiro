@@ -31,10 +31,10 @@ export function Header() {
       <div className="brand" style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 190, fontWeight: 750 }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", color: "inherit" }}>
           <img className="mark" src="/assets/ai-logo.svg" alt="" style={{ width: 38, height: 38, borderRadius: 14, objectFit: "cover", boxShadow: "0 18px 50px rgba(37,99,255,0.3)" }} />
-          <span style={{ fontSize: 15 }}>Zafiro by MSM</span>
+          <span style={{ fontSize: 15 }}>Zafiro</span>
         </Link>
         <span className="global-chip header-brand-chip" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 11px", border: "1px solid rgba(37,99,255,0.25)", borderRadius: 999, background: "rgba(37,99,255,0.08)", fontSize: 13, fontWeight: 700 }}>
-          Global
+          by MSM
         </span>
       </div>
 

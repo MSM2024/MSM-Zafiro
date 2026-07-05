@@ -1,7 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="40" fill="#070314"/>
-  <circle cx="96" cy="96" r="60" fill="none" stroke="#2563ff" stroke-width="8"/>
-  <circle cx="96" cy="96" r="38" fill="none" stroke="#00d4ff" stroke-width="4"/>
-  <circle cx="96" cy="96" r="16" fill="#7c3aed"/>
-  <path d="M96 30 L96 162 M30 96 L162 96" stroke="#2563ff" stroke-width="2" opacity="0.3"/>
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" rx="40" fill="#080A12"/>
+  <circle cx="96" cy="96" r="60" fill="none" stroke="url(#ring)" stroke-width="8"/>
+  <circle cx="96" cy="96" r="38" fill="none" stroke="url(#ring2)" stroke-width="4"/>
+  <path d="M96 38C63 38 36 64 36 97C36 130 63 157 96 157C129 157 156 130 156 97" stroke="url(#ring)" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="96" cy="96" r="12" fill="url(#gem)"/>
+  <circle cx="96" cy="96" r="12" fill="#00D4FF" opacity="0.3" filter="url(#glow)"/>
+  <defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="6"/></filter>
+    <linearGradient id="ring" x1="36" y1="38" x2="156" y2="157"><stop offset="0" stop-color="#00D4FF"/><stop offset="0.5" stop-color="#2563FF"/><stop offset="1" stop-color="#7C3AED"/></linearGradient>
+    <linearGradient id="ring2" x1="58" y1="58" x2="134" y2="134"><stop offset="0" stop-color="#7DDCFF"/><stop offset="1" stop-color="#2D5BFF"/></linearGradient>
+    <radialGradient id="gem"><stop offset="0" stop-color="#7DDCFF"/><stop offset="0.3" stop-color="#00B8FF"/><stop offset="0.6" stop-color="#004CFF"/><stop offset="1" stop-color="#00072D"/></radialGradient>
+  </defs>
 </svg>

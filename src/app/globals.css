@@ -75,6 +75,45 @@ body {
   to { transform: translateX(-50%); }
 }
 
+@keyframes glitch {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 1px); }
+  94% { transform: translate(2px, -1px); }
+  96% { transform: translate(-1px, 2px); }
+  98% { transform: translate(1px, -2px); }
+}
+
+@keyframes holographic {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes scanLine {
+  0% { top: -2%; }
+  100% { top: 102%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-20px) scale(1.1); opacity: 0.6; }
+}
+
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(0,212,255,0.3), 0 0 15px rgba(0,212,255,0.1); }
+  50% { box-shadow: 0 0 10px rgba(0,212,255,0.5), 0 0 30px rgba(0,212,255,0.2), 0 0 60px rgba(124,58,237,0.15); }
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(0,212,255,0.15); }
+  50% { border-color: rgba(124,58,237,0.3); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 @utility gradient-text {
   background: linear-gradient(135deg, var(--color-electric), var(--color-violet), var(--color-magenta));
   -webkit-background-clip: text;
@@ -88,6 +127,25 @@ body {
   background: var(--surface);
   backdrop-filter: blur(24px);
   box-shadow: 0 18px 70px var(--shadow);
+}
+
+@utility neon-border {
+  border: 1px solid rgba(0,212,255,0.15);
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@utility holographic-bg {
+  background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.08), rgba(217,70,239,0.08));
+  background-size: 200% 200%;
+  animation: holographic 4s ease-in-out infinite;
+}
+
+@utility neon-glow {
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+@utility glitch-text {
+  animation: glitch 3s infinite;
 }
 
 @utility glass-sm {

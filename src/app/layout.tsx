@@ -13,8 +13,9 @@ export const metadata: Metadata = {
     template: "%s | MSM Zafiro",
   },
   description:
-    "Pregunta cualquier cosa. Recibe una respuesta inicial de IA. Mejórala con personas reales. Conserva conocimiento útil para todos.",
+    "Zafiro es la red social donde el conocimiento se comparte, la IA responde, los expertos validan y la comunidad construye futuro.",
   keywords: [
+    "MSM Zafiro",
     "red social del conocimiento",
     "IA",
     "inteligencia artificial",
@@ -22,13 +23,13 @@ export const metadata: Metadata = {
     "aprender",
     "conocimiento",
     "ELIANA",
-    "MSM",
     "Zafiro",
+    "reputación digital",
   ],
   openGraph: {
     title: "MSM Zafiro — Red Social del Conocimiento + IA",
     description:
-      "Pregunta cualquier cosa. Recibe una respuesta inicial de IA. Mejórala con personas reales. Conserva conocimiento útil para todos.",
+      "Zafiro es la red social donde el conocimiento se comparte, la IA responde, los expertos validan y la comunidad construye futuro.",
     siteName: "MSM Zafiro",
     locale: "es_ES",
     type: "website",
@@ -37,11 +38,16 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "MSM Zafiro",
     description:
-      "La red social del conocimiento + IA. Pregunta cualquier cosa, aprende junto a la comunidad.",
+      "La red social del conocimiento + IA. Pregunta. Aprende. Construye el futuro.",
   },
   robots: {
     index: true,
     follow: true,
+  },
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/icons/icon-192.png",
   },
 };
 
@@ -52,9 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;750;800;900&display=swap" rel="stylesheet" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <meta name="theme-color" content="#070314" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -70,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </main>
             <footer className="terms-footer" style={{ marginTop: 36, padding: 18, border: "1px solid var(--border)", borderRadius: 24, background: "var(--surface)", color: "var(--muted)", fontSize: 13, lineHeight: 1.5 }}>
-              <strong>Zafiro</strong> es una red mundial de conocimiento basada en preguntas. No es consejo médico, legal o financiero. La IA ayuda, pero puede equivocarse.
+              <strong>MSM Zafiro</strong> es una red mundial de conocimiento basada en preguntas. No es consejo médico, legal o financiero. La IA ayuda, pero puede equivocarse.
               <div className="terms-links" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 10 }}>
                 <a href="/terms" style={{ color: "var(--text)", fontWeight: 700, textDecoration: "none" }}>Terms</a>
                 <a href="/terms" style={{ color: "var(--text)", fontWeight: 700, textDecoration: "none" }}>Privacy</a>
