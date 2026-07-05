@@ -68,7 +68,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-xl font-semibold text-white mb-3">7. Privacidad y Protección de Datos</h2>
-            <p>El manejo de tus datos personales se rige por nuestra <Link href="/terms#privacidad" className="text-indigo-400 hover:text-indigo-300">Política de Privacidad</Link>. En resumen:</p>
+            <p>El manejo de tus datos personales se rige por nuestra <Link href="/privacy" className="text-indigo-400 hover:text-indigo-300">Política de Privacidad</Link>. En resumen:</p>
             <ul className="space-y-1 pl-4 mt-2">
               <li><strong>Datos recopilados:</strong> Nombre, número de teléfono, email, foto de perfil, contenido publicado, interacciones, datos de uso y ubicación aproximada.</li>
               <li><strong>Uso de datos:</strong> Operación de la plataforma, mejora de servicios, personalización de contenido, seguridad y prevención de fraude.</li>
