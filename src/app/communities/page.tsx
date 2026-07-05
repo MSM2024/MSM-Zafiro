@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ShareButton } from "@/components/ShareButton";
 
 export default function CommunitiesPage() {
   const [name, setName] = useState("");
@@ -60,7 +61,8 @@ export default function CommunitiesPage() {
           <article key={card.title} className="card" style={{ minHeight: 180, padding: 20, border: "1px solid var(--border)", borderRadius: 24, background: "var(--surface)", boxShadow: "0 18px 60px var(--shadow)", backdropFilter: "blur(22px)" }}>
             <div className="meta" style={{ display: "flex", justifyContent: "space-between", gap: 12, color: "var(--muted)", fontSize: 12, marginBottom: 16 }}><span>{card.meta}</span></div>
             <h2 className="question" style={{ margin: "0 0 14px", fontSize: 19, lineHeight: 1.25, fontWeight: 750 }}>{card.title}</h2>
-            <p className="answer" style={{ margin: 0, color: "var(--muted)", lineHeight: 1.55, fontSize: 14 }}>{card.desc}</p>
+            <p className="answer" style={{ margin: "0 0 12px", color: "var(--muted)", lineHeight: 1.55, fontSize: 14 }}>{card.desc}</p>
+            <ShareButton title={card.title} text={card.desc} variant="icon" />
           </article>
         ))}
       </div>

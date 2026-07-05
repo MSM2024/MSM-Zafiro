@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FollowButton } from "@/components/FollowButton";
+import { ShareButton } from "@/components/ShareButton";
 
 const DEMO_USER_ID = "demo-current-user";
 const DEMO_TARGET_ID = "demo-target-user";
@@ -36,7 +37,10 @@ export default function ProfilePage() {
           <div className="avatar" style={{ width: 64, height: 64, marginBottom: 14, borderRadius: 22, background: "linear-gradient(135deg, #2563ff, #7c3aed, #d946ef)" }} />
           <h3 style={{ margin: "0 0 4px" }}>Don Miguel</h3>
           <p style={{ margin: "0 0 12px", color: "var(--muted)", lineHeight: 1.5, fontSize: 14 }}>Creador de MSM Zafiro. Inventor, visionario.</p>
-          <FollowButton targetUserId={DEMO_TARGET_ID} currentUserId={DEMO_USER_ID} />
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <FollowButton targetUserId={DEMO_TARGET_ID} currentUserId={DEMO_USER_ID} />
+            <ShareButton title="Perfil de Don Miguel en Zafiro" text="Sigue a Don Miguel en MSM Zafiro, la red social del conocimiento + IA" variant="pill" />
+          </div>
         </article>
 
         <article className="panel profile-card" style={{ padding: 22, border: "1px solid var(--border)", borderRadius: 24, background: "var(--surface)", boxShadow: "0 18px 60px var(--shadow)", backdropFilter: "blur(22px)" }}>

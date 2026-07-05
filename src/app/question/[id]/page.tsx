@@ -6,6 +6,7 @@ import {
   ArrowLeft, Bookmark, Share2, Clock, CheckCircle2,
   MessageCircle, Sparkles, User, Award, Loader2,
 } from 'lucide-react'
+import { ShareButton } from '@/components/ShareButton'
 import { VoteButtons } from '@/components/VoteButtons'
 import { getQuestion, type Question } from '@/lib/data'
 import { CATEGORIES } from '@/lib/constants'
@@ -115,9 +116,7 @@ export default function QuestionPage({ params }: { params: Promise<{ id: string 
                 <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-colors text-sm">
                   <Bookmark className="w-4 h-4" /> Guardar
                 </button>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white/40 hover:text-white/70 hover:bg-white/5 transition-colors text-sm">
-                  <Share2 className="w-4 h-4" /> Compartir
-                </button>
+                <ShareButton title={question.title} text={question.body} variant="pill" />
               </div>
 
               <div className="flex items-center gap-2 mt-4 flex-wrap">
