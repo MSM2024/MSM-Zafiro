@@ -28,7 +28,7 @@ function saveHistory(messages: Message[]) {
   } catch { /* quota */ }
 }
 
-export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
+export function ElianaChat({ fullScreen = false, onChat }: { fullScreen?: boolean; onChat?: () => void }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -69,6 +69,7 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
   };
 
   const startListening = useCallback(() => {
+    onChat?.();
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) return;
@@ -108,6 +109,7 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
   const handleSend = useCallback(async (text?: string) => {
     const message = (text || input).trim();
     if (!message || loading) return;
+    onChat?.();
     setInput("");
     const userMsg: Message = { role: "user", text: message, timestamp: Date.now() };
     const newMessages = [...messages, userMsg];
@@ -242,8 +244,8 @@ export function ElianaChat({ fullScreen = false }: { fullScreen?: boolean }) {
             style={{
               padding: fullScreen ? "14px 18px" : "8px 12px",
               borderRadius: "14px 14px 14px 4px",
-              background: "rgba(10,14,30,0.7)",
-              border: "1px solid rgba(0,212,255,0.08)",
+              background: "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1))",
+              border: "1px solid rgba(0,212,255,0.15)",
               display: "flex", alignItems: "center", gap: 8,
               fontSize: fullScreen ? 13 : 11,
             }}
