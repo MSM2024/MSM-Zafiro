@@ -1,0 +1,2600 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zafiro by MSM</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8fa;
+        --surface: rgba(255, 255, 255, 0.74);
+        --surface-strong: rgba(255, 255, 255, 0.9);
+        --text: #090a0f;
+        --muted: #6b7280;
+        --border: rgba(9, 10, 15, 0.1);
+        --blue: #2563ff;
+        --cyan: #00d4ff;
+        --violet: #7c3aed;
+        --pink: #d946ef;
+        --green: #10b981;
+        --shadow: rgba(15, 23, 42, 0.11);
+      }
+
+      [data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #090a0f;
+        --surface: rgba(18, 20, 30, 0.72);
+        --surface-strong: rgba(23, 25, 35, 0.92);
+        --text: #f9fafb;
+        --muted: #9ca3af;
+        --border: rgba(255, 255, 255, 0.1);
+        --shadow: rgba(0, 0, 0, 0.32);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 12% 8%, rgba(37, 99, 255, 0.18), transparent 31rem),
+          radial-gradient(circle at 86% 0%, rgba(124, 58, 237, 0.2), transparent 30rem),
+          radial-gradient(circle at 50% 42%, rgba(0, 212, 255, 0.08), transparent 28rem),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
+      }
+
+      .sponsor-ticker {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.16);
+        background:
+          linear-gradient(90deg, rgba(37, 99, 255, 0.22), rgba(124, 58, 237, 0.2), rgba(0, 212, 255, 0.18)),
+          rgba(3, 7, 18, 0.92);
+        box-shadow: 0 16px 60px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(24px);
+      }
+
+      .ticker-track {
+        display: flex;
+        width: max-content;
+        animation: tickerMove 34s linear infinite;
+      }
+
+      .ticker-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 42px;
+        padding: 0 28px;
+        color: #dbeafe;
+        white-space: nowrap;
+        font-size: 13px;
+      }
+
+      .ticker-item strong {
+        color: #ffffff;
+      }
+
+      .ticker-badge {
+        padding: 5px 9px;
+        border-radius: 999px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      body,
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .shell {
+        width: min(1220px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 18px 0 112px;
+      }
+
+      header {
+        position: sticky;
+        top: 16px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--surface);
+        box-shadow: 0 18px 70px var(--shadow);
+        backdrop-filter: blur(24px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 190px;
+        font-weight: 750;
+      }
+
+      .mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        object-fit: cover;
+        box-shadow: 0 18px 50px rgba(37, 99, 255, 0.3);
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .nav-button,
+      .icon-button {
+        border: 0;
+        color: var(--muted);
+        background: transparent;
+      }
+
+      .nav-button {
+        padding: 9px 10px;
+        border-radius: 999px;
+        font-size: 13px;
+      }
+
+      .nav-button.active,
+      .nav-button:hover {
+        color: var(--text);
+        background: rgba(37, 99, 255, 0.09);
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .icon-button {
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--surface-strong);
+      }
+
+      main {
+        display: grid;
+        gap: 46px;
+        padding-top: 54px;
+      }
+
+      .view {
+        display: none;
+      }
+
+      .view.active {
+        display: grid;
+        gap: 34px;
+      }
+
+      .hero {
+        display: grid;
+        place-items: center;
+        min-height: 46vh;
+        text-align: center;
+      }
+
+      .hero-inner {
+        width: min(920px, 100%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--muted);
+        background: var(--surface);
+        font-size: 13px;
+        backdrop-filter: blur(18px);
+      }
+
+      h1 {
+        margin: 0 0 26px;
+        font-size: clamp(40px, 7vw, 82px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, var(--blue), var(--violet), var(--pink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .composer {
+        position: relative;
+        width: min(850px, 100%);
+        margin: 0 auto;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        background: var(--surface);
+        box-shadow: 0 24px 80px var(--shadow);
+        backdrop-filter: blur(24px);
+      }
+
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .ai-orb {
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        background: url("assets/ai-logo.svg") center / cover no-repeat;
+        box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.55);
+        animation: pulse 1.5s infinite;
+        flex: 0 0 auto;
+      }
+
+      input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+        font-size: clamp(22px, 4vw, 34px);
+        font-weight: 650;
+      }
+
+      input::placeholder {
+        color: rgba(107, 114, 128, 0.86);
+      }
+
+      .send-button {
+        width: 52px;
+        height: 52px;
+        border: 0;
+        border-radius: 19px;
+        color: white;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        font-size: 22px;
+        flex: 0 0 auto;
+        box-shadow: 0 16px 40px rgba(37, 99, 255, 0.28);
+      }
+
+      .ai-panel {
+        display: none;
+        margin-top: 16px;
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        background: rgba(37, 99, 255, 0.06);
+        text-align: left;
+      }
+
+      .ai-panel.visible {
+        display: block;
+      }
+
+      .ai-status {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      .thinking-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--cyan);
+        box-shadow: 0 0 22px rgba(0, 212, 255, 0.9);
+      }
+
+      .suggestions {
+        display: grid;
+        gap: 8px;
+      }
+
+      .suggestion {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        color: var(--text);
+        background: var(--surface-strong);
+        font-size: 14px;
+      }
+
+      .subtitle {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 17px;
+      }
+
+      .categories {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .pill {
+        padding: 9px 13px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--text);
+        font-size: 13px;
+        backdrop-filter: blur(16px);
+      }
+
+      .pill.blue {
+        border-color: rgba(37, 99, 255, 0.28);
+      }
+
+      .pill.violet {
+        border-color: rgba(124, 58, 237, 0.3);
+      }
+
+      .pill.green {
+        border-color: rgba(16, 185, 129, 0.3);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(26px, 4vw, 42px);
+        line-height: 1.05;
+      }
+
+      .section-head p {
+        max-width: 560px;
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .wall,
+      .category-grid,
+      .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card,
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--surface);
+        box-shadow: 0 18px 60px var(--shadow);
+        backdrop-filter: blur(22px);
+      }
+
+      .card {
+        min-height: 224px;
+        padding: 20px;
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(37, 99, 255, 0.35);
+      }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 16px;
+      }
+
+      .question {
+        margin: 0 0 14px;
+        font-size: 19px;
+        line-height: 1.25;
+        font-weight: 750;
+      }
+
+      .answer {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: 14px;
+      }
+
+      .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 22px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .question-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .question-main,
+      .side-panel {
+        padding: 24px;
+      }
+
+      .question-title {
+        margin: 0 0 16px;
+        font-size: clamp(32px, 5vw, 58px);
+        line-height: 1.02;
+      }
+
+      .summary {
+        padding: 18px;
+        border: 1px solid rgba(37, 99, 255, 0.2);
+        border-radius: 22px;
+        background: rgba(37, 99, 255, 0.08);
+      }
+
+      .summary strong,
+      .answer-card strong {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .answer-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .answer-card {
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: var(--surface-strong);
+      }
+
+      .expert {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: #047857;
+        background: rgba(16, 185, 129, 0.12);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .side-panel {
+        display: grid;
+        gap: 16px;
+      }
+
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .metric strong {
+        color: var(--text);
+      }
+
+      .category-card {
+        padding: 20px;
+      }
+
+      .category-card h3,
+      .profile-card h3 {
+        margin: 0 0 8px;
+      }
+
+      .category-card p,
+      .profile-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 14px;
+      }
+
+      .profile-card {
+        padding: 22px;
+      }
+
+      .avatar {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 14px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, var(--blue), var(--violet), var(--pink));
+      }
+
+      .bottom-nav {
+        position: fixed;
+        left: 50%;
+        right: auto;
+        bottom: 14px;
+        z-index: 45;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(72px, 1fr));
+        gap: 6px;
+        width: min(780px, calc(100% - 28px));
+        padding: 8px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--surface);
+        box-shadow: 0 18px 70px var(--shadow);
+        backdrop-filter: blur(24px);
+        transform: translateX(-50%);
+      }
+
+      .global-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 11px;
+        border: 1px solid rgba(37, 99, 255, 0.25);
+        border-radius: 999px;
+        color: var(--text);
+        background: rgba(37, 99, 255, 0.08);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .launch-board {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .launch-item {
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: var(--surface-strong);
+      }
+
+      .launch-item span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .launch-item strong {
+        display: block;
+        font-size: 18px;
+      }
+
+      .ai-corner {
+        position: fixed;
+        right: 18px;
+        bottom: 92px;
+        z-index: 30;
+        width: min(360px, calc(100% - 36px));
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: var(--surface);
+        box-shadow: 0 24px 90px var(--shadow);
+        backdrop-filter: blur(26px);
+        overflow: hidden;
+      }
+
+      .ai-corner.collapsed {
+        width: auto;
+        border-radius: 24px;
+      }
+
+      .ai-corner-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .ai-corner-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        font-weight: 750;
+      }
+
+      .ai-corner-title span:last-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ai-corner-body {
+        display: grid;
+        gap: 12px;
+        padding: 0 14px 14px;
+      }
+
+      .ai-corner.collapsed .ai-corner-body,
+      .ai-corner.collapsed .ai-corner-title span:last-child {
+        display: none;
+      }
+
+      .ai-message {
+        padding: 12px;
+        border: 1px solid rgba(37, 99, 255, 0.18);
+        border-radius: 18px;
+        background: rgba(37, 99, 255, 0.08);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .ai-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .mini-action {
+        min-height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        color: var(--text);
+        background: var(--surface-strong);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .field,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        outline: 0;
+        color: var(--text);
+        background: var(--surface-strong);
+        padding: 14px 15px;
+      }
+
+      textarea {
+        min-height: 112px;
+        resize: vertical;
+      }
+
+      .primary-action {
+        min-height: 50px;
+        border: 0;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        font-weight: 800;
+        box-shadow: 0 16px 40px rgba(37, 99, 255, 0.26);
+      }
+
+      .account-button {
+        min-height: 42px;
+        border: 0;
+        border-radius: 16px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        padding: 0 14px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .knowledge-map {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .map-node {
+        min-height: 88px;
+        display: grid;
+        place-items: center;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        background: var(--surface-strong);
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          color 180ms ease;
+      }
+
+      .map-node:hover {
+        transform: translateY(-3px);
+        color: var(--text);
+        border-color: rgba(37, 99, 255, 0.35);
+      }
+
+      .map-node.hot {
+        color: #fff;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        border-color: transparent;
+      }
+
+      .terms-footer {
+        margin-top: 36px;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--surface);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .terms-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .terms-links button {
+        border: 0;
+        color: var(--text);
+        background: transparent;
+        font-weight: 700;
+        padding: 0;
+      }
+
+      .concept-frame {
+        display: grid;
+        gap: 14px;
+      }
+
+      .concept-image {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        box-shadow: 0 30px 100px var(--shadow);
+      }
+
+      .hero-concept {
+        width: min(920px, 100%);
+        margin: 26px auto 0;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        overflow: hidden;
+        background: var(--surface);
+        box-shadow: 0 26px 90px var(--shadow);
+      }
+
+      .hero-concept img {
+        display: block;
+        width: 100%;
+      }
+
+      .future-stage {
+        min-height: calc(100vh - 130px);
+        display: grid;
+        grid-template-columns: 250px minmax(0, 1fr) 310px;
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .future-panel {
+        border: 1px solid rgba(0, 212, 255, 0.14);
+        border-radius: 28px;
+        background:
+          linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(9, 10, 15, 0.74)),
+          rgba(18, 20, 30, 0.76);
+        box-shadow: 0 26px 90px rgba(0, 0, 0, 0.36);
+        backdrop-filter: blur(26px);
+      }
+
+      .future-brand {
+        display: grid;
+        align-content: start;
+        gap: 22px;
+        padding: 26px;
+      }
+
+      .future-brand-logo {
+        width: 138px;
+        height: 138px;
+        border-radius: 42px;
+        object-fit: cover;
+        box-shadow: 0 0 70px rgba(0, 212, 255, 0.36);
+      }
+
+      .future-brand h1 {
+        margin: 0;
+        font-size: 34px;
+        line-height: 0.95;
+        color: #f9fafb;
+        text-transform: uppercase;
+      }
+
+      .future-brand small {
+        color: #a7b5d9;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+
+      .future-steps {
+        display: grid;
+        gap: 15px;
+      }
+
+      .future-step {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 12px;
+        align-items: start;
+        color: #dbeafe;
+      }
+
+      .future-step span {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(0, 212, 255, 0.28);
+        border-radius: 15px;
+        color: var(--cyan);
+        background: rgba(37, 99, 255, 0.12);
+      }
+
+      .future-step strong {
+        display: block;
+        color: #ffffff;
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      .future-step p {
+        margin: 3px 0 0;
+        color: #9ca3af;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .future-main {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: 14px;
+      }
+
+      .future-head {
+        padding: 18px 20px;
+      }
+
+      .future-head h2 {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(28px, 4vw, 48px);
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .future-head p {
+        max-width: 760px;
+        margin: 10px 0 0;
+        color: #c7d2fe;
+        line-height: 1.45;
+      }
+
+      .future-metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .future-metric {
+        padding: 13px;
+        border: 1px solid rgba(0, 212, 255, 0.12);
+        border-radius: 18px;
+        color: #dbeafe;
+        background: rgba(37, 99, 255, 0.08);
+      }
+
+      .future-metric strong {
+        display: block;
+        color: #60a5fa;
+        font-size: 20px;
+      }
+
+      .future-app {
+        padding: 14px;
+      }
+
+      .app-window {
+        min-height: 440px;
+        display: grid;
+        grid-template-columns: 160px minmax(0, 1fr) 210px;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        background: rgba(4, 7, 18, 0.82);
+      }
+
+      .app-side,
+      .app-feed,
+      .app-context {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        background: rgba(15, 23, 42, 0.62);
+        padding: 12px;
+      }
+
+      .app-side {
+        display: grid;
+        align-content: start;
+        gap: 8px;
+      }
+
+      .app-side button {
+        min-height: 34px;
+        border: 0;
+        border-radius: 12px;
+        color: #c7d2fe;
+        background: transparent;
+        text-align: left;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      .app-side button:first-of-type {
+        color: #fff;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+      }
+
+      .app-feed {
+        display: grid;
+        align-content: start;
+        gap: 12px;
+      }
+
+      .app-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid rgba(0, 212, 255, 0.16);
+        border-radius: 18px;
+        color: #93c5fd;
+        background: rgba(2, 6, 23, 0.78);
+      }
+
+      .app-search input {
+        font-size: 14px;
+        color: #fff;
+      }
+
+      .mini-question {
+        padding: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        color: #dbeafe;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .mini-question strong {
+        display: block;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+
+      .mini-question span {
+        color: #8ea4d2;
+        font-size: 12px;
+      }
+
+      .app-context {
+        display: grid;
+        gap: 12px;
+      }
+
+      .mini-map {
+        min-height: 145px;
+        position: relative;
+        border: 1px solid rgba(0, 212, 255, 0.12);
+        border-radius: 18px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.26), transparent 12%),
+          radial-gradient(circle at 25% 35%, rgba(124, 58, 237, 0.28), transparent 10%),
+          radial-gradient(circle at 75% 70%, rgba(37, 99, 255, 0.28), transparent 10%),
+          rgba(2, 6, 23, 0.76);
+      }
+
+      .mini-map::before,
+      .mini-map::after {
+        content: "";
+        position: absolute;
+        inset: 28px;
+        border: 1px solid rgba(0, 212, 255, 0.18);
+        border-radius: 50%;
+      }
+
+      .app-context .summary {
+        background: rgba(37, 99, 255, 0.1);
+      }
+
+      .future-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 14px;
+      }
+
+      .future-plans,
+      .future-sponsors {
+        padding: 16px;
+      }
+
+      .plan-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .plan-mini {
+        padding: 13px;
+        border: 1px solid rgba(0, 212, 255, 0.12);
+        border-radius: 18px;
+        color: #dbeafe;
+        background: rgba(15, 23, 42, 0.64);
+      }
+
+      .plan-mini strong {
+        display: block;
+        color: #fff;
+      }
+
+      .sponsor-flow {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        color: #c7d2fe;
+        font-size: 12px;
+      }
+
+      .sponsor-flow span {
+        padding: 12px;
+        border: 1px solid rgba(0, 212, 255, 0.12);
+        border-radius: 16px;
+        background: rgba(15, 23, 42, 0.64);
+      }
+
+      .future-right {
+        display: grid;
+        gap: 14px;
+      }
+
+      .eliana-card,
+      .smart-communities,
+      .live-map-card {
+        padding: 18px;
+      }
+
+      .eliana-card h3,
+      .smart-communities h3,
+      .live-map-card h3,
+      .future-plans h3,
+      .future-sponsors h3 {
+        margin: 0 0 12px;
+        color: #7dd3fc;
+        text-transform: uppercase;
+        font-size: 15px;
+      }
+
+      .eliana-id {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        border: 1px solid rgba(0, 212, 255, 0.14);
+        border-radius: 20px;
+        background: rgba(2, 6, 23, 0.62);
+      }
+
+      .eliana-id img {
+        width: 70px;
+        height: 70px;
+        border-radius: 22px;
+      }
+
+      .check-list {
+        display: grid;
+        gap: 7px;
+        margin-top: 12px;
+        color: #dbeafe;
+        font-size: 12px;
+      }
+
+      .community-grid-mini {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+
+      .community-mini {
+        min-height: 70px;
+        padding: 11px;
+        border: 1px solid rgba(0, 212, 255, 0.12);
+        border-radius: 16px;
+        color: #dbeafe;
+        background: rgba(15, 23, 42, 0.64);
+        font-size: 12px;
+      }
+
+      .community-mini strong {
+        display: block;
+        color: #fff;
+      }
+
+      .fullscreen-note {
+        display: none;
+      }
+
+      .ad-bar,
+      .ad-bar.hidden {
+        display: none;
+      }
+
+      @keyframes pulse {
+        70% {
+          box-shadow: 0 0 0 14px rgba(0, 212, 255, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(0, 212, 255, 0);
+        }
+      }
+
+      @keyframes tickerMove {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      @media (max-width: 960px) {
+        .brand {
+          min-width: auto;
+        }
+
+        nav {
+          display: none;
+        }
+
+        .wall,
+        .category-grid,
+        .profile-grid,
+        .launch-board,
+        .knowledge-map,
+        .question-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .bottom-nav {
+          position: fixed;
+          left: 14px;
+          right: 14px;
+          bottom: 14px;
+          z-index: 20;
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 6px;
+          width: auto;
+          padding: 8px;
+          border: 1px solid var(--border);
+          border-radius: 24px;
+          background: var(--surface);
+          box-shadow: 0 18px 70px var(--shadow);
+          backdrop-filter: blur(24px);
+          transform: none;
+        }
+
+        .bottom-nav .nav-button {
+          padding: 11px 6px;
+          font-size: 12px;
+        }
+
+        .ai-corner {
+          right: 12px;
+          bottom: 150px;
+        }
+
+        .future-stage {
+          grid-template-columns: 1fr;
+        }
+
+        .app-window,
+        .future-bottom,
+        .future-metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .future-right {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 24px, 1220px);
+          padding-top: 12px;
+        }
+
+        header {
+          top: 10px;
+          border-radius: 20px;
+        }
+
+        .actions .icon-button:first-child {
+          display: none;
+        }
+
+        main {
+          padding-top: 38px;
+        }
+
+        .hero {
+          min-height: 48vh;
+        }
+
+        .composer {
+          border-radius: 24px;
+          padding: 14px;
+        }
+
+        .send-button {
+          width: 46px;
+          height: 46px;
+          border-radius: 16px;
+        }
+
+        .suggestion {
+          display: grid;
+        }
+
+        .global-chip {
+          display: none;
+        }
+
+        .ticker-item {
+          min-height: 38px;
+          padding: 0 18px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sponsor-ticker" aria-label="Publicidad obligatoria patrocinada">
+      <div class="ticker-track" id="tickerTrack">
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>AI Academy</strong> Aprende inteligencia artificial con rutas guiadas por preguntas.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Code Mentor</strong> Resuelve errores de programacion con ELIANA y expertos.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Business Lab</strong> Convierte preguntas de negocio en planes y decisiones.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Language Boost</strong> Practica ingles traduciendo preguntas reales.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Zafiro</strong> Sponsors limpios aprobados por IA y cobrados por Stripe.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>AI Academy</strong> Aprende inteligencia artificial con rutas guiadas por preguntas.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Code Mentor</strong> Resuelve errores de programacion con ELIANA y expertos.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Business Lab</strong> Convierte preguntas de negocio en planes y decisiones.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Language Boost</strong> Practica ingles traduciendo preguntas reales.</span>
+        <span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>Zafiro</strong> Sponsors limpios aprobados por IA y cobrados por Stripe.</span>
+      </div>
+    </aside>
+
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <img class="mark" src="assets/ai-logo.svg" alt="" />
+          <span>Zafiro by MSM</span>
+          <span class="global-chip">Global knowledge network</span>
+        </div>
+
+        <nav aria-label="Principal">
+          <button class="nav-button active" data-view-target="home">Home</button>
+          <button class="nav-button" data-view-target="explore">Explore</button>
+          <button class="nav-button" data-view-target="communities">Communities</button>
+          <button class="nav-button" data-view-target="ai">AI</button>
+          <button class="nav-button" data-view-target="membership">Plans</button>
+          <button class="nav-button" data-view-target="sponsor">Sponsor</button>
+          <button class="nav-button" data-view-target="profile">Profile</button>
+        </nav>
+
+        <div class="actions">
+          <button class="icon-button" data-view-target="question" aria-label="Buscar">⌕</button>
+          <button class="icon-button" id="themeToggle" aria-label="Cambiar tema">◐</button>
+          <button class="account-button" data-view-target="auth">Create account</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="view active" id="home">
+          <section class="future-stage" aria-label="Pantalla completa Zafiro">
+            <aside class="future-panel future-brand">
+              <img class="future-brand-logo" src="assets/ai-logo.svg" alt="Logo de Zafiro" />
+              <div>
+                <h1>MSM<br />Zafiro</h1>
+                <small>La red social del conocimiento + IA</small>
+              </div>
+              <div class="future-steps">
+                <div class="future-step"><span>?</span><div><strong>Pregunta</strong><p>Haz cualquier pregunta.</p></div></div>
+                <div class="future-step"><span>AI</span><div><strong>IA responde</strong><p>ELIANA crea la primera respuesta.</p></div></div>
+                <div class="future-step"><span>∞</span><div><strong>Comunidad</strong><p>Las personas agregan y mejoran.</p></div></div>
+                <div class="future-step"><span>✓</span><div><strong>Expertos validan</strong><p>La mejor respuesta gana confianza.</p></div></div>
+                <div class="future-step"><span>↗</span><div><strong>Conocimiento vivo</strong><p>La IA resume y organiza todo.</p></div></div>
+              </div>
+            </aside>
+
+            <section class="future-main">
+              <div class="future-panel future-head">
+                <h2>La red social del conocimiento + IA</h2>
+                <p>La primera plataforma donde las preguntas construyen el futuro. Una red social mundial para aprender, enseñar y crear conocimiento junto a Inteligencia Artificial y expertos.</p>
+                <div class="future-metrics">
+                  <div class="future-metric"><strong>∞</strong><span>Conocimiento sin limites</span></div>
+                  <div class="future-metric"><strong>+10M</strong><span>Usuarios</span></div>
+                  <div class="future-metric"><strong>+50M</strong><span>Preguntas</span></div>
+                  <div class="future-metric"><strong>+100M</strong><span>Respuestas</span></div>
+                </div>
+              </div>
+
+              <div class="future-panel future-app">
+                <div class="app-window">
+                  <aside class="app-side">
+                    <img class="mark" src="assets/ai-logo.svg" alt="" />
+                    <button>+ Preguntar</button>
+                    <button>Inicio</button>
+                    <button>Explorar</button>
+                    <button>Comunidades</button>
+                    <button>Mapa del conocimiento</button>
+                    <button>Expertos</button>
+                    <button>Sponsors</button>
+                  </aside>
+                  <main class="app-feed">
+                    <div style="text-align:center;">
+                      <h3 style="margin: 0; color: #fff;">Que quieres saber hoy?</h3>
+                      <p class="answer">Cada pregunta construye el futuro</p>
+                    </div>
+                    <div class="app-search">
+                      <span class="ai-orb" aria-hidden="true"></span>
+                      <input id="stageAskInput" placeholder="Escribe tu pregunta aqui..." />
+                      <button class="send-button" id="stageAskButton" aria-label="Enviar">→</button>
+                    </div>
+                    <div class="mini-question"><strong>Como empezar a invertir con poco dinero?</strong><span>IA + comunidad · respondida por expertos</span></div>
+                    <div class="mini-question"><strong>Cual es el mejor lenguaje para iniciar en 2026?</strong><span>94 votos · 32 respuestas · Programacion</span></div>
+                    <div class="mini-question"><strong>Como mejorar mi concentracion cada dia?</strong><span>71 votos · resumen IA disponible</span></div>
+                  </main>
+                  <aside class="app-context">
+                    <div class="eliana-id">
+                      <img src="assets/ai-logo.svg" alt="" />
+                      <div><strong style="color:#fff;">ELIANA</strong><p class="answer">Asistente Virtual</p></div>
+                    </div>
+                    <div class="mini-map"></div>
+                    <div class="summary"><strong>Resumen IA</strong><p class="answer">La respuesta mejora con aportes humanos, validacion experta y fuentes.</p></div>
+                  </aside>
+                </div>
+              </div>
+
+              <div class="future-bottom">
+                <div class="future-panel future-plans">
+                  <h3>Planes y membresias</h3>
+                  <div class="plan-row">
+                    <div class="plan-mini"><strong>Free</strong><span>$0 / mes</span></div>
+                    <div class="plan-mini"><strong>Plus</strong><span>$9.99 / mes</span></div>
+                    <div class="plan-mini"><strong>Pro</strong><span>$19.99 / mes</span></div>
+                  </div>
+                </div>
+                <div class="future-panel future-sponsors">
+                  <h3>Patrocinadores / publicidad inteligente</h3>
+                  <div class="sponsor-flow">
+                    <span>1. Sponsor crea anuncio</span>
+                    <span>2. IA analiza y aprueba</span>
+                    <span>3. Stripe cobra</span>
+                    <span>4. Webhook activa</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <aside class="future-right">
+              <div class="future-panel eliana-card">
+                <h3>Asistente virtual ELIANA</h3>
+                <div class="eliana-id">
+                  <img src="assets/ai-logo.svg" alt="" />
+                  <div><strong style="color:#fff;">ELIANA</strong><p class="answer">Tu copiloto inteligente</p></div>
+                </div>
+                <div class="check-list">
+                  <span>✓ Responde tus preguntas</span>
+                  <span>✓ Resume informacion</span>
+                  <span>✓ Traduce idiomas</span>
+                  <span>✓ Detecta duplicados</span>
+                  <span>✓ Recomienda expertos</span>
+                  <span>✓ Crea mapas y guias</span>
+                </div>
+              </div>
+              <div class="future-panel smart-communities">
+                <h3>Comunidades inteligentes</h3>
+                <div class="community-grid-mini">
+                  <div class="community-mini"><strong>Programacion</strong>+128K miembros</div>
+                  <div class="community-mini"><strong>Inteligencia Artificial</strong>+96K miembros</div>
+                  <div class="community-mini"><strong>Negocios</strong>+87K miembros</div>
+                  <div class="community-mini"><strong>Salud</strong>+75K miembros</div>
+                  <div class="community-mini"><strong>Biblia</strong>+65K miembros</div>
+                  <div class="community-mini"><strong>Crear comunidad</strong>+</div>
+                </div>
+              </div>
+              <div class="future-panel live-map-card">
+                <h3>Mapa vivo del conocimiento</h3>
+                <div class="mini-map" style="min-height: 240px;"></div>
+              </div>
+            </aside>
+          </section>
+
+          <div class="hero">
+            <div class="hero-inner">
+              <div class="eyebrow">
+                <span class="ai-orb" aria-hidden="true"></span>
+                <span>AI + humanity, building living knowledge</span>
+              </div>
+              <h1>What do you want to <span class="gradient-text">know?</span></h1>
+              <div class="composer">
+                <div class="input-row">
+                  <span class="ai-orb" aria-hidden="true"></span>
+                  <input id="askInput" aria-label="Pregunta" placeholder="Ask anything..." />
+                  <button class="send-button" id="askButton" aria-label="Enviar pregunta">→</button>
+                </div>
+                <div class="ai-panel" id="aiPanel">
+                  <div class="ai-status">
+                    <span class="thinking-dot"></span>
+                    <span id="aiStatus">AI is understanding your intent...</span>
+                  </div>
+                  <div class="suggestions" id="suggestions"></div>
+                </div>
+              </div>
+              <p class="subtitle">Ask anything. Learn together. Keep knowledge alive.</p>
+            </div>
+          </div>
+
+          <div class="categories" aria-label="Categorias">
+            <span class="pill blue">Tecnologia</span>
+            <span class="pill violet">Ciencia</span>
+            <span class="pill green">Negocios</span>
+            <span class="pill">Salud</span>
+            <span class="pill">Historia</span>
+            <span class="pill violet">Biblia</span>
+            <span class="pill blue">Programacion</span>
+            <span class="pill">Inventos</span>
+            <span class="pill violet">Espacio</span>
+            <span class="pill blue">IA</span>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2>Live knowledge wall</h2>
+              <p>Public questions from the world, summarized by AI and improved by people in real time.</p>
+            </div>
+          </div>
+
+          <section class="wall" id="knowledgeWall" aria-label="Muro vivo de conocimiento">
+            <article class="card">
+              <div class="meta">
+                <span>AI · Ciencia</span>
+                <span>Hace 2 min</span>
+              </div>
+              <h2 class="question">Como cambiara la inteligencia artificial la educacion?</h2>
+              <p class="answer">
+                La IA puede personalizar el aprendizaje, detectar dificultades temprano y ayudar a profesores a crear mejores rutas de estudio.
+              </p>
+              <div class="stats">
+                <span>24 respuestas</span>
+                <span>3 expertos</span>
+                <span>ES</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="meta">
+                <span>Espacio · Futuro</span>
+                <span>Hace 8 min</span>
+              </div>
+              <h2 class="question">Que necesita la humanidad para vivir en Marte?</h2>
+              <p class="answer">
+                Energia estable, habitats presurizados, agua reciclada, proteccion contra radiacion y sistemas agricolas cerrados.
+              </p>
+              <div class="stats">
+                <span>41 respuestas</span>
+                <span>5 expertos</span>
+                <span>EN</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="meta">
+                <span>Negocios · Innovacion</span>
+                <span>Hace 13 min</span>
+              </div>
+              <h2 class="question">Como se valida una idea antes de construir una startup?</h2>
+              <p class="answer">
+                Empieza por un problema real, entrevista usuarios, mide intencion de pago y prueba una solucion minima antes de escalar.
+              </p>
+              <div class="stats">
+                <span>18 respuestas</span>
+                <span>2 expertos</span>
+                <span>ES</span>
+              </div>
+            </article>
+          </section>
+        </section>
+
+        <section class="view" id="explore">
+          <div class="section-head">
+            <div>
+              <h2>Explore knowledge by category</h2>
+              <p>Capsules of global curiosity. Each category can become a living community of experts, students and builders.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>Tecnologia</h3><p>AI, software, hardware, cybersecurity and future products.</p></article>
+            <article class="panel category-card"><h3>Ciencia</h3><p>Physics, biology, chemistry, research and experiments.</p></article>
+            <article class="panel category-card"><h3>Salud</h3><p>Medical education, prevention and expert-reviewed knowledge.</p></article>
+            <article class="panel category-card"><h3>Negocios</h3><p>Startups, investing, markets, strategy and operations.</p></article>
+            <article class="panel category-card"><h3>Biblia</h3><p>Questions, context, history, interpretation and learning.</p></article>
+            <article class="panel category-card"><h3>Programacion</h3><p>Code, architecture, debugging, systems and developer tools.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="question">
+          <div class="question-layout">
+            <article class="panel question-main">
+              <div class="meta">
+                <span>Pregunta abierta · IA · Educacion</span>
+                <span>Actualizada ahora</span>
+              </div>
+              <h2 class="question-title" id="activeQuestionTitle">Como puede una IA ayudar a una persona a aprender mas rapido?</h2>
+              <div class="summary">
+                <strong>AI dynamic summary</strong>
+                <p class="answer" id="activeQuestionSummary">
+                  Una IA puede adaptar explicaciones al nivel del usuario, crear ejercicios, detectar errores, traducir conceptos dificiles y convertir cualquier pregunta en una ruta de aprendizaje.
+                </p>
+              </div>
+              <div class="answer-list">
+                <div class="answer-card">
+                  <strong>Respuesta de la comunidad</strong>
+                  <p class="answer" id="activeCommunityAnswer">
+                    La clave es que la IA no solo conteste, sino que pregunte de vuelta, mida comprension y proponga el siguiente paso.
+                  </p>
+                  <span class="expert">Validado por experto en educacion</span>
+                </div>
+                <div class="answer-card">
+                  <strong>Aporte tecnico</strong>
+                  <p class="answer">
+                    El sistema puede usar historial, embeddings, evaluaciones cortas y preferencias para recomendar contenido personalizado.
+                  </p>
+                </div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Respuestas</span><strong>32</strong></div>
+              <div class="metric"><span>Expertos</span><strong>4</strong></div>
+              <div class="metric"><span>Idiomas</span><strong>ES / EN</strong></div>
+              <div class="metric"><span>Popularidad</span><strong>94%</strong></div>
+              <div class="metric"><span>Estado</span><strong>Vivo</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="communities">
+          <div class="section-head">
+            <div>
+              <h2>Knowledge communities</h2>
+              <p>No son grupos para subir fotos o historias. Son espacios donde una comunidad convierte preguntas en conocimiento organizado.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Create a community</h2>
+              <p class="answer">Cada comunidad tiene preguntas, IA propia, expertos, retos, resumen semanal y reputacion interna.</p>
+              <div class="form-grid" style="margin-top: 18px;">
+                <input class="field" id="communityName" placeholder="Nombre de la comunidad" />
+                <select id="communityCategory">
+                  <option>Programacion</option>
+                  <option>IA</option>
+                  <option>Negocios</option>
+                  <option>Salud</option>
+                  <option>Biblia</option>
+                  <option>Inventos</option>
+                  <option>Educacion</option>
+                </select>
+                <textarea id="communityPurpose" placeholder="Que problema resolvera esta comunidad?"></textarea>
+                <button class="primary-action" id="createCommunityButton">Crear comunidad demo</button>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Tipo</span><strong>Conocimiento</strong></div>
+              <div class="metric"><span>Contenido principal</span><strong>Preguntas</strong></div>
+              <div class="metric"><span>IA propia</span><strong>Si</strong></div>
+              <div class="metric"><span>Fotos/historias</span><strong>No</strong></div>
+              <div class="metric"><span>Monetizacion</span><strong>Premium</strong></div>
+            </aside>
+          </div>
+          <div class="wall">
+            <article class="card"><div class="meta"><span>Universidad</span><span>Global</span></div><h2 class="question">AI Research Circle</h2><p class="answer">Researchers and students improving open questions about artificial intelligence.</p></article>
+            <article class="card"><div class="meta"><span>Builders</span><span>Public</span></div><h2 class="question">Inventors Lab</h2><p class="answer">Ideas, prototypes, patents, feedback and collaboration for new inventions.</p></article>
+            <article class="card"><div class="meta"><span>Learning</span><span>ES / EN</span></div><h2 class="question">Programming Academy</h2><p class="answer">Questions, code reviews, explanations and expert roadmaps for developers.</p></article>
+          </div>
+          <div class="section-head">
+            <div>
+              <h2>Community knowledge map</h2>
+              <p>Lo novedoso: en vez de un feed infinito, cada comunidad genera un mapa vivo de temas, preguntas y respuestas canonicas.</p>
+            </div>
+          </div>
+          <div class="knowledge-map">
+            <button class="map-node hot">Pregunta central</button>
+            <button class="map-node">Respuestas IA</button>
+            <button class="map-node">Aportes humanos</button>
+            <button class="map-node">Expertos</button>
+            <button class="map-node">Resumen final</button>
+            <button class="map-node">Retos</button>
+            <button class="map-node">Guias</button>
+            <button class="map-node">Fuentes</button>
+            <button class="map-node">Traducciones</button>
+            <button class="map-node">Top miembros</button>
+          </div>
+        </section>
+
+        <section class="view" id="ai">
+          <div class="section-head">
+            <div>
+              <h2>The AI companion</h2>
+              <p>ELIANA Asistente Virtual representa una pregunta, un ojo inteligente y una orbita de conocimiento vivo.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <div class="panel question-main">
+              <img src="assets/ai-logo.svg" alt="Logo de la IA" style="width: min(260px, 100%); border-radius: 40px;" />
+              <h2>ELIANA, la IA que piensa contigo</h2>
+              <p class="answer">
+                ELIANA responde primero, resume conversaciones, traduce, encuentra preguntas duplicadas y ayuda a organizar el conocimiento sin reemplazar a la comunidad.
+              </p>
+            </div>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Responder</span><strong>Instantaneo</strong></div>
+              <div class="metric"><span>Traducir</span><strong>Global</strong></div>
+              <div class="metric"><span>Resumir</span><strong>Dinamico</strong></div>
+              <div class="metric"><span>Validar</span><strong>Con humanos</strong></div>
+            </aside>
+          </div>
+          <div class="concept-frame">
+            <div class="section-head">
+              <div>
+                <h2>Premium concept render</h2>
+                <p>Direccion visual dark neon para presentar Zafiro a programadores, socios o inversionistas.</p>
+              </div>
+            </div>
+            <img class="concept-image" src="assets/knowledge-future-premium-concept.png" alt="Concepto premium de Zafiro con ELIANA" />
+          </div>
+        </section>
+
+        <section class="view" id="profile">
+          <div class="section-head">
+            <div>
+              <h2>Profile</h2>
+              <p>A public identity built around questions, answers, expertise and reputation.</p>
+            </div>
+          </div>
+          <div class="profile-grid">
+            <article class="panel profile-card">
+              <div class="avatar"></div>
+              <h3>Camilo Knowledge</h3>
+              <p>Curioso, creador y fundador de una nueva red mundial de conocimiento.</p>
+            </article>
+            <article class="panel profile-card"><h3>Reputacion</h3><p>8,420 puntos · Nivel 12 · 9 insignias · 3 especialidades.</p></article>
+            <article class="panel profile-card"><h3>Especialidades</h3><p>IA, tecnologia, negocios, educacion y productos digitales.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="brand">
+          <div class="section-head">
+            <div>
+              <h2>Brand Lab</h2>
+              <p>Nombre, tono y primera impresion de la plataforma. Esta parte define como la gente recuerda el producto.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <div class="meta">
+                <span>Identidad provisional</span>
+                <span>Version 0.1</span>
+              </div>
+              <h2 class="question-title">La red social donde el mundo pregunta, aprende y construye conocimiento.</h2>
+              <div class="summary">
+                <strong>Promesa principal</strong>
+                <p class="answer">
+                  Pregunta cualquier cosa. Recibe una respuesta inicial de IA. Mejorala con personas reales. Conserva conocimiento util para todos.
+                </p>
+              </div>
+              <div class="answer-list">
+                <div class="answer-card">
+                  <strong>Nombres candidatos</strong>
+                  <p class="answer">Nexa, Lumora, Questia, Kneo, Auralis, Mindora, Omnira, Pregunta, Sabia, Knowra.</p>
+                </div>
+                <div class="answer-card">
+                  <strong>Tono de marca</strong>
+                  <p class="answer">Inteligente, simple, global, confiable, curioso, humano y futurista sin sentirse frio.</p>
+                </div>
+                <div class="answer-card">
+                  <strong>Frases cortas</strong>
+                  <p class="answer">Ask anything. Learn together. / Knowledge that evolves. / Where questions become living knowledge.</p>
+                </div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Logo app</span><strong>Futuro</strong></div>
+              <div class="metric"><span>Logo IA</span><strong>Activo</strong></div>
+              <div class="metric"><span>Colores</span><strong>Premium</strong></div>
+              <div class="metric"><span>Idioma inicial</span><strong>ES / EN</strong></div>
+              <div class="metric"><span>Personalidad</span><strong>Curiosa</strong></div>
+            </aside>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2>Login preview</h2>
+              <p>Entrada limpia para que el usuario sienta que accede a una red global de conocimiento.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <div class="composer" style="margin: 0; width: 100%;">
+                <div class="input-row">
+                  <span class="ai-orb" aria-hidden="true"></span>
+                  <input aria-label="Email" placeholder="Email or username" />
+                </div>
+                <div class="answer-list">
+                  <button class="suggestion" type="button"><span>Continue with Google</span><span>G</span></button>
+                  <button class="suggestion" type="button"><span>Continue with Apple</span><span></span></button>
+                  <button class="suggestion" type="button"><span>Continue with GitHub</span><span>GH</span></button>
+                </div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Objetivo</span><strong>Entrar rapido</strong></div>
+              <div class="metric"><span>Friccion</span><strong>Minima</strong></div>
+              <div class="metric"><span>Confianza</span><strong>Alta</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="experts">
+          <div class="section-head">
+            <div>
+              <h2>Experts layer</h2>
+              <p>La diferencia entre otra red social y una red de conocimiento: expertos verificando, corrigiendo y elevando respuestas.</p>
+            </div>
+          </div>
+          <div class="wall">
+            <article class="card">
+              <div class="meta"><span>Medicina</span><span>Verificado</span></div>
+              <h2 class="question">Dra. Elena Vargas</h2>
+              <p class="answer">Valida respuestas de salud, pide fuentes y marca contenido sensible cuando requiere consulta profesional.</p>
+              <div class="stats"><span>12.4k reputacion</span><span>342 validaciones</span><span>ES / EN</span></div>
+            </article>
+            <article class="card">
+              <div class="meta"><span>Software</span><span>Top 1%</span></div>
+              <h2 class="question">Marco Lin</h2>
+              <p class="answer">Revisa arquitectura, codigo, sistemas distribuidos y respuestas tecnicas generadas por IA.</p>
+              <div class="stats"><span>18.9k reputacion</span><span>811 respuestas</span><span>Global</span></div>
+            </article>
+            <article class="card">
+              <div class="meta"><span>Historia</span><span>Investigador</span></div>
+              <h2 class="question">Ana Moreau</h2>
+              <p class="answer">Aporta contexto, fuentes primarias y explica debates historicos con lenguaje claro.</p>
+              <div class="stats"><span>9.8k reputacion</span><span>211 fuentes</span><span>FR / ES / EN</span></div>
+            </article>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Verification flow</h2>
+              <div class="answer-list">
+                <div class="answer-card"><strong>1. Solicitud</strong><p class="answer">El usuario elige especialidad y sube credenciales o conecta perfiles profesionales.</p></div>
+                <div class="answer-card"><strong>2. Revision</strong><p class="answer">Moderadores y expertos existentes revisan evidencia, historial y calidad de aportes.</p></div>
+                <div class="answer-card"><strong>3. Permisos</strong><p class="answer">El experto puede validar solo dentro de sus areas aprobadas.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Confianza</span><strong>Alta</strong></div>
+              <div class="metric"><span>Abuso</span><strong>Auditable</strong></div>
+              <div class="metric"><span>Validacion</span><strong>Por area</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="reputation">
+          <div class="section-head">
+            <div>
+              <h2>Reputation system</h2>
+              <p>La reputacion no premia ruido. Premia respuestas utiles, correcciones aceptadas, fuentes buenas y validaciones reales.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>Curioso</h3><p>Hace buenas preguntas, sigue temas y ayuda a ordenar conocimiento.</p></article>
+            <article class="panel category-card"><h3>Colaborador</h3><p>Responde, comenta, vota con criterio y mejora respuestas existentes.</p></article>
+            <article class="panel category-card"><h3>Especialista</h3><p>Construye reputacion fuerte dentro de una categoria especifica.</p></article>
+            <article class="panel category-card"><h3>Experto</h3><p>Puede validar respuestas despues de verificacion por especialidad.</p></article>
+            <article class="panel category-card"><h3>Mentor</h3><p>Ayuda a nuevos usuarios a aprender y formular mejores preguntas.</p></article>
+            <article class="panel category-card"><h3>Guardian</h3><p>Detecta spam, desinformacion, duplicados y contenido peligroso.</p></article>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Score formula preview</h2>
+              <div class="summary">
+                <strong>Reputacion = utilidad + confianza + consistencia</strong>
+                <p class="answer">Los votos ayudan, pero pesan mas cuando vienen de usuarios confiables, expertos o personas activas en la categoria correcta.</p>
+              </div>
+              <div class="answer-list">
+                <div class="answer-card"><strong>+15</strong><p class="answer">Respuesta marcada como util por la comunidad.</p></div>
+                <div class="answer-card"><strong>+40</strong><p class="answer">Respuesta validada por experto verificado.</p></div>
+                <div class="answer-card"><strong>+25</strong><p class="answer">Correccion aceptada en una respuesta canonica.</p></div>
+                <div class="answer-card"><strong>-80</strong><p class="answer">Spam, plagio, manipulacion de votos o informacion peligrosa.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Nivel</span><strong>12</strong></div>
+              <div class="metric"><span>Insignias</span><strong>9</strong></div>
+              <div class="metric"><span>Ranking IA</span><strong>Top 3%</strong></div>
+              <div class="metric"><span>Confianza</span><strong>98%</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="notifications">
+          <div class="section-head">
+            <div>
+              <h2>Notifications</h2>
+              <p>Las notificaciones deben traer conocimiento importante, no ansiedad. Menos ruido, mas valor.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <div class="answer-list">
+                <div class="answer-card"><strong>Expert validated your answer</strong><p class="answer">Tu respuesta sobre aprendizaje con IA fue validada por un experto en educacion.</p></div>
+                <div class="answer-card"><strong>New answer in a question you follow</strong><p class="answer">Una investigadora agrego contexto nuevo y fuentes.</p></div>
+                <div class="answer-card"><strong>AI updated the summary</strong><p class="answer">El resumen canonico cambio porque la comunidad aporto informacion mejor.</p></div>
+                <div class="answer-card"><strong>Duplicate detected</strong><p class="answer">Tu pregunta parece similar a otra con 43 respuestas utiles.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>In-app</span><strong>Si</strong></div>
+              <div class="metric"><span>Push PWA</span><strong>Si</strong></div>
+              <div class="metric"><span>Email digest</span><strong>Semanal</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="marketplace">
+          <div class="section-head">
+            <div>
+              <h2>Marketplace future</h2>
+              <p>Cuando la comunidad tenga confianza, el conocimiento puede convertirse en servicios, cursos, expertos, APIs y proyectos.</p>
+            </div>
+          </div>
+          <div class="wall">
+            <article class="card"><div class="meta"><span>Expertos</span><span>Premium</span></div><h2 class="question">Book an expert</h2><p class="answer">Contrata sesiones con expertos verificados para resolver problemas complejos.</p><div class="stats"><span>Futuro</span><span>B2C</span></div></article>
+            <article class="card"><div class="meta"><span>Empresas</span><span>B2B</span></div><h2 class="question">Verified company knowledge</h2><p class="answer">Empresas publican respuestas oficiales, documentacion y soporte inteligente.</p><div class="stats"><span>SaaS</span><span>API</span></div></article>
+            <article class="card"><div class="meta"><span>Inventos</span><span>Innovacion</span></div><h2 class="question">Project marketplace</h2><p class="answer">Ideas, prototipos, inversion, colaboradores y soluciones construidas desde preguntas.</p><div class="stats"><span>Futuro</span><span>Global</span></div></article>
+          </div>
+        </section>
+
+        <section class="view" id="moderation">
+          <div class="section-head">
+            <div>
+              <h2>Moderation console</h2>
+              <p>Una plataforma de conocimiento necesita defensa fuerte contra spam, fraude, abuso y mala informacion.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <div class="answer-list">
+                <div class="answer-card"><strong>AI risk flag</strong><p class="answer">Pregunta de salud detectada como sensible. Requiere disclaimer y revision experta.</p></div>
+                <div class="answer-card"><strong>Vote manipulation</strong><p class="answer">Patron anormal de votos desde cuentas nuevas en la misma categoria.</p></div>
+                <div class="answer-card"><strong>Duplicate cluster</strong><p class="answer">12 preguntas similares sobre el mismo tema pueden fusionarse en una respuesta canonica.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Reportes abiertos</span><strong>18</strong></div>
+              <div class="metric"><span>Riesgo alto</span><strong>3</strong></div>
+              <div class="metric"><span>Spam bloqueado</span><strong>94%</strong></div>
+              <div class="metric"><span>Auditoria</span><strong>Activa</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="roadmap">
+          <div class="section-head">
+            <div>
+              <h2>Build roadmap</h2>
+              <p>Orden pragmatico para convertir este prototipo en producto real sin quemar energia en cosas prematuras.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>1. Identidad</h3><p>Nombre final, logo app, logo IA, colores, tipografia y tono.</p></article>
+            <article class="panel category-card"><h3>2. Frontend MVP</h3><p>Home, pregunta, perfil, explore, login y modo oscuro en Next.js.</p></article>
+            <article class="panel category-card"><h3>3. Supabase</h3><p>Auth, perfiles, preguntas, respuestas, votos, comentarios y RLS.</p></article>
+            <article class="panel category-card"><h3>4. OpenAI</h3><p>Respuesta inicial, resumen, traduccion, clasificacion y moderacion.</p></article>
+            <article class="panel category-card"><h3>5. Calidad</h3><p>Reputacion, expertos, reportes, duplicados y busqueda semantica.</p></article>
+            <article class="panel category-card"><h3>6. Plataforma</h3><p>Organizaciones, API, marketplace, cursos, agentes y comunidades.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="launch">
+          <div class="section-head">
+            <div>
+              <h2>Launch OS</h2>
+              <p>Todo lo que falta para que deje de ser maqueta y empiece a funcionar como producto real.</p>
+            </div>
+            <span class="global-chip">Mundial · simple · escalable</span>
+          </div>
+
+          <div class="launch-board">
+            <div class="launch-item"><span>Estado actual</span><strong>Prototipo visual</strong></div>
+            <div class="launch-item"><span>Siguiente salto</span><strong>Next.js app</strong></div>
+            <div class="launch-item"><span>Backend</span><strong>Supabase</strong></div>
+            <div class="launch-item"><span>IA real</span><strong>OpenAI</strong></div>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2>MSM Ecosystem OS</h2>
+              <p>Zafiro no nace sola: vive dentro de un ecosistema con una sola cuenta, una sola identidad y servicios compartidos.</p>
+            </div>
+            <span class="global-chip">One account · Four apps</span>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>Album de la Vida</h3><p>Historia familiar, fotos, videos, arbol genealogico, libros automaticos y legado con IA.</p></article>
+            <article class="panel category-card"><h3>MSM Mente Maestra</h3><p>Metas, habitos, oracion, crecimiento personal, mentorias, comunidad e inteligencia artificial.</p></article>
+            <article class="panel category-card"><h3>Zafiro</h3><p>Preguntas, respuestas IA, comunidad, expertos, reputacion y biblioteca viva de conocimiento mundial.</p></article>
+            <article class="panel category-card"><h3>MSM Marketplace</h3><p>Tiendas, productos, servicios, pagos, wallet, remesas, paneles y futura conexion con Cajeros MSM.</p></article>
+            <article class="panel category-card"><h3>MSM Core</h3><p>Auth unico, perfil global, membresias, Stripe, wallet, notificaciones, permisos, auditoria y Admin OS.</p></article>
+            <article class="panel category-card"><h3>ELIANA AI Core</h3><p>La IA compartida que responde, resume, traduce, modera, analiza sponsors y organiza conocimiento.</p></article>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2>Membership model</h2>
+              <p>Membresia simple, pagos faciles y reglas internas para promociones por pais sin mostrarlo como parte de la marca.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>Regional access</h3><p>Reglas internas por telefono, pais o promocion. Esto no se muestra como marca publica.</p></article>
+            <article class="panel category-card"><h3>Global Free</h3><p>Leer, buscar y hacer pocas preguntas gratis. Sirve para probar el producto sin friccion.</p></article>
+            <article class="panel category-card"><h3>Global Plus</h3><p>Pago mensual bajo por mas IA, traducciones, guardados, historial y resumenes profundos.</p></article>
+            <article class="panel category-card"><h3>Creditos</h3><p>Compra simple para investigaciones largas, codigo, documentos, imagenes y tareas costosas de IA.</p></article>
+            <article class="panel category-card"><h3>Patrocinios</h3><p>Publicidad limpia por categoria: cursos, herramientas, libros, servicios y empresas verificadas.</p></article>
+            <article class="panel category-card"><h3>Empresas</h3><p>Planes para soporte inteligente, base de conocimiento publica y analitica de preguntas.</p></article>
+          </div>
+
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Checklist para funcionar</h2>
+              <div class="answer-list">
+                <div class="answer-card"><strong>1. Crear app real</strong><p class="answer">Pasar esta maqueta a Next.js, React, TypeScript y TailwindCSS con componentes separados.</p></div>
+                <div class="answer-card"><strong>2. Login</strong><p class="answer">Conectar Google, GitHub, Apple y email usando Supabase Auth.</p></div>
+                <div class="answer-card"><strong>3. Base de datos</strong><p class="answer">Crear tablas reales para usuarios, preguntas, respuestas, votos, comentarios, reputacion y reportes.</p></div>
+                <div class="answer-card"><strong>4. IA</strong><p class="answer">Conectar OpenAI para respuesta inicial, resumen, traduccion, clasificacion, moderacion y preguntas similares.</p></div>
+                <div class="answer-card"><strong>5. Seguridad</strong><p class="answer">Activar RLS, rate limits, validacion con Zod, auditoria y filtros contra spam.</p></div>
+                <div class="answer-card"><strong>6. Despliegue</strong><p class="answer">Subir a GitHub, desplegar en Vercel, conectar dominio y proteger con Cloudflare.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>MVP visual</span><strong>Listo</strong></div>
+              <div class="metric"><span>MVP funcional</span><strong>Falta</strong></div>
+              <div class="metric"><span>Login real</span><strong>Falta</strong></div>
+              <div class="metric"><span>IA real</span><strong>Falta</strong></div>
+              <div class="metric"><span>Base de datos</span><strong>Falta</strong></div>
+              <div class="metric"><span>Publicacion</span><strong>Falta</strong></div>
+            </aside>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2>Variables que hay que preparar</h2>
+              <p>Estas son las llaves y servicios que se necesitaran cuando el proyecto pase a app real.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>OPENAI_API_KEY</h3><p>Para generar respuestas, resumenes, traducciones, moderacion y embeddings.</p></article>
+            <article class="panel category-card"><h3>SUPABASE_URL</h3><p>URL del proyecto de Supabase para conectar frontend y backend.</p></article>
+            <article class="panel category-card"><h3>SUPABASE_ANON_KEY</h3><p>Llave publica controlada por RLS para usar desde el navegador.</p></article>
+            <article class="panel category-card"><h3>OAuth providers</h3><p>Google, Apple, Microsoft y GitHub configurados para login seguro.</p></article>
+            <article class="panel category-card"><h3>VERCEL_PROJECT</h3><p>Deploy automatico desde GitHub cada vez que se actualice el codigo.</p></article>
+            <article class="panel category-card"><h3>CLOUDFLARE_DOMAIN</h3><p>DNS, CDN, WAF, proteccion, analytics y dominio global.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="membership">
+          <div class="section-head">
+            <div>
+              <h2>Membership and money engine</h2>
+              <p>Monetizacion sencilla: planes, creditos de IA, comunidades premium, expertos y publicidad limpia por categoria.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card">
+              <h3>Free</h3>
+              <p>Leer, buscar, participar y hacer preguntas con limites. Perfecto para crecimiento viral.</p>
+            </article>
+            <article class="panel category-card">
+              <h3>Plus</h3>
+              <p>Mas preguntas IA, traducciones, guardados, resumenes y comunidades favoritas.</p>
+            </article>
+            <article class="panel category-card">
+              <h3>Pro</h3>
+              <p>Investigacion profunda, codigo, exportar documentos, carpetas privadas y herramientas avanzadas.</p>
+            </article>
+            <article class="panel category-card">
+              <h3>Community Premium</h3>
+              <p>Comunidades privadas o premium. La plataforma cobra comision al creador.</p>
+            </article>
+            <article class="panel category-card">
+              <h3>AI Credits</h3>
+              <p>Recargas para tareas costosas: documentos, imagenes, codigo, analisis largo y traducciones grandes.</p>
+            </article>
+            <article class="panel category-card">
+              <h3>Sponsors</h3>
+              <p>Publicidad clara por categoria: cursos, libros, herramientas, software y empresas verificadas.</p>
+            </article>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Stripe flow</h2>
+              <div class="answer-list">
+                <div class="answer-card"><strong>1. Usuario elige plan</strong><p class="answer">Plus, Pro, creditos o comunidad premium.</p></div>
+                <div class="answer-card"><strong>2. Stripe Checkout</strong><p class="answer">Stripe procesa pago, tarjeta, Apple Pay o Google Pay.</p></div>
+                <div class="answer-card"><strong>3. Webhook</strong><p class="answer">El servidor recibe confirmacion y actualiza el plan en Supabase.</p></div>
+                <div class="answer-card"><strong>4. Limites</strong><p class="answer">La app desbloquea mas IA, mas guardados, comunidades premium y herramientas.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Pagos</span><strong>Stripe</strong></div>
+              <div class="metric"><span>Simple</span><strong>Si</strong></div>
+              <div class="metric"><span>Publicidad</span><strong>Limpia</strong></div>
+              <div class="metric"><span>Comision</span><strong>10%-25%</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="sponsor">
+          <div class="section-head">
+            <div>
+              <h2>Sponsor Studio</h2>
+              <p>Publicidad autoservicio: el sponsor crea una campana, la IA la analiza, aprueba si cumple reglas y luego cobra por Stripe.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Create sponsored knowledge</h2>
+              <p class="answer">Los anuncios no se mezclan como respuestas organicas. Siempre aparecen como patrocinados y relacionados con categorias.</p>
+              <div class="form-grid" style="margin-top: 18px;">
+                <input class="field" id="sponsorBrand" placeholder="Nombre de marca o sponsor" />
+                <select id="sponsorCategory">
+                  <option>IA</option>
+                  <option>Programacion</option>
+                  <option>Negocios</option>
+                  <option>Educacion</option>
+                  <option>Salud</option>
+                  <option>Finanzas</option>
+                </select>
+                <textarea id="sponsorCopy" placeholder="Texto del anuncio. Ejemplo: Aprende IA con clases guiadas por preguntas."></textarea>
+                <select id="sponsorBudget">
+                  <option value="49">Starter - 49 USD</option>
+                  <option value="149">Growth - 149 USD</option>
+                  <option value="499">Scale - 499 USD</option>
+                </select>
+                <button class="primary-action" id="analyzeSponsorButton">Analizar con IA y continuar a Stripe</button>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Revision</span><strong>IA automatica</strong></div>
+              <div class="metric"><span>Pago</span><strong>Stripe</strong></div>
+              <div class="metric"><span>Formato</span><strong>Patrocinado</strong></div>
+              <div class="metric"><span>Molestia</span><strong>Baja</strong></div>
+              <div class="metric"><span>Humano</span><strong>No requerido</strong></div>
+            </aside>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>AI approval result</h2>
+              <div class="summary">
+                <strong id="sponsorStatus">Esperando campana</strong>
+                <p class="answer" id="sponsorResult">La IA revisara claridad, categoria, seguridad, spam, promesas falsas y relevancia antes de habilitar el pago.</p>
+              </div>
+              <div class="answer-list">
+                <div class="answer-card"><strong>1. Analisis</strong><p class="answer">La IA detecta si el anuncio es educativo, relevante y seguro.</p></div>
+                <div class="answer-card"><strong>2. Autorizacion</strong><p class="answer">Si cumple reglas, queda aprobado automaticamente. Si no, pide cambios.</p></div>
+                <div class="answer-card"><strong>3. Stripe</strong><p class="answer">El sponsor paga. El webhook activa la campana y registra presupuesto.</p></div>
+                <div class="answer-card"><strong>4. Distribucion</strong><p class="answer">La publicidad aparece solo en categorias relacionadas y siempre marcada como Sponsored.</p></div>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Starter</span><strong>49 USD</strong></div>
+              <div class="metric"><span>Growth</span><strong>149 USD</strong></div>
+              <div class="metric"><span>Scale</span><strong>499 USD</strong></div>
+              <div class="metric"><span>Comision</span><strong>100% directa</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="terms">
+          <div class="section-head">
+            <div>
+              <h2>Terms, privacy and AI safety</h2>
+              <p>La app puede operar sola con IA, pero legalmente necesita reglas claras desde el primer dia.</p>
+            </div>
+          </div>
+          <div class="category-grid">
+            <article class="panel category-card"><h3>Terms of use</h3><p>Reglas de cuenta, contenido, pagos, cancelacion y uso aceptable.</p></article>
+            <article class="panel category-card"><h3>Privacy policy</h3><p>Datos usados, telefono, pagos, cookies, analitica y eliminacion de cuenta.</p></article>
+            <article class="panel category-card"><h3>AI disclaimer</h3><p>La IA puede equivocarse. No reemplaza medico, abogado, contador o profesional financiero.</p></article>
+            <article class="panel category-card"><h3>Community rules</h3><p>No spam, no abuso, no fraude, no contenido peligroso, no manipulacion de votos.</p></article>
+            <article class="panel category-card"><h3>Payment terms</h3><p>Stripe, suscripciones, creditos, reembolsos, renovaciones y cancelaciones.</p></article>
+            <article class="panel category-card"><h3>Moderation</h3><p>La plataforma puede ocultar, limitar o remover contenido que rompa reglas.</p></article>
+          </div>
+        </section>
+
+        <section class="view" id="auth">
+          <div class="section-head">
+            <div>
+              <h2>Create your account</h2>
+              <p>Entrada simple: email, telefono o login social. En la app real esto se conecta con Supabase Auth.</p>
+            </div>
+          </div>
+          <div class="question-layout">
+            <article class="panel question-main">
+              <h2>Join Zafiro</h2>
+              <p class="answer">Crea una identidad de conocimiento: preguntas, respuestas, comunidades, reputacion y plan.</p>
+              <div class="form-grid" style="margin-top: 18px;">
+                <input class="field" id="signupName" placeholder="Nombre completo" />
+                <input class="field" id="signupEmail" placeholder="Email" />
+                <input class="field" id="signupPhone" placeholder="Telefono opcional" />
+                <select id="signupGoal">
+                  <option>Quiero aprender</option>
+                  <option>Quiero crear comunidad</option>
+                  <option>Quiero responder como experto</option>
+                  <option>Quiero patrocinar una categoria</option>
+                </select>
+                <button class="primary-action" id="createAccountButton">Crear cuenta demo</button>
+                <button class="suggestion" type="button"><span>Continue with Google</span><span>G</span></button>
+                <button class="suggestion" type="button"><span>Continue with GitHub</span><span>GH</span></button>
+                <button class="suggestion" type="button"><span>Continue with Apple</span><span></span></button>
+              </div>
+            </article>
+            <aside class="panel side-panel">
+              <div class="metric"><span>Auth real</span><strong>Supabase</strong></div>
+              <div class="metric"><span>Pagos</span><strong>Stripe</strong></div>
+              <div class="metric"><span>Perfil</span><strong>Automatico</strong></div>
+              <div class="metric"><span>Plan inicial</span><strong>Free</strong></div>
+              <div class="metric"><span>IA</span><strong>ELIANA</strong></div>
+            </aside>
+          </div>
+          <div class="summary">
+            <strong id="signupStatus">Cuenta no creada</strong>
+            <p class="answer" id="signupResult">Cuando el usuario se registra, se crea perfil, plan inicial, preferencias de idioma y acceso al asistente ELIANA.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="terms-footer">
+        <strong>Zafiro</strong> es una red mundial de conocimiento basada en preguntas. No es consejo medico, legal o financiero. La IA ayuda, pero puede equivocarse.
+        <div class="terms-links">
+          <button data-view-target="terms">Terms</button>
+          <button data-view-target="terms">Privacy</button>
+          <button data-view-target="terms">AI Safety</button>
+          <button data-view-target="membership">Plans</button>
+        </div>
+      </footer>
+    </div>
+
+    <aside class="ai-corner" id="aiCorner" aria-label="Asistente IA">
+      <div class="ai-corner-head">
+        <div class="ai-corner-title">
+          <span class="ai-orb" aria-hidden="true"></span>
+          <span>ELIANA · Asistente Virtual</span>
+        </div>
+        <button class="icon-button" id="aiCornerToggle" aria-label="Minimizar IA">−</button>
+      </div>
+      <div class="ai-corner-body">
+        <div class="ai-message" id="cornerMessage">
+          Hola, soy ELIANA. Estoy lista para guiar el MVP: preguntas, comunidades, sponsors, Supabase, OpenAI, Stripe y lanzamiento.
+        </div>
+        <div class="ai-actions">
+          <button class="mini-action" data-view-target="launch">Ver faltante</button>
+          <button class="mini-action" data-view-target="brand">Nombre</button>
+          <button class="mini-action" data-view-target="question">Pregunta</button>
+          <button class="mini-action" data-view-target="roadmap">Plan</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="bottom-nav" aria-label="Navegacion principal">
+      <button class="nav-button active" data-view-target="home">Home</button>
+      <button class="nav-button" data-view-target="explore">Explore</button>
+      <button class="nav-button" data-view-target="question">Ask</button>
+      <button class="nav-button" data-view-target="communities">Communities</button>
+      <button class="nav-button" data-view-target="ai">AI</button>
+      <button class="nav-button" data-view-target="membership">Plans</button>
+      <button class="nav-button" data-view-target="sponsor">Sponsor</button>
+    </div>
+
+    <script>
+      const root = document.documentElement;
+      const navButtons = document.querySelectorAll("[data-view-target]");
+      const views = document.querySelectorAll(".view");
+      const askInput = document.querySelector("#askInput");
+      const stageAskInput = document.querySelector("#stageAskInput");
+      const stageAskButton = document.querySelector("#stageAskButton");
+      const aiPanel = document.querySelector("#aiPanel");
+      const aiStatus = document.querySelector("#aiStatus");
+      const suggestions = document.querySelector("#suggestions");
+      const askButton = document.querySelector("#askButton");
+      const themeToggle = document.querySelector("#themeToggle");
+      const aiCorner = document.querySelector("#aiCorner");
+      const aiCornerToggle = document.querySelector("#aiCornerToggle");
+      const cornerMessage = document.querySelector("#cornerMessage");
+      const knowledgeWall = document.querySelector("#knowledgeWall");
+      const activeQuestionTitle = document.querySelector("#activeQuestionTitle");
+      const activeQuestionSummary = document.querySelector("#activeQuestionSummary");
+      const activeCommunityAnswer = document.querySelector("#activeCommunityAnswer");
+      const createCommunityButton = document.querySelector("#createCommunityButton");
+      const communityName = document.querySelector("#communityName");
+      const communityCategory = document.querySelector("#communityCategory");
+      const communityPurpose = document.querySelector("#communityPurpose");
+      const tickerTrack = document.querySelector("#tickerTrack");
+      const sponsorBrand = document.querySelector("#sponsorBrand");
+      const sponsorCategory = document.querySelector("#sponsorCategory");
+      const sponsorCopy = document.querySelector("#sponsorCopy");
+      const sponsorBudget = document.querySelector("#sponsorBudget");
+      const analyzeSponsorButton = document.querySelector("#analyzeSponsorButton");
+      const sponsorStatus = document.querySelector("#sponsorStatus");
+      const sponsorResult = document.querySelector("#sponsorResult");
+      const signupName = document.querySelector("#signupName");
+      const signupEmail = document.querySelector("#signupEmail");
+      const signupPhone = document.querySelector("#signupPhone");
+      const signupGoal = document.querySelector("#signupGoal");
+      const createAccountButton = document.querySelector("#createAccountButton");
+      const signupStatus = document.querySelector("#signupStatus");
+      const signupResult = document.querySelector("#signupResult");
+
+      const cornerMessages = {
+        home: "Este es el corazon: una gran pregunta, IA primero y conocimiento vivo debajo.",
+        explore: "Explore organiza la curiosidad mundial por categorias para que el conocimiento no se pierda.",
+        question: "Aqui vive la conversacion entre IA, comunidad y expertos. Esta pantalla sera la mas importante del producto.",
+        communities: "Las comunidades permiten universidades, empresas y grupos de investigacion sin convertir esto en otra red social comun.",
+        ai: "La IA debe ser companera: responde, resume, traduce, compara y detecta duplicados.",
+        brand: "La marca necesita nombre corto, global y memorable. Nexa, Lumora, Questia, Knowra y Omnira son buenas rutas.",
+        experts: "Los expertos son la capa de confianza. Sin ellos, la app seria solo preguntas y respuestas.",
+        reputation: "La reputacion premia utilidad y confianza, no ruido. Este sistema protege la calidad.",
+        notifications: "Las alertas deben traer conocimiento importante, no distraccion.",
+        marketplace: "El marketplace viene despues del nucleo: expertos, empresas, cursos, API y proyectos.",
+        moderation: "Moderacion y seguridad tienen que existir temprano para evitar spam, abuso y desinformacion.",
+        roadmap: "Este es el orden sano: identidad, Next.js, Supabase, OpenAI, calidad y plataforma.",
+        launch: "Aqui esta lo que falta para funcionar: app real, login, base de datos, IA, seguridad y deploy.",
+        membership: "Aqui vive el dinero: membresias, creditos, comunidades premium, expertos y patrocinios limpios.",
+        sponsor: "Los sponsors se crean solos: IA revisa, autoriza, Stripe cobra y la campana se publica sin operador humano.",
+        terms: "Aunque la IA opere sola, la app necesita reglas claras: privacidad, pagos, seguridad y disclaimers.",
+        auth: "Crear cuenta debe ser facil: email, telefono o login social. Supabase crea el perfil y Stripe maneja planes.",
+        profile: "El perfil debe mostrar reputacion, especialidades, preguntas, respuestas e insignias."
+      };
+
+      const relatedQuestions = [
+        "Como cambiara la IA la educacion en los proximos 10 anos?",
+        "Cuales son las mejores formas de aprender con inteligencia artificial?",
+        "Puede una IA reemplazar a un profesor o solo ayudarlo?",
+      ];
+
+      const sponsoredMessages = [
+        "<strong>AI Academy</strong> · Aprende inteligencia artificial con una ruta guiada por preguntas.",
+        "<strong>Code Mentor</strong> · Resuelve errores de programacion con IA y expertos verificados.",
+        "<strong>Business Lab</strong> · Convierte preguntas de negocio en planes, modelos y decisiones.",
+        "<strong>Language Boost</strong> · Traduce, aprende y practica ingles dentro de tus preguntas."
+      ];
+
+      const demoAnswers = [
+        "La respuesta corta es que esta pregunta puede convertirse en conocimiento util si se organiza bien: primero una explicacion clara, luego aportes de la comunidad y finalmente validacion por personas con experiencia.",
+        "La IA puede dar un primer mapa del tema, pero el valor real aparece cuando usuarios y expertos corrigen, agregan ejemplos y mantienen la respuesta actualizada.",
+        "Para resolverlo bien hay que separar el problema en partes: contexto, causas, opciones, riesgos y pasos siguientes. Asi la respuesta no se queda en una opinion suelta.",
+      ];
+
+      function createDemoAnswer(question) {
+        const lower = question.toLowerCase();
+        if (lower.includes("dinero") || lower.includes("negocio") || lower.includes("pago")) {
+          return "Una forma simple de generar dinero es combinar membresia, creditos de IA y patrocinios limpios por categoria. Lo importante es cobrar por valor real: resolver mas rapido, investigar mejor y ahorrar tiempo.";
+        }
+        if (lower.includes("cuba") || lower.includes("telefono")) {
+          return "La regla por pais puede vivir internamente: el usuario verifica su telefono, el sistema asigna beneficios y la marca publica sigue siendo global, limpia y neutral.";
+        }
+        if (lower.includes("ia") || lower.includes("inteligencia")) {
+          return "La IA debe responder primero, detectar preguntas parecidas, resumir la conversacion y traducir. La comunidad y los expertos mantienen la respuesta confiable.";
+        }
+        return demoAnswers[Math.floor(Math.random() * demoAnswers.length)];
+      }
+
+      function escapeHtml(value) {
+        return value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function saveLastQuestion(question, summary) {
+        localStorage.setItem("lastQuestion", JSON.stringify({
+          question,
+          summary,
+          createdAt: new Date().toISOString()
+        }));
+      }
+
+      function renderQuestion(question, summary) {
+        activeQuestionTitle.textContent = question;
+        activeQuestionSummary.textContent = summary;
+        activeCommunityAnswer.textContent = "Primer aporte sugerido: agrega contexto, ejemplos o fuentes para que esta respuesta sea mas util para otras personas.";
+      }
+
+      function addQuestionToWall(question, summary) {
+        const card = document.createElement("article");
+        card.className = "card";
+        const safeQuestion = escapeHtml(question);
+        const safeSummary = escapeHtml(summary);
+        card.innerHTML = `
+          <div class="meta">
+            <span>Nuevo · IA</span>
+            <span>Ahora</span>
+          </div>
+          <h2 class="question">${safeQuestion}</h2>
+          <p class="answer">${safeSummary}</p>
+          <div class="stats">
+            <span>1 respuesta IA</span>
+            <span>0 expertos</span>
+            <span>Auto</span>
+          </div>
+        `;
+        knowledgeWall.prepend(card);
+      }
+
+      function createCommunityDemo() {
+        const name = communityName.value.trim() || "Nueva comunidad de conocimiento";
+        const category = communityCategory.value;
+        const purpose = communityPurpose.value.trim() || "Resolver preguntas importantes con IA, comunidad y expertos.";
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="meta">
+            <span>${escapeHtml(category)}</span>
+            <span>Creada ahora</span>
+          </div>
+          <h2 class="question">${escapeHtml(name)}</h2>
+          <p class="answer">${escapeHtml(purpose)}</p>
+          <div class="stats">
+            <span>IA propia</span>
+            <span>0 miembros</span>
+            <span>Publica</span>
+          </div>
+        `;
+        document.querySelector("#communities .wall").prepend(card);
+        cornerMessage.textContent = "Comunidad creada en demo. En la app real esto se guardaria en Supabase y activaria una IA por comunidad.";
+        communityName.value = "";
+        communityPurpose.value = "";
+      }
+
+      function analyzeSponsorDemo() {
+        const brand = sponsorBrand.value.trim();
+        const copy = sponsorCopy.value.trim();
+        const category = sponsorCategory.value;
+        const budget = sponsorBudget.value;
+        const combined = `${brand} ${copy}`.toLowerCase();
+        const blockedTerms = ["casino", "apuesta", "milagro", "garantizado", "cura", "dinero facil rapido"];
+
+        if (!brand || !copy) {
+          sponsorStatus.textContent = "Falta informacion";
+          sponsorResult.textContent = "Agrega nombre de marca y texto del anuncio para que la IA pueda analizarlo.";
+          return;
+        }
+
+        if (blockedTerms.some((term) => combined.includes(term))) {
+          sponsorStatus.textContent = "No aprobado";
+          sponsorResult.textContent = "La IA detecto promesas riesgosas, spam o una categoria no permitida. El sponsor debe editar el anuncio antes de pagar.";
+          cornerMessage.textContent = "Sponsor rechazado automaticamente. No hizo falta revision humana.";
+          return;
+        }
+
+        sponsorStatus.textContent = "Aprobado por IA · Stripe listo";
+        sponsorResult.textContent = `${brand} fue aprobado para la categoria ${category}. Precio seleccionado: ${budget} USD. En la app real se abriria Stripe Checkout y al pagar se activa la campana.`;
+        const sponsorItem = `<span class="ticker-item"><span class="ticker-badge">Sponsored</span><strong>${escapeHtml(brand)}</strong> ${escapeHtml(copy)}</span>`;
+        tickerTrack.insertAdjacentHTML("afterbegin", sponsorItem);
+        tickerTrack.insertAdjacentHTML("beforeend", sponsorItem);
+        cornerMessage.textContent = "Campana aprobada. La IA autorizo el sponsor y Stripe quedaria listo para cobrar.";
+      }
+
+      function createAccountDemo() {
+        const name = signupName.value.trim() || "Nuevo usuario";
+        const email = signupEmail.value.trim() || "usuario@knowledgefuture.ai";
+        const phone = signupPhone.value.trim() || "Sin telefono";
+        const goal = signupGoal.value;
+
+        signupStatus.textContent = "Cuenta demo creada";
+        signupResult.textContent = `${name} fue creado con plan Free, email ${email}, telefono ${phone} y objetivo: ${goal}. En la app real Supabase Auth guardaria la sesion y crearia el perfil.`;
+        cornerMessage.textContent = `Bienvenido, ${name}. ELIANA ya puede ayudarte a preguntar, crear comunidades y elegir plan.`;
+        localStorage.setItem("demoAccount", JSON.stringify({ name, email, phone, goal }));
+        setTimeout(() => showView("profile"), 900);
+      }
+
+      function submitQuestion() {
+        const question = (askInput.value.trim() || stageAskInput.value.trim());
+        if (!question) {
+          askInput.focus();
+          return;
+        }
+
+        aiPanel.classList.add("visible");
+        aiStatus.textContent = "AI is drafting the first answer...";
+        suggestions.innerHTML = "";
+
+        const summary = createDemoAnswer(question);
+        renderQuestion(question, summary);
+        addQuestionToWall(question, summary);
+        saveLastQuestion(question, summary);
+        askInput.value = "";
+        stageAskInput.value = "";
+        showView("question");
+      }
+
+      function showView(viewId) {
+        views.forEach((view) => view.classList.toggle("active", view.id === viewId));
+        navButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.viewTarget === viewId);
+        });
+        if (cornerMessage && cornerMessages[viewId]) {
+          cornerMessage.textContent = cornerMessages[viewId];
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      navButtons.forEach((button) => {
+        button.addEventListener("click", () => showView(button.dataset.viewTarget));
+      });
+
+      askInput.addEventListener("input", () => {
+        const value = askInput.value.trim();
+        aiPanel.classList.toggle("visible", value.length > 0);
+        if (!value) return;
+
+        aiStatus.textContent = value.length < 18
+          ? "AI is understanding your intent..."
+          : "AI found similar questions before creating a duplicate.";
+
+        suggestions.innerHTML = relatedQuestions
+          .map((question, index) => `
+            <button class="suggestion" type="button">
+              <span>${question}</span>
+              <span>${92 - index * 7}% match</span>
+            </button>
+          `)
+          .join("");
+      });
+
+      askButton.addEventListener("click", submitQuestion);
+      stageAskButton.addEventListener("click", submitQuestion);
+
+      askInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          submitQuestion();
+        }
+      });
+
+      stageAskInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          submitQuestion();
+        }
+      });
+
+      themeToggle.addEventListener("click", () => {
+        const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = nextTheme;
+      });
+
+      aiCornerToggle.addEventListener("click", () => {
+        aiCorner.classList.toggle("collapsed");
+        aiCornerToggle.textContent = aiCorner.classList.contains("collapsed") ? "+" : "−";
+      });
+
+      createCommunityButton.addEventListener("click", createCommunityDemo);
+      analyzeSponsorButton.addEventListener("click", analyzeSponsorDemo);
+      createAccountButton.addEventListener("click", createAccountDemo);
+
+      setInterval(() => {
+        if (!aiCorner.classList.contains("collapsed")) return;
+        aiCorner.classList.remove("collapsed");
+        aiCornerToggle.textContent = "−";
+        cornerMessage.textContent = "Sigo aqui si quieres crear una pregunta, comunidad o plan de monetizacion.";
+        setTimeout(() => {
+          aiCorner.classList.add("collapsed");
+          aiCornerToggle.textContent = "+";
+        }, 3200);
+      }, 12000);
+
+      const savedQuestion = localStorage.getItem("lastQuestion");
+      if (savedQuestion) {
+        const parsed = JSON.parse(savedQuestion);
+        renderQuestion(parsed.question, parsed.summary);
+      }
+
+      sponsoredMessages.forEach((message) => {
+        tickerTrack.insertAdjacentHTML("beforeend", `<span class="ticker-item"><span class="ticker-badge">Sponsored</span>${message}</span>`);
+      });
+    </script>
+  </body>
+</html>
