@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Sparkles, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
+import { createQuestion } from '@/lib/data'
 
 export default function NewQuestionPage() {
   const router = useRouter()
@@ -29,25 +30,17 @@ export default function NewQuestionPage() {
     setTimeout(() => setIsSubmitting(false), 1200)
   }
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setSubmitted(true)
-      const questions = JSON.parse(localStorage.getItem('zafiro_questions') || '[]')
-      questions.unshift({
-        id: crypto.randomUUID(),
-        title,
-        body,
-        category,
-        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
-        score: 0,
-        answerCount: 0,
-        createdAt: new Date().toISOString(),
-      })
-      localStorage.setItem('zafiro_questions', JSON.stringify(questions))
-      setTimeout(() => router.push('/'), 1500)
-    }, 800)
+    await createQuestion({
+      title,
+      body,
+      category,
+      tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
+    })
+    setIsSubmitting(false)
+    setSubmitted(true)
+    setTimeout(() => router.push('/'), 1500)
   }
 
   if (submitted) {
