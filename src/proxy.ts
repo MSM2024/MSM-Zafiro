@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 const PUBLIC_ROUTES = ['/', '/auth', '/terms', '/api/ai/answer']
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const isPublic = PUBLIC_ROUTES.some(
