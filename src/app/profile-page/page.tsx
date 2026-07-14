@@ -14,6 +14,16 @@ import { getPTSAccount, getStreak } from "@/lib/rewards"
 import { DEFAULT_ECOSYSTEM } from "@/lib/ecosistema"
 import ElianaDiamond from "@/components/ElianaDiamond"
 
+function renderSafeMessage(msg: string) {
+  if (msg.startsWith("ELIANA:")) {
+    return (<><strong className="text-[#00D9FF]">ELIANA:</strong>{msg.slice("ELIANA:".length)}</>)
+  }
+  if (msg.startsWith("Tú:")) {
+    return (<><strong className="text-slate-400">Tú:</strong>{msg.slice("Tú:".length)}</>)
+  }
+  return msg
+}
+
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M"
   if (n >= 1_000) return (n / 1_000).toFixed(1) + "K"
@@ -166,8 +176,9 @@ export default function ProfileFullPage() {
                 🤖 Hola, soy ELIANA. Puedo analizar tu perfil, recomendarte conexiones y ayudarte a crecer en ZAFIRO.
               </p>
               {elianaChat.map((msg, i) => (
-                <p key={i} className={`text-[9px] leading-relaxed rounded-lg p-2 ${msg.startsWith("Tú:") ? "bg-[#00D9FF]/5 text-slate-300" : "bg-slate-800/40 text-slate-400"}`}
-                  dangerouslySetInnerHTML={{ __html: msg.replace("ELIANA:", "<strong class='text-[#00D9FF]'>ELIANA:</strong>").replace("Tú:", "<strong class='text-slate-400'>Tú:</strong>") }} />
+                <p key={i} className={`text-[9px] leading-relaxed rounded-lg p-2 ${msg.startsWith("Tú:") ? "bg-[#00D9FF]/5 text-slate-300" : "bg-slate-800/40 text-slate-400"}`}>
+                  {renderSafeMessage(msg)}
+                </p>
               ))}
             </div>
             <div className="flex gap-1.5 p-2 border-t border-slate-700/50">

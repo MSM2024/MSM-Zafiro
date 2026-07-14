@@ -1,5 +1,7 @@
 'use client'
 
+import { earnPTS } from "./rewards"
+
 const REFERRAL_CODES_KEY = "zafiro_referral_codes"
 const REFERRAL_TRACKING_KEY = "zafiro_referral_tracking"
 const REFERRAL_BONUS_PTS = 100
@@ -81,6 +83,7 @@ export function applyReferralCode(code: string, newUserId: string, newEmail: str
   }
   tracking.push(record)
   saveTracking(tracking)
+  earnPTS(referral.userId, "referral_bonus")
   return { ok: true }
 }
 

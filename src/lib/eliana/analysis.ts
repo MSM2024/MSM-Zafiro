@@ -108,6 +108,13 @@ export function analyzePlatform(platform: PlatformInput): PlatformAnalysis {
       addLongTermFact(platform.userId!, { fact: `Interés en categoría: ${c}`, category: "interest", confidence: 0.6 })
     })
   }
+  if (typeof window !== "undefined") {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}")
+      stored[analysis.platformId] = analysis
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored))
+    } catch { /* persist analysis silently */ }
+  }
   return analysis
 }
 

@@ -13,6 +13,16 @@ import {
 } from "lucide-react"
 import ElianaDiamond from "@/components/ElianaDiamond"
 import { usePageTitle } from "@/lib/usePageTitle"
+
+function renderSafeMessage(msg: string) {
+  if (msg.startsWith("ELIANA:")) {
+    return (<><strong className="text-[#00D9FF]">ELIANA:</strong>{msg.slice("ELIANA:".length)}</>)
+  }
+  if (msg.startsWith("Tú:")) {
+    return (<><strong className="text-slate-400">Tú:</strong>{msg.slice("Tú:".length)}</>)
+  }
+  return msg
+}
 import { getCreatorProfile, PLATFORM_META, CONTENT_LABELS, getPlatforms, type ConnectedPlatform } from "@/lib/universo"
 import { DEFAULT_ECOSYSTEM, type EcosystemProject } from "@/lib/ecosistema"
 import { getDefaultPublicaciones, getPublicaciones, type Publicacion } from "@/lib/comentarios"
@@ -120,8 +130,9 @@ export default function PublicCreatorProfile() {
                 🤖 Hola, soy ELIANA. Puedo analizar el perfil de @{username}, recomendar personas y comunidades, responder preguntas y ayudarte a administrar tu presencia digital.
               </p>
               {elianaChat.map((msg, i) => (
-                <p key={i} className={`text-[9px] leading-relaxed rounded-lg p-2 ${msg.startsWith("Tú:") ? "bg-[#00D9FF]/5 text-slate-300" : "bg-slate-800/40 text-slate-400"}`}
-                  dangerouslySetInnerHTML={{ __html: msg.replace("ELIANA:", "<strong class='text-[#00D9FF]'>ELIANA:</strong>").replace("Tú:", "<strong class='text-slate-400'>Tú:</strong>") }} />
+                <p key={i} className={`text-[9px] leading-relaxed rounded-lg p-2 ${msg.startsWith("Tú:") ? "bg-[#00D9FF]/5 text-slate-300" : "bg-slate-800/40 text-slate-400"}`}>
+                  {renderSafeMessage(msg)}
+                </p>
               ))}
             </div>
             <div className="flex gap-1.5 p-2 border-t border-slate-700/50">

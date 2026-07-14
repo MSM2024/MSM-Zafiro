@@ -49,6 +49,8 @@ const plans = [
 export default function MembershipsPage() {
   usePageTitle("Membresías")
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly")
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [confirming, setConfirming] = useState(false)
 
   return (
     <div className="min-h-screen bg-[#050816] text-white">
@@ -96,7 +98,7 @@ export default function MembershipsPage() {
                     </li>
                   ))}
                 </ul>
-                <button className={`w-full py-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                <button onClick={() => { setSelectedPlan(plan.name); setConfirming(true) }} className={`w-full py-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
                   plan.price === "0"
                     ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
                     : "bg-gradient-to-r from-[#00D9FF] to-blue-600 text-white hover:opacity-90"
@@ -114,6 +116,20 @@ export default function MembershipsPage() {
           <p className="text-xs text-slate-400">Todos los planes incluyen cancelación en cualquier momento. Pagos procesados de forma segura a través de Stripe. Datos encriptados con cifrado AES-256.</p>
         </div>
       </div>
+
+      {confirming && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setConfirming(false)}>
+          <div className="w-full max-w-sm p-6 rounded-3xl border border-slate-700 bg-[#0B1220] text-center" onClick={e => e.stopPropagation()}>
+            <Gem className="w-10 h-10 text-[#00D9FF] mx-auto mb-3" />
+            <h2 className="text-lg font-black mb-2">Confirmar Membresía</h2>
+            <p className="text-xs text-slate-400 mb-4">Estás a punto de suscribirte al plan <strong className="text-white">{selectedPlan}</strong>.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setConfirming(false)} className="flex-1 py-2.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 hover:bg-slate-800 transition-all cursor-pointer">Cancelar</button>
+              <button onClick={() => { setConfirming(false); alert(`✅ Redirigiendo a Stripe para el plan ${selectedPlan}…`) }} className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#00D9FF] to-blue-600 text-xs font-bold text-white hover:opacity-90 transition-all cursor-pointer">Confirmar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -25,6 +25,7 @@ export type RewardAction =
   | "create_question" | "answer_question" | "received_like"
   | "explore_sponsor" | "create_sponsor_campaign" | "daily_login"
   | "join_circle" | "refer_friend" | "streak_7_days" | "answer_accepted"
+  | "referral_bonus"
 
 const ACTION_REWARDS: Record<RewardAction, { pts: number; dailyMax: number; label: string }> = {
   create_question: { pts: 100, dailyMax: 5, label: "Crear una pregunta" },
@@ -37,6 +38,7 @@ const ACTION_REWARDS: Record<RewardAction, { pts: number; dailyMax: number; labe
   refer_friend: { pts: 200, dailyMax: 999, label: "Referir un amigo" },
   streak_7_days: { pts: 500, dailyMax: 1, label: "Racha de 7 días" },
   answer_accepted: { pts: 30, dailyMax: 999, label: "Respuesta aceptada" },
+  referral_bonus: { pts: 100, dailyMax: 999, label: "Bono por referido" },
 }
 
 const LEVEL_THRESHOLDS = [0, 1000, 3000, 7000, 15000, 30000, 60000, 100000, 200000, 500000]
