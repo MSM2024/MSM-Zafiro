@@ -15,9 +15,18 @@ const STATUS_COLORS: Record<string, string> = {
   próximamente: "bg-purple-500/10 text-purple-400 border-purple-500/20",
 }
 const COLOR_OPTIONS = [
-  "text-[#00D9FF]", "text-amber-400", "text-purple-400", "text-indigo-400",
-  "text-cyan-300", "text-emerald-400", "text-pink-400", "text-blue-400",
-  "text-orange-400", "text-green-400", "text-red-400", "text-slate-100",
+  { cls: "text-[#00D9FF]", hex: "#00D9FF" },
+  { cls: "text-amber-400", hex: "#fbbf24" },
+  { cls: "text-purple-400", hex: "#c084fc" },
+  { cls: "text-indigo-400", hex: "#818cf8" },
+  { cls: "text-cyan-300", hex: "#67e8f9" },
+  { cls: "text-emerald-400", hex: "#34d399" },
+  { cls: "text-pink-400", hex: "#f472b6" },
+  { cls: "text-blue-400", hex: "#60a5fa" },
+  { cls: "text-orange-400", hex: "#fb923c" },
+  { cls: "text-green-400", hex: "#4ade80" },
+  { cls: "text-red-400", hex: "#f87171" },
+  { cls: "text-slate-100", hex: "#f1f5f9" },
 ]
 
 function loadProjectsProfile(): UserProfile | null {
@@ -216,9 +225,9 @@ export default function ProjectsPage() {
                   <label className="text-[8px] font-mono font-bold text-slate-400 uppercase tracking-wider block mb-1">Color</label>
                   <div className="flex flex-wrap gap-1">
                     {COLOR_OPTIONS.map(c => (
-                      <button key={c} onClick={() => setForm({ ...form, color: c })}
-                        className={`w-5 h-5 rounded-full transition-all cursor-pointer ${form.color === c ? "ring-2 ring-white ring-offset-1 ring-offset-[#050816]" : ""}`}
-                        style={{ backgroundColor: c.replace("text-", "").replace("[#", "").replace("]", "") || "#00D9FF" }} />
+                      <button key={c.cls} onClick={() => setForm({ ...form, color: c.cls })}
+                        className={`w-5 h-5 rounded-full transition-all cursor-pointer ${form.color === c.cls ? "ring-2 ring-white ring-offset-1 ring-offset-[#050816]" : ""}`}
+                        style={{ backgroundColor: c.hex }} />
                     ))}
                   </div>
                 </div>
