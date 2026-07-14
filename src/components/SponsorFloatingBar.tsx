@@ -107,7 +107,7 @@ const SponsorFloatingBar = ({
                   onClick={() => onSponsorClick(sponsor)}
                   className="text-[10px] font-semibold text-white bg-cyan-500/20 hover:bg-cyan-500/30 px-2.5 py-1 rounded-full transition-colors border border-cyan-400/20"
                 >
-                  Conocer m&aacute;s
+                  Conocer más
                 </button>
               </div>
             )

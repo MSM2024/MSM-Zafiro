@@ -94,7 +94,7 @@ export default function SponsorDetailModal({
               <div className="flex items-start gap-2 p-3 rounded-xl bg-amber-950/30 border border-amber-900/50 mb-4">
                 <Gem className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
                 <p className="text-xs text-slate-400">
-                  Explorar este sponsor sintonizar&aacute; +50 PTS
+                  Explorar este sponsor sintonizará +50 PTS
                 </p>
               </div>
 
