@@ -4,19 +4,23 @@ import Link from "next/link"
 import { Gem, Mail, ArrowLeft, AlertCircle, CheckCircle } from "lucide-react"
 import { useState } from "react"
 import { usePageTitle } from "@/lib/usePageTitle"
-import { findUserByEmail } from "@/lib/auth"
+import { recoverPassword } from "@/lib/auth"
 
 export default function RecoverPage() {
   usePageTitle("Recuperar Contraseña")
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
-    if (!findUserByEmail(email)) {
-      setError("No existe una cuenta con ese correo electrónico")
+    setLoading(true)
+    const result = await recoverPassword(email)
+    setLoading(false)
+    if (!result.ok) {
+      setError(result.error || "Error al enviar el enlace")
       return
     }
     setSent(true)
@@ -65,9 +69,9 @@ export default function RecoverPage() {
                 <p className="text-[10px] text-red-300">{error}</p>
               </div>
             )}
-            <button type="submit"
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00D9FF] to-blue-600 text-white text-xs font-bold hover:opacity-90 transition-all cursor-pointer">
-              Enviar Enlace
+            <button type="submit" disabled={loading}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00D9FF] to-blue-600 text-white text-xs font-bold hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer">
+              {loading ? "Enviando..." : "Enviar Enlace"}
             </button>
           </form>
         </div>
