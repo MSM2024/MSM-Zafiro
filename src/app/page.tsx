@@ -34,7 +34,7 @@ import SponsorFloatingBar from "@/components/SponsorFloatingBar"
 import SponsorDetailModal from "@/components/SponsorDetailModal"
 import SponsorAnalyticsChart from "@/components/SponsorAnalyticsChart"
 import BottomNav from "@/components/BottomNav"
-import { getSession, logout as authLogout } from "@/lib/auth"
+import { getSession } from "@/lib/auth"
 import { openElianaChat } from "@/components/ElianaFloatingButton"
 
 export default function Home() {
@@ -73,7 +73,6 @@ export default function Home() {
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
   const [showAddQuestionModal, setShowAddQuestionModal] = useState(false)
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
-  const [selectedNode, setSelectedNode] = useState("n1")
 
   const [gemTab, setGemTab] = useState<"lab" | "handbook" | "ai" | "lore">("lab")
   const [showNotificationBadge] = useState(true)
@@ -86,9 +85,19 @@ export default function Home() {
   const [isElianaExpanded, setIsElianaExpanded] = useState(false)
   const [chatInput, setChatInput] = useState("")
   const [isChatLoading, setIsChatLoading] = useState(false)
-  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "model"; text: string; time: string }>>([
-    { role: "model", text: "¡Saludos sintonizador! Soy **ELIANA**, el núcleo sintético de **ZAFIRO**. ¿Qué misterio de la ciencia sintonizaremos hoy?", time: "18:30" }
-  ])
+  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "model"; text: string; time: string }>>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("zafiro_chat_messages")
+        if (saved) return JSON.parse(saved)
+      } catch { /* ignore */ }
+    }
+    return [{ role: "model", text: "¡Saludos sintonizador! Soy **ELIANA**, el núcleo sintético de **ZAFIRO**. ¿Qué misterio de la ciencia sintonizaremos hoy?", time: "18:30" }]
+  })
+
+  useEffect(() => {
+    localStorage.setItem("zafiro_chat_messages", JSON.stringify(chatMessages))
+  }, [chatMessages])
   const chatBottomRef = useRef<HTMLDivElement>(null)
 
   const [newCommentText, setNewCommentText] = useState("")
@@ -125,6 +134,7 @@ export default function Home() {
       s.id === sponsor.id ? { ...s, clicks: s.clicks + 1, impressions: s.impressions + 1 } : s
     )
     setSponsors(updated)
+    saveSponsors(updated)
     setSelectedSponsorForModal(sponsor)
   }
 
@@ -184,7 +194,7 @@ export default function Home() {
   const handleAddComment = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newCommentText.trim() || !selectedQuestion) return
-    const updated = {
+    const updatedQuestion = {
       ...selectedQuestion,
       replies: [...selectedQuestion.replies, {
         author: "Tú",
@@ -195,7 +205,10 @@ export default function Home() {
         likes: 0
       }]
     }
-    setSelectedQuestion(updated)
+    setSelectedQuestion(updatedQuestion)
+    const updatedQs = qs.map(q => q.id === selectedQuestion.id ? updatedQuestion : q)
+    setQs(updatedQs)
+    saveQuestions(updatedQs)
     setNewCommentText("")
   }
 
@@ -285,7 +298,7 @@ export default function Home() {
       }
       return true
     })
-  }, [selectedTag, searchQuery])
+  }, [selectedTag, searchQuery, qs])
 
   const sortedSponsors = useMemo(() => {
     return [...sponsors].sort((a, b) => {
@@ -750,7 +763,7 @@ export default function Home() {
                   {gemTab === "ai" && <AiAssistant />}
                   {gemTab === "lore" && <LoreExplorer />}
                 </motion.div>
-                <Link href="/sponsors-page"
+                <Link href="/gemologia"
                   className="text-[9px] font-mono text-[#00D9FF] hover:underline text-center block"
                 >
                   Explorar Gemología completa →
