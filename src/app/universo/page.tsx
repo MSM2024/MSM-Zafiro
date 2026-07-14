@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import Link from "next/link"
-import { ArrowLeft, Plus, Trash2, ExternalLink, Search, Gem, Globe, BookOpen, Link2, X, Check, AlertCircle, User, Shield, Download, MessageSquare, Heart, Send, Eye, EyeOff, ArrowUp, ArrowDown, Edit3 } from "lucide-react"
+import { ArrowLeft, Plus, Trash2, ExternalLink, Search, Gem, Globe, Link2, X, Check, AlertCircle, Shield, Download, MessageSquare, Heart, Send, Eye, EyeOff, ArrowUp, ArrowDown, Edit3 } from "lucide-react"
 import { usePageTitle } from "@/lib/usePageTitle"
 import { getSession } from "@/lib/auth"
 import {

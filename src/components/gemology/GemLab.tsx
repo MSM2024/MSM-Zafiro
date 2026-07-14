@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import {
   Sparkles, Layers, Sun, ShieldCheck, Scale, RefreshCw,
-  Flame, MapPin, Info, Award, Zap, Eye, CheckCircle, X
+  MapPin, Award, Zap, Eye, CheckCircle, X
 } from "lucide-react"
 import type { SapphireCut, SapphireColor, SapphireClarity, SapphireOrigin, GemLabConfig } from "@/lib/gemology-types"
 import {

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { ArrowLeft, Award, TrendingUp, BarChart3, DollarSign, Users, Target, Zap, Eye, Plus } from "lucide-react"
+import { ArrowLeft, Award, TrendingUp, BarChart3, DollarSign, Target, Zap, Eye, Plus } from "lucide-react"
 import { useState } from "react"
 import { usePageTitle } from "@/lib/usePageTitle"
 
