@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import { ArrowLeft, Bell, Eye, Globe, Shield, Palette, Moon, Volume2, User, ChevronRight, LogOut, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePageTitle } from "@/lib/usePageTitle"
 import { getSession, logout as authLogout } from "@/lib/auth"
+import { getProfile, getProfiles, updateProfile, createProfile, type UserProfile } from "@/lib/profile"
 import { useRouter } from "next/navigation"
 
 const sections = [
@@ -23,21 +24,27 @@ export default function SettingsPage() {
   const router = useRouter()
   const [activeSection, setActiveSection] = useState("perfil")
   const sessionUser = getSession()
-  const [profileFields, setProfileFields] = useState(() => {
-    const stored = typeof window !== "undefined" ? localStorage.getItem("zafiro_profile") : null
-    return stored ? JSON.parse(stored) : {
-      name: "Carlos Medina",
-      username: "@carlosmedina",
-      bio: "",
-      title: "",
-      location: "",
-      website: ""
+  const userId = sessionUser?.email || "anonymous"
+  const [profileFields, setProfileFields] = useState<Partial<UserProfile>>(() => {
+    if (typeof window === "undefined") return {}
+    let profile = getProfile(userId)
+    if (!profile) {
+      const profiles = getProfiles()
+      const firstKey = Object.keys(profiles)[0]
+      profile = firstKey ? profiles[firstKey] : null
     }
+    return profile ? { name: profile.name, username: profile.username, bioShort: profile.bioShort, title: profile.title, location: profile.location, website: profile.website } : {}
   })
   const [saved, setSaved] = useState(false)
 
+  useEffect(() => {
+    if (!getProfile(userId) && sessionUser) {
+      createProfile(userId, sessionUser.email, sessionUser.name)
+    }
+  }, [userId, sessionUser])
+
   const handleSaveProfile = () => {
-    localStorage.setItem("zafiro_profile", JSON.stringify(profileFields))
+    updateProfile(userId, profileFields)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -83,14 +90,14 @@ export default function SettingsPage() {
               <div className="space-y-5">
                 <h2 className="text-lg font-bold">Perfil Público</h2>
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00D9FF] to-blue-600 flex items-center justify-center text-xl font-black">CM</div>
-                  <div><p className="font-bold">{profileFields.name}</p><p className="text-xs text-slate-400">{profileFields.username}</p></div>
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00D9FF] to-blue-600 flex items-center justify-center text-xl font-black">{(profileFields.name || "?").charAt(0).toUpperCase()}</div>
+                  <div><p className="font-bold">{profileFields.name || "Sin nombre"}</p><p className="text-xs text-slate-400">@{profileFields.username || userId}</p></div>
                 </div>
-                {[["name", "Nombre de Usuario"], ["bio", "Biografía"], ["title", "Título Profesional"], ["location", "Ubicación"], ["website", "Sitio Web"]].map(([key, label]) => (
+                {[["name", "Nombre"], ["username", "Nombre de Usuario"], ["bioShort", "Biografía"], ["title", "Título Profesional"], ["location", "Ubicación"], ["website", "Sitio Web"]].map(([key, label]) => (
                   <div key={key}>
                     <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">{label}</label>
                     <input type="text" placeholder={label}
-                      value={(profileFields as Record<string, string>)[key]}
+                      value={(profileFields as Record<string, string>)[key] || ""}
                       onChange={e => setProfileFields({ ...profileFields, [key]: e.target.value })}
                       className="w-full mt-1 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-[#00D9FF] outline-none" />
                   </div>
