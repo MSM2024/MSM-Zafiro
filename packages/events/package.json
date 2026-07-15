@@ -1,0 +1,12 @@
+{
+  "name": "@zafiro/events",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/event-bus.ts",
+  "types": "./src/event-bus.ts",
+  "exports": {
+    ".": "./src/event-bus.ts",
+    "./event-types": "./src/event-types.ts"
+  }
+}

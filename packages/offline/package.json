@@ -1,0 +1,11 @@
+{
+  "name": "@zafiro/offline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/offline-operation.ts",
+  "types": "./src/offline-operation.ts",
+  "exports": {
+    ".": "./src/offline-operation.ts"
+  }
+}

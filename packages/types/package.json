@@ -1,0 +1,11 @@
+{
+  "name": "@zafiro/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/zafiro.ts",
+  "types": "./src/zafiro.ts",
+  "exports": {
+    ".": "./src/zafiro.ts"
+  }
+}

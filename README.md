@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZAFIRO — MSM Economía
 
-## Getting Started
+Sistema Operativo de Microrredes Inteligentes (MSM) para la economía cubana. Arquitectura modular, offline-first, con ELIANA como asistente central.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Runtime**: Node.js 20+, Next.js 16 (App Router, `'use client'`)
+- **UI**: Tailwind CSS v4, `motion/react`, `lucide-react`
+- **Database**: Supabase (PostgreSQL) + localStorage fallback
+- **Auth**: Supabase SSR + localStorage dual
+- **Payments**: Stripe (planes Pro / Cuba+)
+- **PWA**: Service Worker + manifest.webmanifest
+- **AI**: ELIANA — orquestador basado en Gemini API
+
+## Estructura
+
+```
+packages/
+  types/          — Tipos centrales ZAFIRO
+  frequency-origin/ — Nudo Único Frecuencia Origen
+  guardians/      — Registro de 7 Guardianes
+  events/         — Bus de eventos ZafiroEventBus
+  eliana/         — Procesador de mensajes ELIANA
+  whatsapp/       — Formato visual WhatsApp
+  offline/        — Tipos de operación offline
+  sync/           — Cola de sincronización con backoff
+  digital-twin/   — Modelo de gemelo digital (nodos)
+  mesh-bridge/    — Bridge de malla (WiFi/BLE/LoRa/sat)
+  adaptive-router/ — Router adaptativo por score
+  portable-eliana/ — Paquete portable ELIANA con firma
+src/
+  app/            — 33 rutas estáticas + 3 dinámicas
+  lib/            — Servicios (Economía, Frecuencia Origen, etc.)
+  components/     — UI components (ElianaAvatar, EconomiaPanel, etc.)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Comandos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev              # Desarrollo en :3001
+npm run build            # Build producción
+npm run lint             # ESLint
+npm run build:packages   # Build packages (opcional)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Despliegue
 
-## Learn More
+- Vercel: `msm-zafiro` → https://msm-zafiro.vercel.app
+- Dominio: `msmmystore.com` (proyecto `msm`)
+- Rama prod: `main`
+- Rama dev: `integration/msm-master-molecule`
 
-To learn more about Next.js, take a look at the following resources:
+## Licencia
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MSM MY STORE LLC — Todos los derechos reservados.

@@ -1,0 +1,11 @@
+{
+  "name": "@zafiro/adaptive-router",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/adaptive-router.ts",
+  "types": "./src/adaptive-router.ts",
+  "exports": {
+    ".": "./src/adaptive-router.ts"
+  }
+}

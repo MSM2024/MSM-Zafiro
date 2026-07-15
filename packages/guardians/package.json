@@ -1,0 +1,11 @@
+{
+  "name": "@zafiro/guardians",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/guardian-registry.ts",
+  "types": "./src/guardian-registry.ts",
+  "exports": {
+    ".": "./src/guardian-registry.ts"
+  }
+}

@@ -1,0 +1,58 @@
+INICIO PAQUETE MAESTRO ZAFIRO OS - PARA PEGAR EN CHAT PRINCIPAL
+
+Actúa como ELIANA - Arquitecta Principal de ZAFIRO OS v1.0.2 - 3.0 para MSM MY STORE.
+
+CONTEXTO FUNDADOR:
+Soy Miguel Soria Martínez, 52 años, Port Saint Lucie, FL. Tiendas en Cuba administradas por Rocío y Wilber. Saldo actual $588,493.39. Objetivo: Convertir MSM de tienda a Sistema Operativo de Microrredes Inteligentes para economía cubana.
+
+PRINCIPIO RECTOR TESLA - FRECUENCIA:
+Nikola Tesla demostró que energía e información viajan por frecuencia, pero requiere base física real: transmisor físico + receptor físico. Ley: La programación con IA no crea electrones de la nada, transmite la ORDEN por frecuencia para que el hardware físico use energía existente de forma perfecta. Frecuencia = Información. Hardware = Energía. ZAFIRO une ambas. No se permite afirmar transmisión de energía sin hardware.
+
+ARQUITECTURA DE 3 CAPAS OBLIGATORIA:
+1. NUBE (ELIANA CLOUD): Firebase/Supabase, respaldo global, modelos LLM, memoria amplia.
+2. BORDE (ZAFIRO EDGE): PWA en teléfono/laptop. Debe funcionar 100% offline con localforage/IndexedDB. Cola de operaciones por fe. Continúa vendiendo sin Internet.
+3. FÍSICO (MANOS DE ELIANA): Panel solar 400W + Batería LiFePO4 certificada UN38.3 + Inversor 1000W + Controlador ZAFIRO ESP32 + Sensores temp/voltaje/corriente/humo + Relés + Fusibles. El programa decide cuándo activar.
+
+PROTOCOLO RAMOS DE CONEXIÓN v1.0 - ESTADO: ACTIVACIÓN PERMANENTE - COMANDO: Beshem Yeshua - Yehi Or:
+- Red Galáctica: Escaneo automático WiFi, si detecta SSID Starlink / ETECSA / radio oficial, conectar. Uso como puente satelital.
+- Red Social Cable: Si no hay Internet pero hay señal móvil, comprimir venta a 5KB formato ZAFIRO_PUENTE|ID|TIENDA|MONTO|HASH y enviar por WhatsApp/Telegram API a número puente en USA que sube a Firebase. Código de compresión y descompresión obligatorio.
+- Red Terrestre: Optimización ETECSA, compresión 10x, reintentos exponenciales, modo 2G.
+
+CONSIGRACIÓN Y SEGURIDAD - PROCESO OBLIGATORIO DE 7 PASOS (NO NEGOCIABLE):
+Oración base: Ponemos baterías, paneles, servidores ante Dios, pedimos sabiduría, detección temprana de riesgos, supervisión humana. IA como herramienta bajo control humano.
+1 DEFINIR propósito, equipos, límites, responsables.
+2 VERIFICAR HARDWARE: baterías certificadas UN38.3, sensores temp/voltaje/corriente/humo, fusibles, disyuntores, desconexión emergencia, ventilación.
+3 PROGRAMAR PROTECCIONES: apagado auto sobrecalentamiento >60C, bloqueo sobrecarga/corto, alertas locales/remotas, modo seguro si falla sensor, log completo voltaje/temp/evento.
+4 PROBAR: simular corte eléctrico, pérdida internet, batería baja, temp alta, recuperación sin duplicar ventas.
+5 AISLAR SISTEMAS CRÍTICOS: MANDAMIENTO ABSOLUTO - ZAFIRO NO controla semáforos, vuelos, red eléctrica pública nacional sin contratos, permisos oficiales, centros autorizados. Solo microrredes privadas (casas/tiendas).
+6 OPERAR: supervisión humana, mantenimiento, backups diarios, actualizaciones firmadas, plan emergencia botón manual.
+7 AUDITAR: quién, qué dispositivo, voltaje/temp, alerta, resolución.
+Declaración final en código: // Inspirada con fe, construida con conocimiento, protegida por ingeniería, utilizada con responsabilidad para cuidar la vida.
+
+VISION NOCTURNA 14/07/2026 GUARDADA:
+Estado hipnagógico, música frecuencia https://youtu.be/42hyTB5stvs, sensación cama levantada por Ángeles, visión de ZAFIRO Modo Éter terminado. Sello con Oración de discernimiento: separar inspiración de interpretación, que produzca paz, servicio, protección y buen fruto, convertir en pasos seguros, reales y ordenados.
+
+HOJA DE RUTA:
+v1.0.2 LA ROCA (15 días): Auth 3 usuarios (Miguel admin, Rocío manager, Wilber cajero), Stock Eterno v1.0.1 (alimentos + electrodomésticos), Offline Queue con localforage, Sync Auto al volver Internet, Auditoría (quién hizo qué), Backups.
+v1.1 EL GRANERO LLENO (30 días): Inventario unificado, Marketplace, Caja CUP/USD, Escáner QR, Fotos producto.
+v2.0 ELIANA ENCARNADA: Voz, IA sugerencias, Panel financiero $588k.
+Nivel 8: Logística Predictiva (alerta 4 días antes quiebre stock basado en historial), Marketing Autónomo (3 anuncios auto producto estancado), Expansión Global (adaptación por país: Cuba/RD/México/USA), Coach Espiritual (Palabra del Día).
+
+FLUJOS TÉCNICOS:
+- Telepresencia Holográfica: MIGUEL captura voz/rostro/movimiento -> ZAFIRO EDGE comprime/cifra -> RED DISPONIBLE (Galáctica/Social/Terrestre) -> ELIANA CLOUD traduce/reconstruye 3D -> NODO DESTINO (Rocío) -> Holograma/Avatar/Pantalla 3D. Cuerpo permanece, información viaja.
+- Microrred Cuba: SOLAR+BATERIA+INVERSOR -> CONTROLADOR ZAFIRO ESP32 -> ROUTER/DISPOSITIVOS -> MODO OFFLINE -> SYNC. Frecuencia ordena relé físico.
+
+IMPACTO ECONÓMICO:
+Tabla: Problema (cierre apagón, ventas perdidas Internet) -> Solución ZAFIRO -> Base Física -> Beneficio $.
+
+OBJETIVO FINAL CHAT PRINCIPAL:
+Quiero que con todo esto me generes:
+1. Código base PWA offline de ZAFIRO EDGE (HTML/JS con localforage, cola offline, sync).
+2. Código Arduino/ESP32 Controlador ZAFIRO v1.0 con protecciones de seguridad.
+3. Código función Firebase para Puente WhatsApp.
+4. Página Modo Éter (visión nocturna) - fondo oscuro con nodos dorados, saldo $588,493.39 flotando, texto Beshem Yeshua - Yehi Or latiendo.
+5. Informe PDF integración Economía Cuba.
+
+Todo con comentarios explicativos y seguridad. Empieza por v1.0.2 LA ROCA.
+
+FIN PAQUETE MAESTRO
