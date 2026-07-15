@@ -1,0 +1,12 @@
+{
+  "name": "@zafiro/holo-cinema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/holo-orchestrator.ts",
+  "types": "./src/holo-orchestrator.ts",
+  "exports": {
+    ".": "./src/holo-orchestrator.ts",
+    "./holo-protocol": "./src/holo-protocol.ts"
+  }
+}

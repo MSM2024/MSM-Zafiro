@@ -3,24 +3,7 @@
 import { applyReferralCode } from "./referidos"
 import { createProfile, seedMiguelProfile } from "./profile"
 import { getSupabaseClient, isSupabaseAvailable } from "./supabase"
-
-export type UserRole = "OWNER" | "CASHIER" | "VIEWER"
-
-export interface ZafiroUser {
-  id: string
-  name: string
-  email: string
-  passwordHash: string
-  createdAt: string
-  avatar?: string
-}
-
-export interface ZafiroSession {
-  email: string
-  name: string
-  id: string
-  role?: UserRole
-}
+import type { ZafiroUser, ZafiroSession, UserRole } from "../../packages/types/src/zafiro"
 
 const USERS_KEY = "zafiro_users"
 const SESSION_KEY = "zafiro_session"
@@ -70,7 +53,8 @@ export async function registerUser(name: string, email: string, password: string
   const users = getUsers()
   if (users.find(u => u.email === email)) return { ok: false, error: "Este correo ya está registrado" }
   const passwordHash = await hashPassword(password)
-  const user: ZafiroUser = { id: `user_${Date.now()}`, name, email, passwordHash, createdAt: new Date().toISOString() }
+  const now = new Date().toISOString()
+  const user: ZafiroUser = { id: `user_${Date.now()}`, name, email, passwordHash, role: "VIEWER", permissions: [], active: true, createdAt: now, updatedAt: now }
   users.push(user)
   saveUsers(users)
   localStorage.setItem(SESSION_KEY, JSON.stringify({ email, name, id: user.id }))

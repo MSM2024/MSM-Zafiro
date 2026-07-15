@@ -1,16 +1,26 @@
-# VERSION STATUS MATRIX — ZAFIRO
+# VERSION STATUS MATRIX
 
-| Versión | Estado | Build | Despliegue | Observaciones |
-|---------|--------|-------|------------|---------------|
-| V1.0.9 | ✅ | ✅ 0 err | ✅ msm-zafiro.vercel.app | ECONOMIA + Frecuencia Origen |
-| V1.1.0 | ❌ | — | — | WhatsApp Business |
-| V1.2.0 | ❌ | — | — | Offline Core |
-| V1.3.0 | ❌ | — | — | Adaptive Router |
-| V1.4.0 | ❌ | — | — | Mesh Bridge |
-| V1.5.0 | ❌ | — | — | Digital Twin |
-| V1.6.0 | ❌ | — | — | Avatar ELIANA |
-| V1.7.0 | ❌ | — | — | Paquete Portable |
-| V1.8.0 | ❌ | — | — | Infraestructura |
-| V1.9.0 | ❌ | — | — | Docs + Pruebas |
+| Módulo | V1.0.0 | V1.0.9 | V1.1.0 | V1.5.0 | V1.9.0 |
+|--------|--------|--------|--------|--------|--------|
+| Auth Dual | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Roles (4 niveles) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Supabase Migrations | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Frecuencia Origen | ❌ | ✅ | ✅ | ✅ | ✅ |
+| 7 Guardianes | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Event Bus | ❌ | ✅ | ✅ | ✅ | ✅ |
+| ELIANA | ❌ | ✅ | ❌ | ✅ | ✅ |
+| WhatsApp | ❌ | ✅ | ❌ | ✅ | ✅ |
+| MSM Economía | ❌ | ✅ | ❌ | ✅ | ✅ |
+| PWA | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Sync Engine | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Offline Core | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Stripe | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Gemini API | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Digital Twin | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Mesh Bridge | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Adaptive Router | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Portable ELIANA | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Tests | ❌ | ✅ | ❌ | ✅ | ✅ |
+| Documentación | ❌ | ✅ | ❌ | ✅ | ✅ |
 
-**Leyenda:** ✅ Completo · ⚠️ Parcial · 🟡 Simulado · ❌ No iniciado
+✅ = Funcional / ❌ = Pendiente o no iniciado

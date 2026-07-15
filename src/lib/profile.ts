@@ -1,55 +1,14 @@
 'use client'
 
-export interface UserProject {
-  id: string
-  name: string
-  description: string
-  url: string
-  status: "activo" | "beta" | "próximamente"
-  icon: string
-  color: string
-  tags: string[]
-}
+import type {
+  UserProfile as ZafiroUserProfile,
+  UserProject as ZafiroUserProject,
+  SocialLink as ZafiroSocialLink,
+} from "../../packages/types/src/zafiro"
 
-export interface SocialLink {
-  id: string
-  platform: string
-  url: string
-  label: string
-}
-
-export interface UserProfile {
-  userId: string
-  name: string
-  publicName: string
-  username: string
-  title: string
-  company: string
-  location: string
-  website: string
-  linktree: string
-  roles: string[]
-  bioShort: string
-  bioLong: string
-  avatar: string
-  coverImage: string
-  email: string
-  joinedAt: string
-  points: number
-  streak: number
-  level: string
-  followers: number
-  following: number
-  questions: number
-  answers: number
-  communities: number
-  achievements: number
-  sponsors: number
-  projects: number
-  visits: number
-  customProjects: UserProject[]
-  socialLinks: SocialLink[]
-}
+export type UserProfile = ZafiroUserProfile
+export type UserProject = ZafiroUserProject
+export type SocialLink = ZafiroSocialLink
 
 const PROFILES_KEY = "zafiro_profiles"
 
