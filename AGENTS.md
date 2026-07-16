@@ -18,7 +18,12 @@
 - **Backup**: `git bundle create "..\ZAFIRO_BACKUP_$(Get-Date -Format yyyyMMdd)\full.bundle" --all`
 
 ## Estado Actual (2026-07-16)
-- **Build**: 0 errores, 78 rutas (74 static + 4 dynamic)
+- **Build**: 0 errores, 88 rutas
+- **Nube Familiar**: `/familia/*` (7 rutas) — Encuentro Soria Martínez 16-ago-2026, árbol genealógico, galería, cronología, historias, invitación WhatsApp
+- **Módulos económicos**: `/admin/tasas` (tasas Cuba + calculadora MSM), `/admin/bpa` (BPA Mirror v1.0)
+- **Libs nuevas**: `ledger.ts` (Flujo Económico 5 pasos), `firma-369.ts` (firma cripto-espiritual), `tasas.ts`, `bpa-mirror.ts`, `familia.ts`, `owner.ts` (Membresía Eterna)
+- **Frecuencia 369 + Nodo Único**: inyectados en ELIANA (web + WhatsApp), sin errores "No pude procesar"
+- **Migraciones**: 00006 (17 tablas familia), 00007 (exchange_rate_snapshots)
 - **Dominio**: https://zafiro.msmmystore.com — CNAME → Vercel, HTTPS 200 OK
 - **Auth**: localStorage fallback — Supabase sin credenciales
 - **Datos**: localStorage (15+ keys) — migraciones SQL listas (2 archivos)
