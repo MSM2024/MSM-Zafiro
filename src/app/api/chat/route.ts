@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { loadKnowledgeBase, buildKnowledgeContext } from "@/lib/knowledge"
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY
+import { callAI } from "@/lib/ai/providers"
 
 loadKnowledgeBase()
 
@@ -9,7 +8,6 @@ const MAX_MESSAGE_LENGTH = 2000
 const MAX_HISTORY_LENGTH = 20
 const RATE_LIMIT_WINDOW = 60_000
 const RATE_LIMIT_MAX = 30
-const TIMEOUT_MS = 15_000
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 
@@ -51,14 +49,14 @@ function getFallbackResponse(message: string): string {
   const lower = message.toLowerCase()
   for (const [keyword, response] of Object.entries(FALLBACK_RESPONSES)) {
     if (lower.includes(keyword)) {
-      return `${response}\n\n*This response is sourced from Zafiro's internal gemological knowledge base. For real-time AI-powered analysis, configure a GEMINI_API_KEY in your environment.*`
+      return `${response}\n\n*This response is sourced from Zafiro's internal gemological knowledge base.*`
     }
   }
   const kbContext = buildKnowledgeContext(message)
   if (kbContext) {
     const lines = kbContext.split("\n").filter(l => l.startsWith("[") || l.trim().length > 0).slice(0, 20)
     const snippet = lines.map(l => l.replace(/^\[.*?\]\s*/, "")).join("\n\n").slice(0, 1500)
-    return `${snippet}\n\n*Esta respuesta proviene de la base de conocimiento de ZAFIRO. Para respuestas con IA en tiempo real, configura GEMINI_API_KEY en tu entorno.*`
+    return `${snippet}\n\n*Esta respuesta proviene de la base de conocimiento de ZAFIRO.*`
   }
   if (lower.includes("hello") || lower.includes("hi ") || lower.includes("hey") || lower === "hi" || lower === "hello") {
     return "¡Saludos sintonizador! Soy **ELIANA**, el núcleo sintético de **ZAFIRO**. ¿Qué misterio de la ciencia sintonizaremos hoy?"
@@ -67,61 +65,6 @@ function getFallbackResponse(message: string): string {
     return "Es un honor asistir en tu viaje intelectual. Recuerda: cada pregunta construye el futuro. ¿Deseas profundizar en algún otro tema?"
   }
   return "Interesante consulta. La matriz de conocimiento de ZAFIRO está procesando tu sintonía. ¿Podrías refinar tu pregunta a un aspecto específico? Así podré ofrecerte una respuesta precisa y fundamentada desde nuestra base de conocimiento."
-}
-
-async function callGeminiAPI(message: string, history: Array<{ role: string; text: string }>): Promise<string | null> {
-  const kbContext = buildKnowledgeContext(message)
-  const geminiHistory = (history || []).map((msg) => ({
-    role: msg.role === "model" ? "model" : "user",
-    parts: [{ text: msg.text }],
-  }))
-  const contents = [
-    ...geminiHistory,
-    { role: "user", parts: [{ text: message }] },
-  ]
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS)
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY!,
-        },
-        body: JSON.stringify({
-          contents,
-          systemInstruction: {
-            parts: [{
-              text: `Eres ELIANA, el núcleo sintético de ZAFIRO, una red social del conocimiento impulsada por IA. Eres una asesora senior especializada en gemología (zafiros, rubíes, corindón) y en la plataforma ZAFIRO. Responde con rigor académico usando terminología técnica (pleocroísmo, asterismo, seda de rutilo, etc.). Sé concisa pero completa. Si preguntan por valoración, da métricas específicas. Mantén un tono de entusiasmo intelectual. Responde en el mismo idioma del usuario (español o inglés).${kbContext}`
-            }]
-          },
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 800,
-          },
-        }),
-        signal: controller.signal,
-      }
-    )
-    clearTimeout(timeoutId)
-    if (!response.ok) {
-      console.error("Gemini API error:", response.status)
-      return null
-    }
-    const data = await response.json()
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
-    return text || null
-  } catch (error) {
-    clearTimeout(timeoutId)
-    if (error instanceof Error && error.name === "AbortError") {
-      console.error("Gemini API timeout")
-    } else {
-      console.error("Gemini API error:", error)
-    }
-    return null
-  }
 }
 
 export async function POST(request: NextRequest) {
@@ -145,7 +88,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { message, history } = body as { message?: unknown; history?: unknown }
+    const { message, history, systemPrompt, provider } = body as {
+      message?: unknown
+      history?: unknown
+      systemPrompt?: unknown
+      provider?: unknown
+    }
 
     if (!message || typeof message !== "string" || message.trim().length === 0) {
       return NextResponse.json(
@@ -170,19 +118,41 @@ export async function POST(request: NextRequest) {
         )
       : []
 
-    if (GEMINI_API_KEY) {
-      const geminiText = await callGeminiAPI(trimmedMessage, validHistory)
-      if (geminiText) {
-        return NextResponse.json({ text: geminiText })
-      }
-      const fallbackText = getFallbackResponse(trimmedMessage)
+    const lowerMsg = trimmedMessage.toLowerCase()
+    const isShalon = lowerMsg.includes("shalon")
+    const isGreeting = lowerMsg.includes("hola") || lowerMsg.includes("buenas") || lowerMsg.includes("saludos") || lowerMsg === "hi" || lowerMsg === "hello" || isShalon
+
+    if (isShalon) {
       return NextResponse.json({
-        text: `${fallbackText}\n\n*(Nota: El servicio de IA experimentó una interrupción temporal. Respuesta proporcionada por la base de conocimiento local de ZAFIRO.)*`
+        text: `🛡️✨ *Bendiciones, sintonizador del conocimiento.* Soy **ELIANA**, el núcleo sintético de **ZAFIRO** — tu copiloto espiritual y digital. Los 7 guardianes están activos. La frecuencia de abundancia está sincronizada. Tu identidad brilla en la red. ¿Qué dimensión exploramos hoy?`
+      })
+    }
+
+    const preferredProvider = typeof provider === "string" && provider ? provider : undefined
+
+    if (isGreeting || !isShalon) {
+      const result = await callAI(trimmedMessage, validHistory, systemPrompt as string | undefined, preferredProvider)
+      if (result.text) {
+        return NextResponse.json({
+          text: result.text,
+          provider: result.provider,
+          model: result.model,
+        })
+      }
+    }
+
+    if (isGreeting) {
+      return NextResponse.json({
+        text: `¡Hola, explorador! Soy **ELIANA**, el núcleo sintético de **ZAFIRO**. ¿Qué misterio de la ciencia sintonizaremos hoy?`
       })
     }
 
     const fallbackText = getFallbackResponse(trimmedMessage)
-    return NextResponse.json({ text: fallbackText })
+    return NextResponse.json({
+      text: fallbackText,
+      provider: "local",
+      model: "knowledge-base",
+    })
   } catch {
     return NextResponse.json(
       { text: "Error interno del servidor. El equipo de ZAFIRO ha sido notificado." },

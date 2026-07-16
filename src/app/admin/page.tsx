@@ -1,7 +1,8 @@
 'use client'
 
 import Link from "next/link"
-import { ArrowLeft, Shield, Users, FileText, BarChart3, Activity, Settings, AlertTriangle, MessageSquare, UserCheck, Eye, Ban, TrendingUp, Cpu, Zap, Bot, CheckCircle, Clock, RefreshCw, DollarSign, Star, Gem, Heart, Share2, Globe, BookOpen, Sparkles } from "lucide-react"
+import { ArrowLeft, Shield, Users, FileText, BarChart3, Activity, Settings, AlertTriangle, MessageSquare, UserCheck, Eye, Ban, TrendingUp, Cpu, Zap, Bot, CheckCircle, Clock, RefreshCw, DollarSign, Star, Gem, Heart, Share2, Globe, BookOpen, Sparkles, Fingerprint, Building2, Search, Crown, FileSearch, Siren, ScrollText } from "lucide-react"
+import { getIdentityStats } from "@/lib/identity"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { usePageTitle } from "@/lib/usePageTitle"
@@ -59,13 +60,7 @@ export default function AdminPage() {
     { name: "Tiempo de procesamiento de referidos", value: "30s", status: "Óptimo", color: "text-amber-400" },
   ]
 
-  const improvementSuggestions = [
-    "Implementar verificación de identidad con documento para reducir escalados por fraude.",
-    "Entrenar a ELIANA con más ejemplos de disputas de pago para mejorar tasa de auto-resolución.",
-    "Agregar recordatorio automático de renovación de membresía 7 días antes del vencimiento.",
-    "Optimizar detección de contenido duplicado en preguntas frecuentes.",
-    "Mejorar el onboarding con tutorial interactivo guiado por ELIANA.",
-  ]
+  const identityStats = typeof window !== 'undefined' ? getIdentityStats() : null
 
   return (
     <div className="min-h-screen bg-[#050816] text-white">
@@ -88,19 +83,33 @@ export default function AdminPage() {
           {[
             { id: "automation", label: "Automation", icon: Cpu },
             { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-            { id: "usuarios", label: "Usuarios", icon: Users },
+            { id: "usuarios", label: "Usuarios", icon: Users, href: "/admin/usuarios" },
+            { id: "vip", label: "VIP", icon: Crown, href: "/admin/vip" },
+            { id: "kyc", label: "KYC", icon: Fingerprint, href: "/admin/kyc" },
+            { id: "kyb", label: "KYB", icon: Building2, href: "/admin/kyb" },
+            { id: "riesgos", label: "Riesgos", icon: Siren, href: "/admin/riesgos" },
+            { id: "auditoria", label: "Auditoría", icon: ScrollText, href: "/admin/auditoria" },
+            { id: "ratings", label: "Calificaciones", icon: Star, href: "/admin/ratings" },
             { id: "reportes", label: "Reportes", icon: AlertTriangle },
             { id: "contenido", label: "Contenido", icon: FileText },
             { id: "moderacion", label: "Moderación", icon: Eye },
-            { id: "config", label: "Configuración", icon: Settings },
+            { id: "config", label: "Config", icon: Settings },
           ].map((t) => {
             const Icon = t.icon
+            if (t.href) {
+              return (
+                <Link key={t.id} href={t.href}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                    tab === t.id ? "bg-gradient-to-r from-[#00D9FF]/15 to-blue-600/10 text-[#00D9FF] border border-[#00D9FF]/20" : "text-slate-400 hover:text-white hover:bg-slate-900/40"
+                  }`}>
+                  <Icon className="w-3.5 h-3.5" /> {t.label}
+                </Link>
+              )
+            }
             return (
               <button key={t.id} onClick={() => setTab(t.id)}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                  tab === t.id
-                    ? "bg-gradient-to-r from-[#00D9FF]/15 to-blue-600/10 text-[#00D9FF] border border-[#00D9FF]/20"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900/40"
+                  tab === t.id ? "bg-gradient-to-r from-[#00D9FF]/15 to-blue-600/10 text-[#00D9FF] border border-[#00D9FF]/20" : "text-slate-400 hover:text-white hover:bg-slate-900/40"
                 }`}>
                 <Icon className="w-3.5 h-3.5" /> {t.label}
               </button>
@@ -134,110 +143,25 @@ export default function AdminPage() {
               })}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
-              <div className="p-5 rounded-2xl glass">
-                <h3 className="text-xs font-bold text-white mb-3 flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 text-[#00D9FF]" /> Actividad de Automatización</h3>
-                <div className="space-y-1.5 max-h-80 overflow-y-auto">
-                  {automationLog.map((a) => (
-                    <div key={a.id} className="flex items-center justify-between p-2 rounded-lg bg-slate-800/20 border border-slate-700/30">
-                      <div className="flex items-center gap-2 min-w-0">
-                        {a.eliana ? (
-                          <Bot className="w-3.5 h-3.5 text-[#00D9FF] shrink-0" />
-                        ) : (
-                          <Users className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                        )}
-                        <div className="min-w-0">
-                          <p className="text-[9px] font-bold text-white truncate">{a.action}</p>
-                          <p className="text-[7px] text-slate-500">{a.user} · {a.type}</p>
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span className={`text-[7px] font-mono px-1.5 py-0.5 rounded-full ${
-                          a.status === "Auto-resuelto" ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"
-                        }`}>{a.status}</span>
-                        <p className="text-[6px] text-slate-600 mt-0.5">{a.date}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-5 rounded-2xl glass">
-                <h3 className="text-xs font-bold text-white mb-3 flex items-center gap-2"><AlertTriangle className="w-3.5 h-3.5 text-red-400" /> Alertas de Fraude</h3>
-                <div className="space-y-1.5">
-                  {fraudAlerts.map((f) => (
-                    <div key={f.id} className="flex items-center justify-between p-2 rounded-lg bg-slate-800/20 border border-slate-700/30">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className={`w-2 h-2 rounded-full shrink-0 ${
-                          f.severity === "Alta" ? "bg-red-400" : f.severity === "Media" ? "bg-amber-400" : "bg-slate-500"
-                        }`} />
-                        <div className="min-w-0">
-                          <p className="text-[9px] text-white truncate">{f.detail}</p>
-                          <p className="text-[7px] text-slate-500">Severidad: {f.severity}</p>
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span className={`text-[7px] font-mono px-1.5 py-0.5 rounded-full ${
-                          f.status === "Bloqueado" ? "bg-red-500/10 text-red-400" :
-                          f.status === "En revisión" ? "bg-amber-500/10 text-amber-400" :
-                          f.status === "Investigando" ? "bg-blue-500/10 text-blue-400" :
-                          "bg-emerald-500/10 text-emerald-400"
-                        }`}>{f.status}</span>
-                        <p className="text-[6px] text-slate-600 mt-0.5">{f.date}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
-              <div className="p-5 rounded-2xl glass">
-                <h3 className="text-xs font-bold text-white mb-3 flex items-center gap-2"><Activity className="w-3.5 h-3.5 text-[#00D9FF]" /> Rendimiento del Sistema</h3>
-                <div className="space-y-2">
-                  {systemMetrics.map((m, i) => (
-                    <div key={i} className="flex items-center justify-between py-1.5 border-b border-slate-800/40 last:border-0">
-                      <span className="text-[9px] text-slate-400">{m.name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-bold text-white">{m.value}</span>
-                        <span className={`text-[7px] ${m.color}`}>{m.status}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-5 rounded-2xl glass">
-                <h3 className="text-xs font-bold text-white mb-3 flex items-center gap-2"><Sparkles className="w-3.5 h-3.5 text-amber-400" /> Recomendaciones de Mejora</h3>
-                <ul className="space-y-1.5">
-                  {improvementSuggestions.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[9px] text-slate-400 leading-relaxed">
-                      <span className="text-[#00D9FF] mt-0.5">→</span> {s}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-[#00D9FF]/10 bg-[#00D9FF]/5 p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Zap className="w-4 h-4 text-[#00D9FF]" />
-                <h3 className="text-xs font-bold text-white">Procesos Automatizados por ELIANA</h3>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {identityStats && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {[
-                  "Registro y verificación", "Onboarding de nuevos usuarios", "Gestión de membresías Pro", "Cuba Plus",
-                  "Pagos con Stripe", "Renovaciones", "Cancelaciones", "Sistema de referidos",
-                  "MSM Rewards (PTS)", "Publicaciones", "Comunidades", "Soporte básico",
-                  "Notificaciones", "Moderación inicial", "Recomendaciones personalizadas", "Fraude y abuso",
-                ].map((p, i) => (
-                  <div key={i} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-slate-800/30 border border-slate-700/30">
-                    <CheckCircle className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
-                    <span className="text-[8px] text-slate-300">{p}</span>
-                  </div>
-                ))}
+                  { label: "Total Usuarios", value: identityStats.totalUsers, icon: Users, color: "text-[#00D9FF]" },
+                  { label: "VIP Activos", value: identityStats.vip + identityStats.entrepreneurVip, icon: Crown, color: "text-amber-400" },
+                  { label: "KYC Aprobados", value: identityStats.kycApproved, icon: CheckCircle, color: "text-emerald-400" },
+                  { label: "KYC Pendientes", value: identityStats.kycPending, icon: Clock, color: "text-amber-400" },
+                ].map((s, i) => {
+                  const Icon = s.icon
+                  return (
+                    <div key={i} className="p-3 rounded-2xl glass">
+                      <Icon className={`w-4 h-4 ${s.color} mb-1.5`} />
+                      <p className="text-lg font-black">{s.value}</p>
+                      <p className="text-[8px] text-slate-400">{s.label}</p>
+                    </div>
+                  )
+                })}
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -245,10 +169,10 @@ export default function AdminPage() {
           <div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               {[
-                { label: "Usuarios Totales", value: "14,820", icon: Users, change: "+12%", color: "text-[#00D9FF]" },
-                { label: "Preguntas", value: "3,452", icon: MessageSquare, change: "+8%", color: "text-emerald-400" },
-                { label: "Comunidades", value: "128", icon: Activity, change: "+3%", color: "text-purple-400" },
-                { label: "PTS Circulando", value: "2.4M", icon: TrendingUp, change: "+18%", color: "text-amber-400" },
+                { label: "Usuarios Totales", value: identityStats?.totalUsers || "—", icon: Users, color: "text-[#00D9FF]" },
+                { label: "VIP", value: identityStats ? identityStats.vip + identityStats.entrepreneurVip : "—", icon: Crown, color: "text-amber-400" },
+                { label: "KYC Aprobados", value: identityStats?.kycApproved || "—", icon: Fingerprint, color: "text-emerald-400" },
+                { label: "Casos Riesgo", value: identityStats?.highRisk || "—", icon: AlertTriangle, color: "text-red-400" },
               ].map((s, i) => {
                 const Icon = s.icon
                 return (
@@ -256,51 +180,27 @@ export default function AdminPage() {
                     <Icon className={`w-5 h-5 ${s.color} mb-2`} />
                     <p className="text-2xl font-black">{s.value}</p>
                     <p className="text-[10px] text-slate-400">{s.label}</p>
-                    <span className="text-[9px] text-emerald-400">{s.change}</span>
                   </div>
                 )
               })}
             </div>
-            <div className="p-5 rounded-2xl glass">
-              <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-400" /> Reportes Recientes</h2>
-              <div className="space-y-2">
-                {[
-                  { id: "1", user: "usuario_324", reason: "Spam", status: "Pendiente", date: "hace 2h" },
-                  { id: "2", user: "usuario_891", reason: "Contenido ofensivo", status: "Revisado", date: "hace 5h" },
-                  { id: "3", user: "usuario_456", reason: "Desinformación", status: "Pendiente", date: "hace 8h" },
-                  { id: "4", user: "usuario_123", reason: "Autopromoción", status: "Resuelto", date: "hace 1d" },
-                ].map((r) => (
-                  <div key={r.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/30 border border-slate-800">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center">
-                        <Ban className="w-4 h-4 text-red-400" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-white">{r.user}</p>
-                        <p className="text-[9px] text-slate-500">{r.reason}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full ${
-                        r.status === "Pendiente" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
-                        r.status === "Revisado" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" :
-                        "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                      }`}>{r.status}</span>
-                      <p className="text-[8px] text-slate-600 mt-0.5">{r.date}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {tab === "usuarios" && (
-          <div className="p-5 rounded-2xl glass">
-            <h2 className="text-sm font-bold text-white mb-3">Gestión de Usuarios</h2>
-            <p className="text-[10px] text-slate-400">ELIANA gestiona automáticamente el registro, verificación de email, detección de cuentas duplicadas y onboarding. Los casos escalados aparecen aquí para revisión humana.</p>
-            <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-500">
-              <Bot className="w-3 h-3 text-[#00D9FF]" /> 92.6% de registros gestionados automáticamente por ELIANA
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <Link href="/admin/kyc" className="p-5 rounded-2xl glass hover:border-[#00D9FF]/30 transition-all border border-slate-800/50">
+                <h3 className="text-xs font-bold text-white mb-3 flex items-center gap-2"><Fingerprint className="w-3.5 h-3.5 text-[#00D9FF]" /> Verificación de Identidad</h3>
+                <div className="grid grid-cols-2 gap-2 text-[9px] text-slate-400">
+                  <span>Pendientes: {identityStats?.kycPending || 0}</span>
+                  <span>Aprobados: {identityStats?.kycApproved || 0}</span>
+                  <span>Más info: {identityStats?.kycMoreInfo || 0}</span>
+                  <span>Rechazados: {identityStats?.kycRejected || 0}</span>
+                </div>
+              </Link>
+              <Link href="/admin/kyb" className="p-5 rounded-2xl glass hover:border-[#00D9FF]/30 transition-all border border-slate-800/50">
+                <h3 className="text-xs font-bold text-white mb-3 flex items-center gap-2"><Building2 className="w-3.5 h-3.5 text-indigo-400" /> Verificación Empresarial</h3>
+                <div className="grid grid-cols-2 gap-2 text-[9px] text-slate-400">
+                  <span>Negocios: {identityStats?.kybPending || 0} pendientes</span>
+                  <span>Vencen pronto: {identityStats?.expiringSoon || 0}</span>
+                </div>
+              </Link>
             </div>
           </div>
         )}

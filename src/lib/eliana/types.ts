@@ -81,6 +81,8 @@ export interface ElianaResponse {
   suggestions?: string[]
   actions?: ElianaAction[]
   context?: Record<string, string>
+  provider?: string
+  model?: string
 }
 
 export interface ElianaAction {

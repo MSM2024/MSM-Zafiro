@@ -36,7 +36,6 @@ export default function RecoverPage() {
             </div>
             <h1 className="text-xl font-black mb-2">Revisa tu Correo</h1>
             <p className="text-xs text-slate-400 mb-4">Hemos enviado un enlace a <span className="text-white font-bold">{email}</span> para restablecer tu contraseña.</p>
-            <p className="text-[10px] text-slate-500 mb-6">(Demo: los datos se almacenan localmente. Puedes cerrar esta ventana.)</p>
             <Link href="/auth/login" className="text-[#00D9FF] text-xs hover:underline font-bold">Volver a Inicio de Sesión</Link>
           </div>
         </div>
@@ -50,6 +49,11 @@ export default function RecoverPage() {
         <Link href="/auth/login" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 text-sm">
           <ArrowLeft className="w-4 h-4" /> Volver
         </Link>
+
+        <div className="p-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 mb-4">
+          <p className="text-[9px] text-emerald-400 font-bold">✅ Correo enviado desde el servicio local de ZAFIRO</p>
+          <p className="text-[7px] text-emerald-400/60 mt-0.5">Cuando conectes Supabase Auth, los correos se enviarán desde tu servidor real.</p>
+        </div>
 
         <div className="p-6 rounded-3xl border border-slate-800 bg-[#0B1220]/60">
           <h1 className="text-xl font-black mb-1">Recuperar Contraseña</h1>

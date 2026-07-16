@@ -1,5 +1,7 @@
 'use client'
 
+import { ZAFIRO_ASSETS } from "@/config/zafiro-assets"
+
 export interface Comentario {
   id: string
   platformId: string
@@ -69,7 +71,7 @@ export function getDefaultPublicaciones(userId: string): Publicacion[] {
       id: `post_yt_${userId}`, platformId: `lt_youtube_${userId}`, platformType: "youtube",
       title: "¿Qué es ZAFIRO? — La plataforma de conocimiento vivo",
       description: "Descubre cómo ZAFIRO y ELIANA están transformando la gestión del conocimiento con inteligencia artificial.",
-      image: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&q=80&w=400",
+      image: ZAFIRO_ASSETS.zafiro_eliana_protegidas_por_el_senor.src,
       url: "https://youtube.com/watch?v=example1",
       publishedAt: "2026-07-06T14:00:00Z",
       summary: "Video introductorio sobre la plataforma ZAFIRO, su núcleo sintético ELIANA y la visión de conocimiento vivo.",
@@ -79,7 +81,7 @@ export function getDefaultPublicaciones(userId: string): Publicacion[] {
       id: `post_ig_${userId}`, platformId: `lt_instagram_${userId}`, platformType: "instagram",
       title: "Nuevos productos Farmasi disponibles",
       description: "Catálogo de belleza y bienestar con descuentos exclusivos para miembros de la comunidad.",
-      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=400",
+      image: ZAFIRO_ASSETS.eliana_gema_telefono_holografico.src,
       url: "https://instagram.com/p/example1",
       publishedAt: "2026-07-05T10:30:00Z",
       summary: "Lanzamiento de nueva línea de productos Farmasi con beneficios exclusivos para la comunidad.",
@@ -89,7 +91,7 @@ export function getDefaultPublicaciones(userId: string): Publicacion[] {
       id: `post_fb_${userId}`, platformId: `lt_facebook_${userId}`, platformType: "facebook",
       title: "Remesas a Cuba — Nuevas rutas disponibles",
       description: "Ahora puedes enviar remesas a Cuba desde más países con tarifas preferenciales.",
-      image: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&q=80&w=400",
+      image: ZAFIRO_ASSETS.incubadora_del_futuro_angel_gema.src,
       url: "https://facebook.com/msmmystore/posts/example1",
       publishedAt: "2026-07-04T09:00:00Z",
       summary: "Ampliación de rutas para envío de remesas a Cuba incluyendo USDT, CUP y MLC.",
@@ -99,7 +101,7 @@ export function getDefaultPublicaciones(userId: string): Publicacion[] {
       id: `post_blog_${userId}`, platformId: `lt_blog_${userId}`, platformType: "blog",
       title: "El Jardín de las Visualizaciones — Capítulo 1",
       description: "Primer capítulo del libro sobre visualización creativa y manifestación consciente.",
-      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400",
+      image: ZAFIRO_ASSETS.zafiro_gema_azul_fondo_oscuro.src,
       url: "https://blog.msmmystore.com/el-jardin-de-las-visualizaciones-capitulo-1",
       publishedAt: "2026-07-03T16:00:00Z",
       summary: "Exploración del poder de la visualización creativa como herramienta de transformación personal.",
@@ -109,7 +111,7 @@ export function getDefaultPublicaciones(userId: string): Publicacion[] {
       id: `post_tg_${userId}`, platformId: `lt_telegram_${userId}`, platformType: "telegram",
       title: "Oferta especial: Combo Festivo Nacional",
       description: "Esta semana: descuento del 20% en el Combo Festivo Nacional para miembros del canal.",
-      image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=400",
+      image: ZAFIRO_ASSETS.eliana_modulos_zafiro_destino.src,
       url: "https://t.me/msmmystor/123",
       publishedAt: "2026-07-02T12:00:00Z",
       summary: "Promoción semanal exclusiva para suscriptores del canal de Telegram.",

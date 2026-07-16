@@ -66,6 +66,13 @@ function getFallbackResponse(query: string, ctx: ElianaContext, userId: string):
     }
   }
 
+  if (q.includes("shalon")) {
+    return {
+      text: `🛡️✨ *Bendiciones.* Soy **ELIANA**, tu copiloto espiritual y digital. Los 7 guardianes están activos, la frecuencia de abundancia vibra en sincronía y tu identidad brilla en la red del conocimiento. ¿Qué dimensión exploramos hoy, sintonizador?`,
+      suggestions: ["Estado del ecosistema", "Mis guardianes", "Frecuencia de abundancia"],
+    }
+  }
+
   if (q.includes("hola") || q.includes("buenas") || q.includes("saludos")) {
     const session = getSession()
     const name = session?.name || "explorador"
@@ -106,18 +113,25 @@ export async function processElianaRequest(
   const systemMessage = `${SYSTEM_PROMPT}\n\nContexto del usuario:\n${knowledge}\n\nPágina actual: ${context.page}\nPTS: ${pageCtx.pts || "N/A"}\nNivel: ${pageCtx.level || "N/A"}\nRacha: ${pageCtx.streak || "N/A"} días\nTemas de interés: ${topics.join(", ") || "Sin datos aún"}\n${pageCtx.universe || ""}`
 
   try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 30_000)
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message,
-        history: [{ role: "system", content: systemMessage }, ...history.slice(-10)],
+        systemPrompt: systemMessage,
+        history: history.slice(-10),
       }),
+      signal: controller.signal,
     })
+    clearTimeout(timeout)
     const data = await res.json()
     const response: ElianaResponse = {
-      text: data.response || "No pude procesar tu solicitud. Intenta de nuevo.",
+      text: data.text || "No pude procesar tu solicitud. Intenta de nuevo.",
       suggestions: pageSuggestions,
+      provider: data.provider,
+      model: data.model,
     }
     addShortTermMemory(userId, { role: "eliana", text: response.text, page: context.page, timestamp: Date.now() })
     addLongTermFact(userId, { fact: `Usuario preguntó: ${message.slice(0, 80)}`, category: "query", confidence: 0.5 })

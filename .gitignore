@@ -43,5 +43,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
+# project specific
+*.log
+.server-log.txt
+backups/
+.backup-vercel/
+dist/
+temp/
 .env*

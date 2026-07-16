@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import AuthBridgeInit from "@/components/AuthBridgeInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,15 +16,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ZAFIRO — MSM Economía",
+    default: "ZAFIRO — Universo Digital Soberano",
     template: "%s | ZAFIRO",
   },
-  description: "Sistema Operativo de Microrredes Inteligentes para la economía cubana.",
-  keywords: ["ZAFIRO", "MSM", "economía", "Cuba", "microrred", "IA", "ELIANA"],
+  description: "Red Social del Conocimiento, la Conciencia y el Propósito. Conecta personas, ideas, conocimiento, negocios, tecnología, historia, fe y propósito en el ecosistema MSM.",
+  keywords: ["ZAFIRO", "MSM", "ELIANA", "conocimiento", "conciencia", "propósito", "ecosistema digital", "red social", "IA"],
   authors: [{ name: "MSM MY STORE LLC" }],
   openGraph: {
-    title: "ZAFIRO — MSM Economía",
-    description: "Sistema Operativo de Microrredes Inteligentes para la economía cubana.",
+    title: "ZAFIRO — Universo Digital Soberano",
+    description: "Red Social del Conocimiento, la Conciencia y el Propósito. Conecta personas, ideas, conocimiento, negocios, tecnología, historia, fe y propósito en el ecosistema MSM.",
     siteName: "ZAFIRO",
     type: "website",
     locale: "es_ES",
@@ -38,6 +39,11 @@ export const metadata: Metadata = {
     "mobile-web-app-capable": "yes",
   },
 };
+
+/* ============================================================
+   SALMO 91 — Protección divina sobre ZAFIRO OS
+   "El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente."
+   ============================================================ */
 
 export default function RootLayout({
   children,
@@ -60,7 +66,10 @@ export default function RootLayout({
         `}} />
       </head>
       <body className="bg-[#050816] text-white antialiased flex flex-col min-h-screen">
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout>
+          <AuthBridgeInit />
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

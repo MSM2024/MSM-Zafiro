@@ -3,7 +3,8 @@
 import { applyReferralCode } from "./referidos"
 import { createProfile, seedMiguelProfile } from "./profile"
 import { getSupabaseClient, isSupabaseAvailable } from "./supabase"
-import type { ZafiroUser, ZafiroSession, UserRole } from "../../packages/types/src/zafiro"
+import { sendEmail } from "./email-service"
+import type { ZafiroUser, ZafiroSession, LegacyUserRole } from "../../packages/types/src/zafiro"
 
 const USERS_KEY = "zafiro_users"
 const SESSION_KEY = "zafiro_session"
@@ -138,30 +139,38 @@ export async function logout(): Promise<void> {
 export async function recoverPassword(email: string): Promise<{ ok: boolean; error?: string }> {
   const supabase = getSupabaseClient()
   if (supabase) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001"
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zafiro.msmmystore.com"
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${appUrl}/auth/verify` })
     if (error) return { ok: false, error: error.message }
     return { ok: true }
   }
 
-  // Fallback: localStorage
+  // Fallback: localStorage email service
   const user = findUserByEmail(email)
   if (!user) return { ok: false, error: "No existe una cuenta con ese correo" }
-  return { ok: true, error: "Modo demo: revisa tu consola" }
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zafiro.msmmystore.com"
+  sendEmail(
+    email,
+    "Recupera tu acceso a ZAFIRO",
+    `Hemos recibido tu solicitud de recuperación.\n\nHaz clic en el siguiente enlace para restablecer tu contraseña:\n${appUrl}/auth/verify?email=${encodeURIComponent(email)}&mode=recovery\n\nSi no solicitaste esto, ignora este mensaje.\n\n— Equipo ZAFIRO`,
+    'recovery',
+    { email, type: 'password_recovery' }
+  )
+  return { ok: true }
 }
 
 // --- Role helpers ---
-export function getUserRole(): UserRole {
+export function getUserRole(): LegacyUserRole {
   if (typeof window === "undefined") return "VIEWER"
-  return (localStorage.getItem(ROLE_KEY) as UserRole) || "VIEWER"
+  return (localStorage.getItem(ROLE_KEY) as LegacyUserRole) || "VIEWER"
 }
 
-export function setUserRole(role: UserRole) {
+export function setUserRole(role: LegacyUserRole) {
   localStorage.setItem(ROLE_KEY, role)
 }
 
-export function requireRole(required: UserRole): boolean {
-  const hierarchy: Record<UserRole, number> = { OWNER: 3, CASHIER: 2, VIEWER: 1 }
+export function requireRole(required: LegacyUserRole): boolean {
+  const hierarchy: Record<LegacyUserRole, number> = { OWNER: 3, CASHIER: 2, VIEWER: 1 }
   return hierarchy[getUserRole()] >= hierarchy[required]
 }
 

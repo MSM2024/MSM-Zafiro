@@ -30,12 +30,14 @@ import TrendsSection from "@/components/TrendsSection"
 import ExpertLeaderboard from "@/components/ExpertLeaderboard"
 import AddQuestionModal from "@/components/AddQuestionModal"
 import { StripeModal } from "@/components/StripeModal"
+import { ZAFIRO_ASSETS } from "@/config/zafiro-assets"
 import SponsorFloatingBar from "@/components/SponsorFloatingBar"
 import SponsorDetailModal from "@/components/SponsorDetailModal"
 import SponsorAnalyticsChart from "@/components/SponsorAnalyticsChart"
 import BottomNav from "@/components/BottomNav"
 import { getSession } from "@/lib/auth"
 import { openElianaChat } from "@/components/ElianaFloatingButton"
+import PortalGenesis from "@/components/PortalGenesis"
 
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -252,7 +254,7 @@ export default function Home() {
       tagline: sponsorCampTitle,
       details: sponsorCampDetails || "Anuncio patrocinado premium sintonizado por autogestión asíncrona.",
       logo: sponsorCampLogo,
-      image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600",
+      image: ZAFIRO_ASSETS.zafiro_dashboard_mobile_concept.src,
       targetCategory: sponsorCampCategory,
       targetAudience: "Todos los Sintonizadores",
       countries: ["Global"],
@@ -307,13 +309,28 @@ export default function Home() {
     })
   }, [sponsors, selectedTag, searchQuery, joinedCommunities])
 
-  return (
-    <div className="min-h-screen bg-[#050816] text-white overflow-hidden relative">
+  const [showPortal, setShowPortal] = useState(true)
 
-      <ParticlesBackground isDarkMode={isDarkMode} />
+  return (
+    <div className="min-h-screen bg-[#050816] text-white relative">
+
+      {showPortal && (
+        <div className="relative z-20">
+          <PortalGenesis />
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-[#050816] z-10" />
+          <button
+            onClick={() => setShowPortal(false)}
+            className="absolute bottom-4 right-4 z-20 px-4 py-2 rounded-xl bg-slate-800/60 border border-slate-700/50 text-[9px] font-mono text-slate-400 hover:text-white hover:bg-slate-700/60 transition-all backdrop-blur-sm"
+          >
+            ✕ Saltar Intro
+          </button>
+        </div>
+      )}
+
+      {!showPortal && <ParticlesBackground isDarkMode={isDarkMode} />}
 
       {/* TOP BAR */}
-      <header className="sticky top-0 z-30 h-14 flex items-center justify-between px-4 border-b border-slate-800/50 bg-[#050816]/80 backdrop-blur-xl glow-border">
+      <header className={`sticky top-0 z-30 h-14 flex items-center justify-between px-4 border-b border-slate-800/50 bg-[#050816]/80 backdrop-blur-xl glow-border ${showPortal ? "hidden" : ""}`}>
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-[#050816] flex items-center justify-center border border-cyan-500/30">
             <Gem className="w-4 h-4 text-[#00D9FF]" />
@@ -366,7 +383,7 @@ export default function Home() {
       </header>
 
       {/* MAIN LAYOUT */}
-      <div className="flex flex-col flex-1 h-[calc(100vh-3.5rem)]">
+      <div className={`flex flex-col flex-1 ${showPortal ? "hidden" : "h-[calc(100vh-3.5rem)]"}`}>
 
         {/* DESKTOP TOP NAV */}
         <nav className="hidden lg:flex items-center gap-1 px-4 py-2 border-b border-slate-900 overflow-x-auto shrink-0">
@@ -676,7 +693,7 @@ export default function Home() {
                   <h2 className="text-xl font-black text-white font-display uppercase">{userSession?.name || "Miguel Solano"}</h2>
                 </div>
                 <div className="p-4 rounded-2xl glass flex items-center gap-4">
-                  <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120" className="w-14 h-14 rounded-2xl object-cover border border-slate-700" alt="" />
+                  <img src={ZAFIRO_ASSETS.eliana_interfaz_manos_telefono.src} className="w-14 h-14 rounded-2xl object-cover border border-slate-700" alt="" />
                   <div className="space-y-1 leading-tight">
                     <h4 className="text-sm font-bold text-white">{userSession?.name || "Miguel Solano"}</h4>
                     <p className="text-xs text-slate-400 font-semibold">Socio Platino de ZAFIRO</p>

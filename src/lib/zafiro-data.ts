@@ -1,3 +1,5 @@
+import { ZAFIRO_ASSETS } from "@/config/zafiro-assets"
+
 export interface Story {
   id: string;
   name: string;
@@ -105,66 +107,81 @@ export interface SponsorCampaign {
   status: "Activa" | "Pausada" | "Completada";
 }
 
+const AVATAR_A = ZAFIRO_ASSETS.eliana_interfaz_manos_telefono.src
+const AVATAR_B = ZAFIRO_ASSETS.eliana_modulos_zafiro_destino.src
+const AVATAR_C = ZAFIRO_ASSETS.eliana_gema_telefono_holografico.src
+const AVATAR_D = ZAFIRO_ASSETS.eliana_origen_modulos_superiores.src
+const AVATAR_E = ZAFIRO_ASSETS.eliana_ascension_red_de_nodos.src
+const AVATAR_F = ZAFIRO_ASSETS.eliana_zafiro_destino_gema_telefono.src
+const AVATAR_G = ZAFIRO_ASSETS.eliana_origen_panel_de_modulos.src
+const BRAND_IMG = ZAFIRO_ASSETS.zafiro_gema_azul_fondo_oscuro.src
+const BRAND_WIDE = ZAFIRO_ASSETS.zafiro_eliana_protegidas_por_el_senor.src
+const CONCEPT_DESK = ZAFIRO_ASSETS.zafiro_dashboard_desktop_concept.src
+const CONCEPT_MOB = ZAFIRO_ASSETS.zafiro_dashboard_mobile_concept.src
+const INCUBADORA = ZAFIRO_ASSETS.incubadora_del_futuro_angel_gema.src
+const STORYBOARD = ZAFIRO_ASSETS.eliana_awakening_storyboard.src
+const LOGO_GEMA = ZAFIRO_ASSETS.zafiro_logo_gema_geometria_sagrada.src
+
 export const stories: Story[] = [
   {
     id: "s1", name: "Dr. Alex R.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
+    avatar: AVATAR_A,
     gradient: "from-cyan-400 to-blue-600", duration: "24h",
-    content: { title: "Computación Optica", text: "¡Gran avance! Laboratorios cuánticos logran procesar fotones a temperatura ambiente utilizando guías de onda de silicio modificado.", image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=600", tag: "Física Cuántica" }
+    content: { title: "Computación Optica", text: "¡Gran avance! Laboratorios cuánticos logran procesar fotones a temperatura ambiente utilizando guías de onda de silicio modificado.", image: CONCEPT_DESK, tag: "Física Cuántica" }
   },
   {
     id: "s2", name: "Ana García",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120",
+    avatar: AVATAR_B,
     gradient: "from-purple-500 to-pink-500", duration: "48h",
-    content: { title: "Sintéticos Biológicos", text: "Hemos reprogramado células de levadura para sintetizar proteínas complejas que limpian microplásticos oceánicos de forma autónoma.", image: "https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?auto=format&fit=crop&q=80&w=600", tag: "Biotecnología" }
+    content: { title: "Sintéticos Biológicos", text: "Hemos reprogramado células de levadura para sintetizar proteínas complejas que limpian microplásticos oceánicos de forma autónoma.", image: INCUBADORA, tag: "Biotecnología" }
   },
   {
     id: "s3", name: "Sponsor: Nothing",
-    avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=120",
+    avatar: AVATAR_C,
     gradient: "from-slate-400 to-black", duration: "Patrocinado",
-    content: { title: "Estética Monocromo", text: "Nothing OS integra widgets nativos conectados directamente al flujo asíncrono de ZAFIRO.", image: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=600", tag: "Nothing Tech" }
+    content: { title: "Estética Monocromo", text: "Nothing OS integra widgets nativos conectados directamente al flujo asíncrono de ZAFIRO.", image: BRAND_WIDE, tag: "Nothing Tech" }
   },
   {
     id: "s4", name: "Ing. Mariana",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120",
+    avatar: AVATAR_D,
     gradient: "from-amber-400 to-rose-500", duration: "24h",
-    content: { title: "Diseño Generativo", text: "Hoy entrené un modelo de difusión para conceptualizar hábitats marcianos optimizando la radiación cósmica.", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600", tag: "Diseño & Espacio" }
+    content: { title: "Diseño Generativo", text: "Hoy entrené un modelo de difusión para conceptualizar hábitats marcianos optimizando la radiación cósmica.", image: CONCEPT_MOB, tag: "Diseño & Espacio" }
   }
 ];
 
 export const questions: Question[] = [
   {
     id: "q1",
-    author: { name: "Carlos Medina", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120", title: "Líder de Estrategia Cuántica", verified: true },
+    author: { name: "Carlos Medina", avatar: AVATAR_E, title: "Líder de Estrategia Cuántica", verified: true },
     time: "hace 2 horas", title: "¿Cómo afectará la criptografía de red cristalina al ecosistema financiero actual?",
     details: "Con la inminente llegada de computadores cuánticos comerciales de más de 2000 qubits lógicos, los algoritmos tradicionales RSA están en riesgo. ¿Qué medidas de migración a criptografía post-cuántica basada en retículos recomiendan?",
     category: "Ciberseguridad", views: 345, repliesCount: 2, rating: 98,
     tagColor: "text-blue-400 border-blue-500/30", tagBg: "bg-blue-500/10",
     replies: [
-      { author: "Dr. Alejandro R.", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=120", title: "PhD en Criptografía Teórica", time: "hace 1 hora", text: "NIST ya ha estandarizado algoritmos como Kyber y Dilithium. El paso inmediato es realizar una auditoría de 'Agilidad Criptográfica'.", likes: 24 },
-      { author: "ELIANA AI", avatar: "", title: "Sintonizadora ZAFIRO", time: "hace 45 minutos", text: "La criptografía basada en vectores de retículos es matemáticamente impenetrable hoy. Sugiero integrar Kyber-1024 en tu pasarela para un escudo del 99.9% contra ataques cuánticos.", likes: 48, isAi: true }
+      { author: "Dr. Alejandro R.", avatar: AVATAR_F, title: "PhD en Criptografía Teórica", time: "hace 1 hora", text: "NIST ya ha estandarizado algoritmos como Kyber y Dilithium. El paso inmediato es realizar una auditoría de 'Agilidad Criptográfica'.", likes: 24 },
+      { author: "ELIANA AI", avatar: BRAND_IMG, title: "Sintonizadora ZAFIRO", time: "hace 45 minutos", text: "La criptografía basada en vectores de retículos es matemáticamente impenetrable hoy. Sugiero integrar Kyber-1024 en tu pasarela para un escudo del 99.9% contra ataques cuánticos.", likes: 48, isAi: true }
     ]
   },
   {
     id: "q2",
-    author: { name: "Dra. Sofía Herrera", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120", title: "Economista Principal", verified: true },
+    author: { name: "Dra. Sofía Herrera", avatar: AVATAR_G, title: "Economista Principal", verified: true },
     time: "hace 4 horas", title: "¿Qué métricas determinan el verdadero valor de un activo de datos en 2028?",
     details: "Ante la automatización total, los datos son el único bien de producción insustituible. ¿Cómo calculamos el valor de amortización de un dataset de entrenamiento de nicho?",
     category: "Economía de Datos", views: 198, repliesCount: 1, rating: 94,
     tagColor: "text-purple-400 border-purple-500/30", tagBg: "bg-purple-500/10",
     replies: [
-      { author: "Ing. Mariana López", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120", title: "Product Manager de Datos", time: "hace 2 horas", text: "Utilizamos la fórmula de Rendimiento Incremental de Inferencia (IIR): medimos la reducción de tasa de error del modelo tras inyectar el dataset.", likes: 18 }
+      { author: "Ing. Mariana López", avatar: AVATAR_A, title: "Product Manager de Datos", time: "hace 2 horas", text: "Utilizamos la fórmula de Rendimiento Incremental de Inferencia (IIR): medimos la reducción de tasa de error del modelo tras inyectar el dataset.", likes: 18 }
     ]
   },
   {
     id: "q3",
-    author: { name: "Lucas Thorne", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=120", title: "Ingeniero Aeroespacial", verified: false },
+    author: { name: "Lucas Thorne", avatar: AVATAR_B, title: "Ingeniero Aeroespacial", verified: false },
     time: "hace 12 horas", title: "¿Es viable el helio-3 lunar para reactores de confinamiento magnético?",
     details: "¿El factor de sección eficaz de fusión de la reacción Deuterio-Helio-3 justifica el costo de transporte aeroespacial frente a la fusión clásica Deuterio-Tritio?",
     category: "Ciencia Espacial", views: 412, repliesCount: 1, rating: 97,
     tagColor: "text-amber-400 border-amber-500/30", tagBg: "bg-amber-500/10",
     replies: [
-      { author: "ELIANA AI", avatar: "", title: "Sintonizadora ZAFIRO", time: "hace 10 horas", text: "Aunque la temperatura de ignición requerida es ~580M Kelvin, la ventaja crucial es que no libera neutrones destructivos, sino protones que pueden convertirse directamente en electricidad con 90% de eficiencia.", likes: 39, isAi: true }
+      { author: "ELIANA AI", avatar: BRAND_IMG, title: "Sintonizadora ZAFIRO", time: "hace 10 horas", text: "Aunque la temperatura de ignición requerida es ~580M Kelvin, la ventaja crucial es que no libera neutrones destructivos, sino protones que pueden convertirse directamente en electricidad con 90% de eficiencia.", likes: 39, isAi: true }
     ]
   }
 ];
@@ -176,16 +193,16 @@ export const trends: Trend[] = [
 ];
 
 export const communities: Community[] = [
-  { id: "c1", name: "Sistemas Holográficos 2030", description: "Desarrollo de pantallas ópticas de fase de ondas coherentes sin soporte de cristal.", members: "14.2K expertos", avatar: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&q=80&w=120", tag: "Óptica Teórica", color: "border-cyan-500/30 text-cyan-400 bg-cyan-500/5" },
-  { id: "c2", name: "Sintetizadores de Proteínas Libres", description: "Comunidad No-Code biológica para programar bacterias modificadas autorreguladas.", members: "9.8K biólogos", avatar: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=120", tag: "Bio-Software", color: "border-emerald-500/30 text-emerald-400 bg-emerald-500/5" },
-  { id: "c3", name: "Macroeconomistas del Margen Cero", description: "Teoría de valor asíncrono para economías pos-escasez automatizadas por agentes.", members: "11.5K economistas", avatar: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=120", tag: "Pos-Escasez", color: "border-purple-500/30 text-purple-400 bg-purple-500/5" }
+  { id: "c1", name: "Sistemas Holográficos 2030", description: "Desarrollo de pantallas ópticas de fase de ondas coherentes sin soporte de cristal.", members: "14.2K expertos", avatar: AVATAR_C, tag: "Óptica Teórica", color: "border-cyan-500/30 text-cyan-400 bg-cyan-500/5" },
+  { id: "c2", name: "Sintetizadores de Proteínas Libres", description: "Comunidad No-Code biológica para programar bacterias modificadas autorreguladas.", members: "9.8K biólogos", avatar: AVATAR_D, tag: "Bio-Software", color: "border-emerald-500/30 text-emerald-400 bg-emerald-500/5" },
+  { id: "c3", name: "Macroeconomistas del Margen Cero", description: "Teoría de valor asíncrono para economías pos-escasez automatizadas por agentes.", members: "11.5K economistas", avatar: AVATAR_E, tag: "Pos-Escasez", color: "border-purple-500/30 text-purple-400 bg-purple-500/5" }
 ];
 
 export const experts: Expert[] = [
-  { rank: 1, name: "Dr. Alejandro Ramos", title: "Algoritmos Genéticos & Redes Post-Cuánticas", pts: "14,820 PTS", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=120", color: "bg-amber-500 text-black", verified: true },
-  { rank: 2, name: "Ing. Mariana López", title: "Arquitecta de Redes No-Code & Web3", pts: "12,410 PTS", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120", color: "bg-slate-300 text-black", verified: true },
-  { rank: 3, name: "Coach Eduardo Mendoza", title: "Liderazgo en Sistemas Descentralizados", pts: "9,850 PTS", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=120", color: "bg-amber-700 text-white", verified: true },
-  { rank: 4, name: "Dra. Sofía Herrera", title: "Fórmulas Macroeconómicas y Tokenización", pts: "8,940 PTS", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120", color: "bg-blue-900 text-white", verified: true }
+  { rank: 1, name: "Dr. Alejandro Ramos", title: "Algoritmos Genéticos & Redes Post-Cuánticas", pts: "14,820 PTS", avatar: AVATAR_B, color: "bg-amber-500 text-black", verified: true },
+  { rank: 2, name: "Ing. Mariana López", title: "Arquitecta de Redes No-Code & Web3", pts: "12,410 PTS", avatar: AVATAR_F, color: "bg-slate-300 text-black", verified: true },
+  { rank: 3, name: "Coach Eduardo Mendoza", title: "Liderazgo en Sistemas Descentralizados", pts: "9,850 PTS", avatar: AVATAR_A, color: "bg-amber-700 text-white", verified: true },
+  { rank: 4, name: "Dra. Sofía Herrera", title: "Fórmulas Macroeconómicas y Tokenización", pts: "8,940 PTS", avatar: AVATAR_G, color: "bg-blue-900 text-white", verified: true }
 ];
 
 export const knowledgeNodes: Record<string, KnowledgeNode> = {
@@ -196,12 +213,12 @@ export const knowledgeNodes: Record<string, KnowledgeNode> = {
 };
 
 export const defaultSponsors: SponsorCampaign[] = [
-  { id: "sp-1", companyName: "Nothing Tech", campaignName: "Lienzo Monocromo Cuántico", tagline: "Nothing OS integra widgets cuánticos nativos.", details: "Sintoniza tu flujo asíncrono de conocimiento sin interferencias en un lienzo monocromo puro.", logo: "N", image: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=600", targetCategory: "Ciberseguridad", targetAudience: "Sintonizadores Avanzados", countries: ["Global", "España", "EE.UU."], languages: ["Español", "Inglés"], budget: 800, spent: 320, duration: "30 días", ctaText: "Ver Widgets", impressions: 14520, clicks: 1240, conversions: 412, status: "Activa" },
-  { id: "sp-2", companyName: "Vercel Systems", campaignName: "Inferencia en el Borde", tagline: "Despliega modelos de inferencia en el borde global.", details: "Latencia ultra-baja de 0.02ms para tus enjambres de agentes de IA.", logo: "▲", image: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=600", targetCategory: "Inteligencia Artificial", targetAudience: "Todos los Sintonizadores", countries: ["Global", "México", "Colombia"], languages: ["Español", "Inglés"], budget: 1500, spent: 750, duration: "Sintonía Continua", ctaText: "Probar Inferencia", impressions: 28940, clicks: 3410, conversions: 980, status: "Activa" },
-  { id: "sp-3", companyName: "Stripe Quantum", campaignName: "Monetización Asíncrona", tagline: "Pagos asíncronos instantáneos para economías de datos.", details: "Monetiza tus aportaciones científicas con transferencias inmediatas de valor real.", logo: "💳", image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=600", targetCategory: "Economía de Datos", targetAudience: "Líderes de Opinión", countries: ["EE.UU.", "España", "México"], languages: ["Español", "Inglés"], budget: 1200, spent: 450, duration: "15 días", ctaText: "Configurar Stripe", impressions: 11200, clicks: 890, conversions: 240, status: "Activa" },
-  { id: "sp-4", companyName: "OpenAI Research", campaignName: "Razonamiento Profundo", tagline: "Sistemas avanzados de enjambres inteligentes.", details: "Modelos optimizados de razonamiento lógico continuo para la resolución de anomalías cuánticas.", logo: "🤖", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600", targetCategory: "Inteligencia Artificial", targetAudience: "Sintonizadores Avanzados", countries: ["Global"], languages: ["Inglés"], budget: 2000, spent: 1120, duration: "Sintonía Continua", ctaText: "Explorar Modelos", impressions: 34900, clicks: 4520, conversions: 1540, status: "Activa" },
-  { id: "sp-5", companyName: "Linear Labs", campaignName: "Física Gravitacional", tagline: "Física de datos gravitacionales para telemetría espacial.", details: "Seguimiento milimétrico de órbita mediante algoritmos de red de tensión profunda.", logo: "⊘", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600", targetCategory: "Ciencia Espacial", targetAudience: "Líderes de Opinión", countries: ["Global", "EE.UU."], languages: ["Español", "Inglés"], budget: 600, spent: 180, duration: "7 días", ctaText: "Ver Telemetría", impressions: 8900, clicks: 650, conversions: 110, status: "Activa" },
-  { id: "sp-6", companyName: "BioSynthetica", campaignName: "Software Celular Activo", tagline: "Programación bacteriana para degradar microplásticos.", details: "Reprogramación autónoma de células de levadura para regenerar ecosistemas acuáticos.", logo: "🧬", image: "https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?auto=format&fit=crop&q=80&w=600", targetCategory: "Biotecnología", targetAudience: "Todos los Sintonizadores", countries: ["España", "Colombia", "México"], languages: ["Español"], budget: 950, spent: 410, duration: "15 días", ctaText: "Sintonizar Bio", impressions: 12100, clicks: 1040, conversions: 320, status: "Activa" }
+  { id: "sp-1", companyName: "Nothing Tech", campaignName: "Lienzo Monocromo Cuántico", tagline: "Nothing OS integra widgets cuánticos nativos.", details: "Sintoniza tu flujo asíncrono de conocimiento sin interferencias en un lienzo monocromo puro.", logo: "N", image: BRAND_WIDE, targetCategory: "Ciberseguridad", targetAudience: "Sintonizadores Avanzados", countries: ["Global", "España", "EE.UU."], languages: ["Español", "Inglés"], budget: 800, spent: 320, duration: "30 días", ctaText: "Ver Widgets", impressions: 14520, clicks: 1240, conversions: 412, status: "Activa" },
+  { id: "sp-2", companyName: "Vercel Systems", campaignName: "Inferencia en el Borde", tagline: "Despliega modelos de inferencia en el borde global.", details: "Latencia ultra-baja de 0.02ms para tus enjambres de agentes de IA.", logo: "▲", image: CONCEPT_DESK, targetCategory: "Inteligencia Artificial", targetAudience: "Todos los Sintonizadores", countries: ["Global", "México", "Colombia"], languages: ["Español", "Inglés"], budget: 1500, spent: 750, duration: "Sintonía Continua", ctaText: "Probar Inferencia", impressions: 28940, clicks: 3410, conversions: 980, status: "Activa" },
+  { id: "sp-3", companyName: "Stripe Quantum", campaignName: "Monetización Asíncrona", tagline: "Pagos asíncronos instantáneos para economías de datos.", details: "Monetiza tus aportaciones científicas con transferencias inmediatas de valor real.", logo: "💳", image: BRAND_IMG, targetCategory: "Economía de Datos", targetAudience: "Líderes de Opinión", countries: ["EE.UU.", "España", "México"], languages: ["Español", "Inglés"], budget: 1200, spent: 450, duration: "15 días", ctaText: "Configurar Stripe", impressions: 11200, clicks: 890, conversions: 240, status: "Activa" },
+  { id: "sp-4", companyName: "OpenAI Research", campaignName: "Razonamiento Profundo", tagline: "Sistemas avanzados de enjambres inteligentes.", details: "Modelos optimizados de razonamiento lógico continuo para la resolución de anomalías cuánticas.", logo: "🤖", image: CONCEPT_MOB, targetCategory: "Inteligencia Artificial", targetAudience: "Sintonizadores Avanzados", countries: ["Global"], languages: ["Inglés"], budget: 2000, spent: 1120, duration: "Sintonía Continua", ctaText: "Explorar Modelos", impressions: 34900, clicks: 4520, conversions: 1540, status: "Activa" },
+  { id: "sp-5", companyName: "Linear Labs", campaignName: "Física Gravitacional", tagline: "Física de datos gravitacionales para telemetría espacial.", details: "Seguimiento milimétrico de órbita mediante algoritmos de red de tensión profunda.", logo: "⊘", image: INCUBADORA, targetCategory: "Ciencia Espacial", targetAudience: "Líderes de Opinión", countries: ["Global", "EE.UU."], languages: ["Español", "Inglés"], budget: 600, spent: 180, duration: "7 días", ctaText: "Ver Telemetría", impressions: 8900, clicks: 650, conversions: 110, status: "Activa" },
+  { id: "sp-6", companyName: "BioSynthetica", campaignName: "Software Celular Activo", tagline: "Programación bacteriana para degradar microplásticos.", details: "Reprogramación autónoma de células de levadura para regenerar ecosistemas acuáticos.", logo: "🧬", image: STORYBOARD, targetCategory: "Biotecnología", targetAudience: "Todos los Sintonizadores", countries: ["España", "Colombia", "México"], languages: ["Español"], budget: 950, spent: 410, duration: "15 días", ctaText: "Sintonizar Bio", impressions: 12100, clicks: 1040, conversions: 320, status: "Activa" }
 ];
 
 export const nobleSponsors = [

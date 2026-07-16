@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation"
 import Footer from "@/components/Footer"
 import ElianaFloatingButton from "@/components/ElianaFloatingButton"
 import NetworkBackground from "@/components/ui/NetworkBackground"
+import PresenciaInstantanea from "@/components/PresenciaInstantanea"
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -16,6 +17,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {children}
       </div>
       {!isHome && <Footer />}
+      <PresenciaInstantanea />
       <ElianaFloatingButton />
     </>
   )

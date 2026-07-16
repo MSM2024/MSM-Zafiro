@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@zafiro/types": ["./packages/types/src/zafiro"]
     }
   },
   "include": [

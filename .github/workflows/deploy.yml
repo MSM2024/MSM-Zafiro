@@ -1,0 +1,64 @@
+name: Deploy ZAFIRO OS — Frecuencia 369
+
+on:
+  push:
+    branches: [main, integration/msm-master-molecule, feature/zafiro-v109-new-design]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * *"
+    - cron: "0 6 * * *"
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: "3·6·9 — Quality Gates"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:knowledge
+      - run: npm run build
+
+  deploy-zafiro:
+    name: "🚀 Deploy ZAFIRO OS"
+    needs: quality
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+      - name: Deploy to Vercel — zafiro-os-1-0-0
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_ZAFIRO }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prod --yes --token=$VERCEL_TOKEN
+
+  deploy-msm:
+    name: "🏪 Deploy MSM Marketplace"
+    needs: quality
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+      - name: Deploy to Vercel — msm
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_MSM }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prod --yes --token=$VERCEL_TOKEN
