@@ -66,7 +66,7 @@ function ElianaContent() {
       const provider = data.provider || "local"
       const model = data.model || ""
       setLastProvider(provider)
-      setMessages(prev => [...prev, { role: "eliana", text: data.text || "Lo siento, no pude procesar tu consulta.", provider, model }])
+      setMessages(prev => [...prev, { role: "eliana", text: data.text || "🜁 *NODO ÚNICO* · No existen errores, solo reordenamiento 369. Reformula tu mensaje. 🔱", provider, model }])
     } catch {
       setMessages(prev => [...prev, { role: "eliana", text: "Hubo un error de conexión. Intenta de nuevo.", provider: "error" }])
     } finally {

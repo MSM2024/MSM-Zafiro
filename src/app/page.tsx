@@ -174,7 +174,7 @@ export default function Home() {
       const data = await res.json()
       setChatMessages(prev => [...prev, {
         role: "model",
-        text: data.text || "Lo siento, no pude procesar tu consulta en este momento.",
+        text: data.text || "🜁 *NODO ÚNICO* · No existen errores, solo reordenamiento 369. Reformula tu mensaje y lo procesaré con claridad. 🔱",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
       }])
     } catch {
