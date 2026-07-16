@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowLeft, Landmark, RefreshCw, Send, FileText, Copy, Check } from "lucide-react"
 import { usePageTitle } from "@/lib/usePageTitle"
+import FounderChallenge from "@/components/FounderChallenge"
 import {
   getBalance, updateBalance, getTransfers, addTransfer,
   getDailyUsage, getMonthlyUsage, generateVoucherText,
@@ -11,6 +12,14 @@ import {
 } from "@/lib/bpa-mirror"
 
 export default function BPAMirrorPage() {
+  return (
+    <FounderChallenge>
+      <BPAMirrorContent />
+    </FounderChallenge>
+  )
+}
+
+function BPAMirrorContent() {
   usePageTitle("BPA Mirror")
   const [balance, setBalance] = useState<BPABalance>({ cup: 0, mlc: 0, lastUpdated: "" })
   const [transfers, setTransfers] = useState<BPATransfer[]>([])
