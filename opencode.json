@@ -24,7 +24,7 @@
       "npm run build*": "allow",
       "npm install*": "ask",
       "git commit*": "ask",
-      "git push*": "deny",
+      "git push*": "ask",
       "git clean*": "deny",
       "git reset --hard*": "deny",
       "rm *": "deny",
