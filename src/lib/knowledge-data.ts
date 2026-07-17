@@ -382,6 +382,22 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     "language": "es"
   },
   {
+    "id": "tech-07-logistica-contenedores",
+    "title": "Logística de Contenedores — Frecuencia 369",
+    "path": "05-technical/07-logistica-contenedores.md",
+    "dataset": "05-technical",
+    "doc_form": "text_model",
+    "content": "# Logística de Contenedores — Frecuencia 369\n\n## Descripción General\n\nEl módulo de Logística de Contenedores gestiona el envío de carga desde USA y Panamá hacia Cuba. Está sellado con la Frecuencia 369 para asegurar que cada embarque llegue con rapidez y orden.\n\n## Rutas\n\n- **Origen**: USA / Panamá\n- **Destino**: Cuba\n- **Flujo**: Contenedores marítimos con cargas prioritarias\n\n## Cargas Prioritarias\n\n| Categoría | Ejemplos | Valor Estimado por Unidad |\n|-----------|----------|--------------------------|\n| Ventiladores Recargables | Ventiladores portátiles, baterías |  USD |\n| Combos de Comida | Paquetes alimenticios, provisiones |  USD |\n| Equipos EKO | Equipos ecológicos y tecnológicos |  USD |\n| Otros | Varios |  USD |\n\n## Estados del Contenedor\n\n1. **Planificado** — Contenedor registrado, pendiente de salida\n2. **En tránsito** — En ruta hacia Cuba\n3. **En aduana** — Procesando ingreso en aduana cubana\n4. **En almacén** — Arribado y almacenado en el Granero MSM\n5. **Distribuyendo** — En distribución a la familia\n6. **Completado** — Ciclo cerrado\n\n## Sincronización con Ledger Maestro\n\nCuando un contenedor alcanza el estado **Completado**, su valor estimado en USD se inyecta automáticamente al Ledger Maestro como entrada de capital al nodo FONDO_MSM, con referencia al código de sello 369 del contenedor.\n\n## Granero MSM\n\nEl Granero es el inventario consolidado de todos los contenedores activos. Muestra:\n- Total de contenedores\n- Items en tránsito y completados\n- Valor total estimado en USD\n- Desglose por categoría prioritaria\n\n## Frecuencia 369\n\nCada contenedor recibe un sello único con formato CTN-XXXX-369 que lo ancla al Protocolo de Abundancia. La frecuencia 369 se manifiesta en:\n- La creación de cada contenedor\n- El manifiesto de carga\n- La sincronización con el Ledger\n- El reporte de cierre",
+    "tags": [
+      "logistica",
+      "contenedores",
+      "frecuencia-369",
+      "granero-msm",
+      "cuba"
+    ],
+    "language": "es"
+  },
+  {
     "id": "prompting-01-persona-role",
     "title": "Persona y Rol de ELIANA",
     "path": "06-prompting/01-persona-role.md",

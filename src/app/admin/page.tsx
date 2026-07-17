@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { ArrowLeft, Shield, Users, FileText, BarChart3, Activity, Settings, AlertTriangle, MessageSquare, UserCheck, Eye, Ban, TrendingUp, Cpu, Zap, Bot, CheckCircle, Clock, RefreshCw, DollarSign, Star, Gem, Heart, Share2, Globe, BookOpen, Sparkles, Fingerprint, Building2, Search, Crown, FileSearch, Siren, ScrollText } from "lucide-react"
+import { ArrowLeft, Shield, Users, FileText, BarChart3, Activity, Settings, AlertTriangle, MessageSquare, UserCheck, Eye, Ban, TrendingUp, Cpu, Zap, Bot, CheckCircle, Clock, RefreshCw, DollarSign, Star, Gem, Heart, Share2, Globe, BookOpen, Sparkles, Fingerprint, Building2, Search, Crown, FileSearch, Siren, ScrollText, Ship } from "lucide-react"
 import { getIdentityStats } from "@/lib/identity"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -89,6 +89,7 @@ export default function AdminPage() {
             { id: "kyb", label: "KYB", icon: Building2, href: "/admin/kyb" },
             { id: "riesgos", label: "Riesgos", icon: Siren, href: "/admin/riesgos" },
             { id: "auditoria", label: "Auditoría", icon: ScrollText, href: "/admin/auditoria" },
+            { id: "logistica", label: "Logística", icon: Ship, href: "/admin/logistica" },
             { id: "ratings", label: "Calificaciones", icon: Star, href: "/admin/ratings" },
             { id: "reportes", label: "Reportes", icon: AlertTriangle },
             { id: "contenido", label: "Contenido", icon: FileText },
