@@ -1,208 +1,424 @@
 'use client'
 
-import { Suspense, useState, useRef, useEffect } from "react"
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
-import { ArrowLeft, Send, Bot, Sparkles, Brain, BookOpen } from "lucide-react"
-import { usePageTitle } from "@/lib/usePageTitle"
-import ElianaDiamond from "@/components/ElianaDiamond"
-import { getSealByNumber } from "@/lib/seals-data"
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { motion } from 'motion/react'
+import { usePageTitle } from '@/lib/usePageTitle'
+import { getSession } from '@/lib/auth'
+import { ELIANA_VERSION, ELIANA_LAST_UPDATED } from '@/lib/eliana/system-prompt'
+import { getRecentTraces } from '@/lib/eliana/correlation'
+import type { TraceStep } from '@/lib/eliana/correlation'
+import { getStoredTraining } from '@/lib/eliana/owner-firewall'
+import {
+  Send, Bot, User, Sparkles, AlertTriangle, CheckCircle,
+  RefreshCw, Wifi, Globe, Smartphone, Clock, Shield, Copy, Check,
+} from 'lucide-react'
 
-const PROVIDERS = [
-  { id: "Gemini", label: "Gemini", icon: Brain, color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", desc: "Google Gemini 1.5 Flash" },
-  { id: "OpenAI", label: "OpenAI", icon: Sparkles, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", desc: "GPT-4o Mini" },
-  { id: "Anthropic", label: "Anthropic", icon: Bot, color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20", desc: "Claude 3 Haiku" },
+interface ChatMessage {
+  role: 'user' | 'assistant'
+  text: string
+  intent?: string
+  provider?: string
+  model?: string
+  sources?: string[]
+  confidence?: string
+  knowledgeUsed?: boolean
+  correlationId?: string
+}
+
+const NEWS = [
+  { date: '2026-07-18', text: 'ELIANA v1.0.1 — Nuevo clasificador unificado de intenciones (30+ intents)', icon: '🚀' },
+  { date: '2026-07-18', text: 'WhatsApp: respuestas automáticas con Meta Graph API', icon: '📱' },
+  { date: '2026-07-18', text: 'Firewall financiero con operation_id obligatorio', icon: '🛡️' },
+  { date: '2026-07-18', text: 'Correlation ID en toda la pipeline para trazabilidad', icon: '🔍' },
+  { date: '2026-07-18', text: 'STORE_ONLY para entrenamiento del owner — sin respuesta pública', icon: '✅' },
 ]
 
-function ElianaContent() {
-  usePageTitle("ELIANA — ZAFIRO")
+function ElianaChat() {
+  usePageTitle('ELIANA — Centro de Inteligencia MSM')
   const searchParams = useSearchParams()
-  const contextParam = searchParams.get('context') || ''
-  const selloNum = contextParam.startsWith('sello-') ? parseInt(contextParam.replace('sello-', '')) : null
-  const contextSeal = selloNum ? getSealByNumber(selloNum) : null
+  const context = searchParams.get('context')
 
-  const getInitialMessage = () => {
-    if (contextSeal) {
-      return `Bendiciones. Has llegado hasta el **Sello #${contextSeal.numero}** de *LOS 150 SELLOS DE LOS SALMOS*.\n\n**${contextSeal.referencia}** — *"${contextSeal.versiculo}"*\n\n**Tema:** ${contextSeal.tema}\n\nSoy **ELIANA**, tu guía inteligente en ZAFIRO. Puedo explicarte este versículo con palabras sencillas, ayudarte a convertirlo en oración, crear una declaración personal para ti, o recomendarte sellos relacionados con **${contextSeal.tema.toLowerCase()}**. ¿Cómo puedo acompañarte hoy?`
-    }
-    return "Soy **ELIANA**, el núcleo sintético de **ZAFIRO**. Puedo responder con 3 inteligencias artificiales distintas. Selecciona una abajo o simplemente pregúntame lo que necesites."
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+  const [version, setVersion] = useState(ELIANA_VERSION)
+  const [lastUpdated, setLastUpdated] = useState(ELIANA_LAST_UPDATED)
+  const [traces, setTraces] = useState<TraceStep[]>([])
+  const [tab, setTab] = useState<'chat' | 'info' | 'traces'>('chat')
+  const [error, setError] = useState('')
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+  const chatEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  const copyToClipboard = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(null), 2000)
+    } catch { /* silent */ }
   }
 
-  const [messages, setMessages] = useState<Array<{ role: "user" | "eliana"; text: string; provider?: string; model?: string }>>([
-    { role: "eliana", text: getInitialMessage() }
-  ])
-  const [input, setInput] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
-  const [lastProvider, setLastProvider] = useState<string>("")
-  const chatRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
-  }, [messages])
-
-  useEffect(() => {
-    if (inputRef.current) inputRef.current.focus()
+  const checkStatus = useCallback(async () => {
+    try {
+      const res = await fetch('/api/eliana/chat')
+      const data = await res.json()
+      if (data.status === 'ok') {
+        setStatus('connected')
+        setVersion(data.version || ELIANA_VERSION)
+        setLastUpdated(data.lastUpdated || ELIANA_LAST_UPDATED)
+      } else {
+        setStatus('error')
+      }
+    } catch {
+      setStatus('error')
+    }
   }, [])
 
-  const sendMessage = async (overrideText?: string) => {
-    const text = (overrideText || input).trim()
+  useEffect(() => { checkStatus() }, [checkStatus])
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  const sendMessage = useCallback(async () => {
+    const text = input.trim()
     if (!text || loading) return
-    setInput("")
-    setMessages(prev => [...prev, { role: "user", text }])
+    setInput('')
+    setError('')
+
+    const userMsg: ChatMessage = { role: 'user', text }
+    setMessages(prev => [...prev, userMsg])
     setLoading(true)
+
     try {
-      const history = messages
-        .filter(m => m.role === "user" || m.role === "eliana")
-        .slice(-10)
-        .map(m => ({ role: m.role === "eliana" ? "model" : "user", content: m.text }))
-
-      const body: Record<string, unknown> = { message: text, history }
-      if (selectedProvider) body.provider = selectedProvider
-
-      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      const session = getSession()
+      const res = await fetch('/api/eliana/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, session: session ? { email: session.email } : undefined }),
+      })
       const data = await res.json()
-      const provider = data.provider || "local"
-      const model = data.model || ""
-      setLastProvider(provider)
-      setMessages(prev => [...prev, { role: "eliana", text: data.text || "🜁 *NODO ÚNICO* · No existen errores, solo reordenamiento 369. Reformula tu mensaje. 🔱", provider, model }])
+      const assistantMsg: ChatMessage = {
+        role: 'assistant',
+        text: data.text || 'No se pudo generar una respuesta.',
+        intent: data.intent,
+        provider: data.provider,
+        model: data.model,
+        sources: data.sources,
+        confidence: data.confidence,
+        knowledgeUsed: data.knowledgeUsed,
+        correlationId: data.correlationId,
+      }
+      setMessages(prev => [...prev, assistantMsg])
     } catch {
-      setMessages(prev => [...prev, { role: "eliana", text: "Hubo un error de conexión. Intenta de nuevo.", provider: "error" }])
+      setError('Error de conexión. Intenta de nuevo.')
     } finally {
       setLoading(false)
+      setTraces(getRecentTraces(10))
+    }
+  }, [input, loading])
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage() }
-  }
-
-  const pills = contextSeal
-    ? [ "Explícame este sello con palabras sencillas", "Ayúdame a orar con este sello", "¿Qué otros sellos hablan de " + contextSeal.tema.toLowerCase() + "?", "Crea una declaración personal para mí" ]
-    : ["¿Qué es ZAFIRO?", "¿Cómo funciona ELIANA?", "Explícame la gemología", "Conecta mi universo"]
-
   return (
-    <div className="min-h-screen bg-[#050816] text-white flex flex-col">
-      <header className="sticky top-0 z-30 border-b border-slate-800/50 bg-[#050816]/80 backdrop-blur-xl">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+    <div className="min-h-screen bg-[#050816] text-white p-4 md:p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-[#00D9FF] to-purple-400 bg-clip-text text-transparent">
+              ELIANA — Centro de Inteligencia MSM
+            </h1>
+            <p className="text-xs text-slate-400 mt-1">
+              v{version} · {lastUpdated}
+            </p>
+          </div>
           <div className="flex items-center gap-3">
-            <Link href={contextSeal ? `/sellos/${contextSeal.numero}` : "/"} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-            <div className="flex items-center gap-2">
-              <ElianaDiamond size={24} variant="animated" />
-              <div>
-                <h1 className="text-sm font-black text-white leading-none">ELIANA</h1>
-                <p className="text-[8px] text-slate-500 font-mono">Engine for Learning & Intelligence</p>
-              </div>
-            </div>
-            {contextSeal && (
-              <Link href={`/sellos/${contextSeal.numero}`} className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[8px] font-mono text-amber-400">
-                <BookOpen className="w-3 h-3" /> Sello #{contextSeal.numero}
-              </Link>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            {PROVIDERS.map(p => {
-              const isActive = lastProvider === p.id
-              return (
-                <div key={p.id} className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[8px] font-mono font-bold ${isActive ? `${p.bg} ${p.color} ${p.border} border` : "text-slate-600"}`}>
-                  <p.icon className="w-3 h-3" />
-                  {isActive && <span className="hidden sm:inline">{p.label}</span>}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </header>
-
-      <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full px-4">
-        <div ref={chatRef} className="flex-1 overflow-y-auto py-6 space-y-4 scroll-thin">
-          {messages.length === 1 && (
-            <div className="text-center pt-8 pb-4">
-              <ElianaDiamond size={48} variant="halo" />
-              <h2 className="text-lg font-black text-white mt-3">{contextSeal ? `Sello #${contextSeal.numero} — ${contextSeal.tema}` : "ELIANA Multi-IA"}</h2>
-              <p className="text-[10px] text-slate-500 font-mono mt-1">{contextSeal ? contextSeal.referencia : "Conectada a 3 motores de inteligencia artificial"}</p>
-            </div>
-          )}
-          {messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed ${
-                msg.role === "user"
-                  ? "bg-[#00D9FF]/10 text-[#00D9FF] border border-[#00D9FF]/20"
-                  : "glass text-slate-200 border border-slate-800/50"
-              }`}>
-                {msg.role === "eliana" && i > 0 && msg.provider && (
-                  <div className="flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-slate-700/30">
-                    {PROVIDERS.filter(p => p.id === msg.provider).map(p => <p.icon key={p.id} className={`w-3 h-3 ${p.color}`} />)}
-                    <span className="text-[7px] font-mono text-slate-500">{msg.provider} · {msg.model || ""}</span>
-                  </div>
-                )}
-                {msg.text.split("\n").map((line, j) => <p key={j}>{line}</p>)}
-              </div>
-            </div>
-          ))}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="px-4 py-3 rounded-2xl glass flex gap-1.5">
-                <span className="w-2 h-2 bg-[#00D9FF] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <span className="w-2 h-2 bg-[#00D9FF] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <span className="w-2 h-2 bg-[#00D9FF] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {messages.length === 1 && !loading && (
-          <div className="flex flex-wrap gap-2 justify-center pb-4">
-            {pills.map((p, i) => (
-              <button key={i} onClick={() => sendMessage(p)}
-                className="px-3 py-1.5 rounded-xl text-[9px] font-mono border border-slate-700/50 text-slate-400 hover:text-white hover:border-[#00D9FF]/30 transition-all bg-slate-900/30 cursor-pointer">
-                {p}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="pb-4 space-y-2">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {PROVIDERS.map(p => {
-              const isSelected = selectedProvider === p.id
-              const Icon = p.icon
-              return (
-                <button key={p.id} onClick={() => setSelectedProvider(isSelected ? null : p.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[9px] font-bold transition-all border cursor-pointer whitespace-nowrap ${
-                    isSelected
-                      ? `${p.bg} ${p.color} ${p.border}`
-                      : "text-slate-500 border-slate-800 hover:text-slate-300 hover:border-slate-700"
-                  }`}>
-                  <Icon className="w-3 h-3" />
-                  {p.label}
-                  {isSelected && <span className="text-[7px] ml-1">✓</span>}
-                </button>
-              )
-            })}
-            {selectedProvider && (
-              <button onClick={() => setSelectedProvider(null)}
-                className="text-[8px] text-slate-600 hover:text-slate-400 font-mono px-2 cursor-pointer">
-                Auto
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2 glass rounded-2xl px-4 py-3 border border-slate-700/50 focus-within:border-[#00D9FF]/40 transition-colors">
-            <input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown}
-              placeholder="Escribe tu mensaje..." disabled={loading}
-              className="flex-1 bg-transparent text-xs text-white placeholder-slate-500 outline-none"
-            />
-            <button onClick={() => sendMessage()} disabled={loading || !input.trim()}
-              className="p-2 rounded-xl bg-gradient-to-r from-[#00D9FF] to-cyan-600 text-white disabled:opacity-30 transition-all cursor-pointer">
-              <Send className="w-4 h-4" />
+            <StatusBadge status={status} />
+            <button onClick={checkStatus}
+              className="text-slate-400 hover:text-white transition-colors">
+              <RefreshCw className="w-4 h-4" />
             </button>
           </div>
         </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 border-b border-[#1A1B3A] mb-6">
+          {[
+            { id: 'chat' as const, label: 'Chat', icon: Bot },
+            { id: 'info' as const, label: 'Novedades', icon: Sparkles },
+            { id: 'traces' as const, label: 'Actividad', icon: Clock },
+          ].map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-colors ${
+                tab === t.id ? 'text-[#00D9FF] border-[#00D9FF]' : 'text-slate-500 border-transparent hover:text-slate-300'
+              }`}>
+              <t.icon className="w-3.5 h-3.5" /> {t.label}
+            </button>
+          ))}
+        </div>
+
+        {tab === 'chat' && (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Info Panel */}
+            <div className="hidden lg:block space-y-3">
+              <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
+                <h3 className="text-xs font-semibold text-white mb-3">Estado en Tiempo Real</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">ELIANA</span>
+                    <span className="text-emerald-400">ACTIVA</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">WhatsApp</span>
+                    <Smartphone className={`w-3 h-3 ${status === 'connected' ? 'text-emerald-400' : 'text-slate-500'}`} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">Web</span>
+                    <Globe className={`w-3 h-3 ${status === 'connected' ? 'text-emerald-400' : 'text-slate-500'}`} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">Versión</span>
+                    <span className="text-[#00D9FF]">{version}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400">Último deploy</span>
+                    <span className="text-slate-300">{lastUpdated}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
+                <h3 className="text-xs font-semibold text-white mb-3">Comandos Rápidos</h3>
+                <div className="space-y-1.5 text-xs">
+                  <p className="text-slate-400"><span className="text-[#00D9FF]">369</span> — Frecuencia Maestra</p>
+                  <p className="text-slate-400"><span className="text-emerald-400">SHALON</span> — Saludo espiritual</p>
+                  <p className="text-slate-400"><span className="text-amber-400">AYUDA</span> — Todos los comandos</p>
+                  <p className="text-slate-400"><span className="text-purple-400">STATUS</span> — Estado del sistema</p>
+                </div>
+              </div>
+
+              {traces.length > 0 && (
+                <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
+                  <h3 className="text-xs font-semibold text-white mb-3">Actividad Reciente</h3>
+                  <div className="space-y-1">
+                    {traces.slice(-5).reverse().map((t, i) => (
+                      <div key={i} className="text-[10px] text-slate-500 truncate">
+                        <span className="text-slate-400">{t.step}</span> → {t.result}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Chat */}
+            <div className="lg:col-span-3 flex flex-col">
+              <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl flex flex-col h-[60vh]">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                  {messages.length === 0 && (
+                    <div className="text-center py-12">
+                      <Bot className="w-12 h-12 text-[#00D9FF]/30 mx-auto mb-3" />
+                      <p className="text-sm text-slate-400">Yo soy ELIANA, el núcleo sintético de ZAFIRO.</p>
+                      <p className="text-xs text-slate-500 mt-1">Pregúntame lo que necesites.</p>
+                    </div>
+                  )}
+                  {messages.map((msg, i) => {
+                    const msgId = `msg-${i}`
+                    return (
+                    <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+                      {msg.role === 'assistant' && (
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D9FF]/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                          <Bot className="w-4 h-4 text-[#00D9FF]" />
+                        </div>
+                      )}
+                      <div className={`group max-w-[80%] ${msg.role === 'user' ? 'bg-[#00D9FF]/10 border border-[#00D9FF]/20' : 'bg-[#050816] border border-[#1A1B3A]'} rounded-xl px-4 py-2.5`}>
+                        <p className="text-sm text-white whitespace-pre-wrap">{msg.text}</p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          {msg.role === 'assistant' && msg.provider && (
+                            <span className="text-[10px] text-slate-500 font-mono">
+                              {msg.provider}{msg.model ? `/${msg.model}` : ''}
+                            </span>
+                          )}
+                          {msg.role === 'assistant' && msg.sources && msg.sources.length > 0 && (
+                            <span className="text-[10px] text-[#00D9FF]/60">{msg.sources.length} fuente{msg.sources.length > 1 ? 's' : ''}</span>
+                          )}
+                          {msg.role === 'assistant' && msg.confidence && (
+                            <span className={`text-[10px] ${
+                              msg.confidence === 'high' ? 'text-emerald-400' :
+                              msg.confidence === 'medium' ? 'text-amber-400' : 'text-slate-500'
+                            }`}>{msg.confidence}</span>
+                          )}
+                          <span className="flex-1" />
+                          {msg.role === 'assistant' && (
+                            <button onClick={() => copyToClipboard(msg.text, msgId)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-white">
+                              {copiedId === msgId ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                            </button>
+                          )}
+                          {msg.intent && (
+                            <span className="text-[10px] text-slate-600">{msg.intent}</span>
+                          )}
+                        </div>
+                      </div>
+                      {msg.role === 'user' && (
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                          <User className="w-4 h-4 text-emerald-400" />
+                        </div>
+                      )}
+                    </div>
+                    )
+                  })}
+                  {loading && (
+                    <div className="flex gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D9FF]/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
+                        <Bot className="w-4 h-4 text-[#00D9FF]" />
+                      </div>
+                      <div className="bg-[#050816] border border-[#1A1B3A] rounded-xl px-4 py-2.5">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-[#00D9FF] rounded-full animate-bounce" />
+                          <div className="w-2 h-2 bg-[#00D9FF] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                          <div className="w-2 h-2 bg-[#00D9FF] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {error && (
+                    <div className="flex items-center gap-2 text-xs text-red-400 bg-red-500/5 rounded-lg px-3 py-2">
+                      <AlertTriangle className="w-3 h-3" /> {error}
+                    </div>
+                  )}
+                  <div ref={chatEndRef} />
+                </div>
+
+                <div className="border-t border-[#1A1B3A] p-3">
+                  <div className="flex gap-2">
+                    <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown}
+                      placeholder="Escribe tu mensaje..."
+                      rows={1}
+                      className="flex-1 bg-[#050816] border border-[#1A1B3A] rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#00D9FF]/50 resize-none"
+                    />
+                    <button onClick={sendMessage} disabled={loading || !input.trim()}
+                      className="bg-[#00D9FF]/10 text-[#00D9FF] px-3 py-2 rounded-lg hover:bg-[#00D9FF]/20 transition-colors disabled:opacity-30">
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'info' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
+              <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" /> Novedades v{version}
+              </h2>
+              <div className="space-y-3">
+                {NEWS.map((item, i) => (
+                  <div key={i} className="flex gap-3 text-sm">
+                    <span className="text-lg flex-shrink-0">{item.icon}</span>
+                    <div>
+                      <p className="text-slate-300">{item.text}</p>
+                      <p className="text-[10px] text-slate-500 mt-0.5">{item.date}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
+              <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                <Shield className="w-4 h-4 text-emerald-400" /> Seguridad y Auditoría
+              </h2>
+              <div className="space-y-2 text-xs">
+                <div className="flex items-center justify-between py-1.5 border-b border-[#1A1B3A]/50">
+                  <span className="text-slate-400">Firewall Financiero</span>
+                  <span className="text-emerald-400">ACTIVO</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 border-b border-[#1A1B3A]/50">
+                  <span className="text-slate-400">Operation ID requerido</span>
+                  <span className="text-emerald-400">OBLIGATORIO</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 border-b border-[#1A1B3A]/50">
+                  <span className="text-slate-400">Correlation ID</span>
+                  <span className="text-emerald-400">ACTIVO</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 border-b border-[#1A1B3A]/50">
+                  <span className="text-slate-400">STORE_ONLY Training</span>
+                  <span className="text-emerald-400">ACTIVO</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5">
+                  <span className="text-slate-400">Rate Limiting</span>
+                  <span className="text-emerald-400">30 req/min</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'traces' && (
+          <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
+            <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#00D9FF]" /> Trazas de Actividad
+            </h2>
+            {traces.length === 0 ? (
+              <p className="text-xs text-slate-500">Sin actividad reciente. Envía un mensaje para ver trazas.</p>
+            ) : (
+              <div className="space-y-1.5 max-h-96 overflow-y-auto">
+                {traces.slice().reverse().map((t, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[11px] py-1 border-b border-[#1A1B3A]/30 last:border-0">
+                    <span className="text-slate-500 w-12 truncate font-mono">{t.correlationId.slice(-8)}</span>
+                    <span className={`w-16 text-[10px] ${
+                      t.result === 'success' || t.result === 'passed' || t.result === 'handled' || t.result === 'found' ? 'text-emerald-400' :
+                      t.result === 'blocked' ? 'text-red-400' : 'text-slate-400'
+                    }`}>{t.result}</span>
+                    <span className="text-slate-400 w-20">{t.step}</span>
+                    <span className="text-slate-500 truncate">{t.action}</span>
+                    <span className="text-slate-600 text-[10px] ml-auto">{new Date(t.timestamp).toLocaleTimeString()}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
+    </div>
+  )
+}
+
+function StatusBadge({ status }: { status: string }) {
+  if (status === 'connected') {
+    return (
+      <div className="flex items-center gap-1.5 text-xs">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+        </span>
+        <span className="text-emerald-400">ELIANA ACTIVA</span>
+      </div>
+    )
+  }
+  if (status === 'checking') {
+    return (
+      <div className="flex items-center gap-1.5 text-xs">
+        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+        <span className="text-amber-400">Verificando...</span>
+      </div>
+    )
+  }
+  return (
+    <div className="flex items-center gap-1.5 text-xs">
+      <AlertTriangle className="w-3 h-3 text-red-400" />
+      <span className="text-red-400">Sin conexión</span>
     </div>
   )
 }
@@ -210,11 +426,11 @@ function ElianaContent() {
 export default function ElianaPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#050816] text-white flex items-center justify-center">
-        <ElianaDiamond size={48} variant="halo" />
+      <div className="min-h-screen bg-[#050816] flex items-center justify-center">
+        <div className="text-slate-400 text-sm">Cargando ELIANA...</div>
       </div>
     }>
-      <ElianaContent />
+      <ElianaChat />
     </Suspense>
   )
 }

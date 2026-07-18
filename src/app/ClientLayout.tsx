@@ -6,6 +6,7 @@ import ElianaFloatingButton from "@/components/ElianaFloatingButton"
 import NetworkBackground from "@/components/ui/NetworkBackground"
 import PresenciaInstantanea from "@/components/PresenciaInstantanea"
 import ZafiroLockScreen from "@/components/ZafiroLockScreen"
+import HoloCompanion from "@/components/HoloCompanion"
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -20,6 +21,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {!isHome && <Footer />}
       <PresenciaInstantanea />
       <ElianaFloatingButton />
+      <HoloCompanion />
     </ZafiroLockScreen>
   )
 }
