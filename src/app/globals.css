@@ -26,8 +26,8 @@
 *::-webkit-scrollbar { display: none; }
 
 body {
-  background: #050816;
-  color: #ededed;
+  background: var(--color-background, #050816);
+  color: var(--color-foreground, #ededed);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
@@ -150,3 +150,53 @@ body {
 .scroll-thin::-webkit-scrollbar { width: 3px; display: block; }
 .scroll-thin::-webkit-scrollbar-track { background: transparent; }
 .scroll-thin::-webkit-scrollbar-thumb { background: rgba(0, 217, 255, 0.2); border-radius: 10px; }
+
+/* ─── ZAFIRO Theme CSS Variables ─── */
+:root {
+  --zafiro-accent: #00D9FF;
+  --zafiro-accent-hover: #00b3d4;
+  --zafiro-accent-foreground: #ffffff;
+  --zafiro-accent-soft: rgba(0, 217, 255, 0.12);
+  --zafiro-focus-ring: rgba(0, 217, 255, 0.3);
+  --zafiro-accent-rgb: 0, 217, 255;
+  --zafiro-font-scale: 1;
+}
+
+:root.light {
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+}
+
+:root.dark {
+  --color-background: #050816;
+  --color-foreground: #ededed;
+}
+
+:root[data-compact="true"] {
+  --zafiro-space-sm: 0.25rem;
+  --zafiro-space-md: 0.5rem;
+  --zafiro-space-lg: 0.75rem;
+}
+
+:root[data-compact="false"] {
+  --zafiro-space-sm: 0.5rem;
+  --zafiro-space-md: 1rem;
+  --zafiro-space-lg: 1.5rem;
+}
+
+:root.reduce-motion *,
+:root.reduce-motion *::before,
+:root.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+:root[data-font-scale="pequena"] { --zafiro-font-scale: 0.875; }
+:root[data-font-scale="normal"] { --zafiro-font-scale: 1; }
+:root[data-font-scale="grande"] { --zafiro-font-scale: 1.125; }
+:root[data-font-scale="muy-grande"] { --zafiro-font-scale: 1.25; }
+
+body {
+  font-size: calc(0.875rem * var(--zafiro-font-scale));
+}
