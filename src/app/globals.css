@@ -57,6 +57,17 @@ body {
   0%, 100% { opacity: 0.15; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(1.5); }
 }
+@keyframes scan-line {
+  0% { top: -2px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-4px); }
+  30%, 70% { transform: translateX(4px); }
+}
 
 /* ─── Glass Utility ─── */
 .glass {
