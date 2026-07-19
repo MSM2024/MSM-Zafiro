@@ -18,16 +18,5 @@
   ],
   "redirects": [
     { "source": "/preview", "destination": "/", "permanent": false }
-  ],
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "maxDuration": 10
-    },
-    "src/app/api/eliana/chat/route.ts": {
-      "maxDuration": 30
-    },
-    "src/app/api/stripe/webhook/route.ts": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
