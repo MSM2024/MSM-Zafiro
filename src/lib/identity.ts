@@ -2,12 +2,13 @@
 
 import { getSupabaseClient, isSupabaseAvailable } from './supabase'
 import { getSession } from './auth'
+import { ROLE_PERMISSIONS } from '../../packages/types/src/zafiro'
 import type {
   Profile, ProfilePrivateData, MembershipTier, VerificationStatus,
   RiskLevel, UserRole, VipStatus, AccountStatus, Badge, BadgeType,
   KycCase, KycDocument, KycReview, BusinessProfile, BusinessMember,
   ConsentRecord, VerificationEvent, AdminAction, Permission,
-  ROLE_PERMISSIONS, KycProviderSession, KycProviderResult,
+  KycProviderSession, KycProviderResult,
 } from '../../packages/types/src/zafiro'
 
 export type { Profile, ProfilePrivateData, BusinessProfile, BusinessMember, KycCase, KycDocument, KycReview, VerificationEvent, UserRole, MembershipTier, VerificationStatus, RiskLevel, Permission, Badge, VipStatus, BadgeType }
@@ -509,16 +510,19 @@ export function recordAdminAction(
 // ============================================================
 // 10. DON MIGUEL BOOTSTRAP
 // ============================================================
+// Seguridad: No usar UUID inventado. Resolver user_id real desde Supabase Auth.
+// MFA obligatorio. No exponer service_role_key en frontend.
 
-const OWNER_EMAIL = process.env.NEXT_PUBLIC_ZAFIRO_OWNER_EMAIL || 'cm8msm@gmail.com'
+import { isOwnerEmail, sealOwnerMembership, recordOwnerAudit } from './owner'
+
+const OWNER_EMAIL = process.env.NEXT_PUBLIC_ZAFIRO_OWNER_EMAIL || 'com8msm@gmail.com'
 const OWNER_DISPLAY = process.env.NEXT_PUBLIC_ZAFIRO_OWNER_DISPLAY_NAME || 'Don Miguel'
 
 export function bootstrapOwnerProfile(): Profile | undefined {
   const session = getSession()
   if (!session) return undefined
 
-  const isOwner = session.email?.toLowerCase() === OWNER_EMAIL.toLowerCase()
-  if (!isOwner) return undefined
+  if (!isOwnerEmail(session.email)) return undefined
 
   let profile = getProfileByAuthId(session.id)
   if (!profile) {
@@ -537,7 +541,8 @@ export function bootstrapOwnerProfile(): Profile | undefined {
   awardBadge(profile.id, 'IDENTIDAD_VERIFICADA')
   awardBadge(profile.id, 'FUNDADOR')
 
-  recordEvent('profile', profile.id, 'OWNER_BOOTSTRAPPED', profile.id)
+  sealOwnerMembership()
+  recordOwnerAudit('OWNER_BOOTSTRAPPED', { profileId: profile.id })
 
   return profile
 }
@@ -546,36 +551,9 @@ export function bootstrapOwnerProfile(): Profile | undefined {
 // 11. PERMISSION HELPERS
 // ============================================================
 
-const PERMISSION_MAP: Record<UserRole, Permission[]> = {
-  OWNER_SUPERADMIN: [
-    'users.read', 'users.update', 'users.suspend',
-    'roles.manage', 'memberships.manage',
-    'kyc.read', 'kyc.review', 'kyc.approve', 'kyc.reject',
-    'kyb.review', 'kyb.approve',
-    'audit.read', 'system.configure',
-    'plans.manage', 'marketplace.manage', 'economy.manage', 'security.manage',
-  ],
-  ADMIN: [
-    'users.read', 'users.update',
-    'memberships.manage',
-    'kyc.read', 'kyc.review',
-    'kyb.review',
-    'audit.read',
-    'plans.manage', 'marketplace.manage',
-  ],
-  COMPLIANCE_REVIEWER: [
-    'kyc.read', 'kyc.review', 'kyc.approve', 'kyc.reject',
-    'kyb.review', 'kyb.approve',
-    'audit.read',
-  ],
-  SUPPORT_AGENT: ['users.read', 'kyc.read'],
-  ENTREPRENEUR: ['users.read', 'marketplace.manage'],
-  USER: ['users.read'],
-}
-
 export function hasPermission(profile: Profile | undefined, permission: Permission): boolean {
   if (!profile) return false
-  return (PERMISSION_MAP[profile.role] || []).includes(permission)
+  return (ROLE_PERMISSIONS[profile.role] || []).includes(permission)
 }
 
 export function can(permission: Permission): boolean {

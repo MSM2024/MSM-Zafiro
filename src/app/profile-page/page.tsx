@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
@@ -8,7 +8,7 @@ import {
 } from "lucide-react"
 import { usePageTitle } from "@/lib/usePageTitle"
 import { getSession } from "@/lib/auth"
-import { getProfile, getProfileByUsername, updateProfile, seedMiguelProfile, type UserProject, type SocialLink, type UserProfile } from "@/lib/profile"
+import { getProfile, getProfileByUsername, updateProfile, seedMiguelProfile, onProfileChange, type UserProject, type SocialLink, type UserProfile } from "@/lib/profile"
 import { type ConnectedPlatform, getPlatforms, PLATFORM_META } from "@/lib/universo"
 import { getPTSAccount, getStreak } from "@/lib/rewards"
 import { DEFAULT_ECOSYSTEM } from "@/lib/ecosistema"
@@ -33,7 +33,12 @@ function formatNumber(n: number): string {
 export default function ProfileFullPage() {
   usePageTitle("Mi Perfil")
   const router = useRouter()
-  const [profileInit] = useState(() => {
+  const [version, setVersion] = useState(0)
+  useEffect(() => onProfileChange(() => setVersion(v => v + 1)), [])
+  const [profileInit, setProfileInit] = useState(() => buildProfileInit())
+  useEffect(() => { setProfileInit(buildProfileInit()) }, [version])
+
+  function buildProfileInit() {
     if (typeof window === "undefined") return { profile: null, platforms: [], ptsAccount: { balance: 0, level: 1, levelProgress: 0 }, currentStreak: 0, following: false }
     const session = getSession()
     if (session) {
@@ -61,16 +66,8 @@ export default function ProfileFullPage() {
         }
       }
     }
-    const seeded = seedMiguelProfile()
-    const pts = getPTSAccount(seeded.userId)
-    return {
-      profile: seeded,
-      platforms: getPlatforms(seeded.userId),
-      ptsAccount: { balance: pts.balance, level: pts.level, levelProgress: pts.levelProgress } as { balance: number; level: number; levelProgress: number },
-      currentStreak: getStreak(seeded.userId),
-      following: false,
-    }
-  })
+    return { profile: null, platforms: [], ptsAccount: { balance: 0, level: 1, levelProgress: 0 }, currentStreak: 0, following: false }
+  }
   const [profile, setProfile] = useState<UserProfile | null>(profileInit.profile)
   const [platforms, setPlatforms] = useState<ConnectedPlatform[]>(profileInit.platforms)
   const [activeSection, setActiveSection] = useState("resumen")

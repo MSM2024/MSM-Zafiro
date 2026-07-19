@@ -33,8 +33,24 @@ export function saveConfigPresencia(cfg: ConfigPresencia): void {
   localStorage.setItem(PRESENCIA_KEY, JSON.stringify(cfg))
 }
 
+type SpeechRecognitionInstance = {
+  lang: string
+  continuous: boolean
+  interimResults: boolean
+  onresult: ((event: SpeechRecognitionEvent) => void) | null
+  start: () => void
+  stop: () => void
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance
+
+type SpeechRecognitionEvent = {
+  resultIndex: number
+  results: SpeechRecognitionResultList
+}
+
 export class PresenciaEngine {
-  private recognition: any | null = null
+  private recognition: SpeechRecognitionInstance | null = null
   private listeners: Array<(text: string) => void> = []
   private activo = false
   private palabraClave: string
@@ -42,12 +58,12 @@ export class PresenciaEngine {
   constructor(palabraClave = "ZAFIRO") {
     this.palabraClave = palabraClave.toLowerCase()
     if (typeof window !== "undefined" && "SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
-      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      const SR = (window as unknown as Record<string, SpeechRecognitionConstructor>).SpeechRecognition || (window as unknown as Record<string, SpeechRecognitionConstructor>).webkitSpeechRecognition
       this.recognition = new SR()
       this.recognition.lang = "es-ES"
       this.recognition.continuous = true
       this.recognition.interimResults = false
-      this.recognition.onresult = (event: any) => {
+      this.recognition.onresult = (event: SpeechRecognitionEvent) => {
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript.toLowerCase()
           if (transcript.includes(this.palabraClave)) {

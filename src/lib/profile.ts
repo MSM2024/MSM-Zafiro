@@ -11,6 +11,23 @@ export type UserProject = ZafiroUserProject
 export type SocialLink = ZafiroSocialLink
 
 const PROFILES_KEY = "zafiro_profiles"
+const PROFILES_EVENT = "zafiro-profile-changed"
+let profileCacheVersion = 0
+
+function notifyProfileChange() {
+  profileCacheVersion++
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(PROFILES_EVENT, { detail: { version: profileCacheVersion } }))
+  }
+}
+
+export function getProfileCacheVersion() { return profileCacheVersion }
+export function onProfileChange(cb: () => void) {
+  if (typeof window === "undefined") return () => {}
+  const handler = () => cb()
+  window.addEventListener(PROFILES_EVENT, handler)
+  return () => window.removeEventListener(PROFILES_EVENT, handler)
+}
 
 function emptyProfile(): UserProfile {
   return {
@@ -58,6 +75,7 @@ export function getProfiles(): Record<string, UserProfile> {
 
 function saveProfiles(profiles: Record<string, UserProfile>) {
   localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles))
+  notifyProfileChange()
 }
 
 export function getProfile(userId: string): UserProfile | null {

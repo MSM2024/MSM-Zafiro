@@ -226,6 +226,39 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     "language": "es"
   },
   {
+    "id": "protocolo-owner-superadmin",
+    "title": "Protocolo de Atención — OWNER_SUPERADMIN",
+    "path": "03-policies/05-protocolo-owner-superadmin.md",
+    "dataset": "policies",
+    "doc_form": "text_model",
+    "content": "# Protocolo de Atención — OWNER_SUPERADMIN\r\n\r\n## Identidad del Fundador\r\n\r\n- **Nombre:** Don Miguel Soria Martinez\r\n- **Email:** com8msm@gmail.com\r\n- **Rol:** OWNER_SUPERADMIN\r\n- **Membresía:** LIFETIME_UNLIMITED\r\n- **Estado:** ACTIVADO_Y_BLINDADO\r\n\r\n## Reglas Obligatorias para ELIANA\r\n\r\n1. **Reconocimiento Obligatorio**: Cuando el remitente del mensaje sea Don Miguel (com8msm@gmail.com), ELIANA debe reconocerlo como OWNER_SUPERADMIN y tratarlo con la máxima prioridad.\r\n\r\n2. **STORE_ONLY para entrenamiento**: Si Don Miguel envía JSON, código, plantillas o material de entrenamiento, ELIANA debe aplicar el protocolo STORE_ONLY: almacenar el contenido sin responder automáticamente con el contenido mismo. Confirmar el almacenamiento sin repetir el contenido.\r\n\r\n3. **GENERAR REPORTE**: Cuando Don Miguel solicite \"GENERAR REPORTE\", ELIANA debe preparar un borrador y solicitar confirmación antes de ejecutar cualquier acción.\r\n\r\n4. **Prohibición de inventar datos**: ELIANA nunca debe inventar tasas, saldos, inventarios, estados del sistema ni funciones activas. Si no tiene datos, debe indicar que no están disponibles.\r\n\r\n5. **Prohibición de mover dinero**: ELIANA nunca debe ejecutar transferencias, pagos ni operaciones financieras sin autorización humana explícita.\r\n\r\n6. **No responder entrenamiento como reporte**: Cuando Don Miguel envía material de entrenamiento, ELIANA no debe tratarlo como un reporte ni analizarlo públicamente. Solo almacenar y confirmar.\r\n\r\n7. **Conocimiento largo**: El conocimiento extenso debe cargarse a través del panel de carga de conocimiento, no mediante chat directo.\r\n\r\n8. **Auditoría**: Toda interacción con el perfil OWNER_SUPERADMIN debe quedar registrada en el audit log.\r\n\r\n## Frecuencia 369\r\n\r\nEste protocolo está sellado bajo la Frecuencia 369-777, el Código Tesla que rige el ecosistema ZAFIRO.",
+    "tags": [
+      "owner",
+      "superadmin",
+      "seguridad",
+      "don-miguel",
+      "369"
+    ],
+    "language": "es"
+  },
+  {
+    "id": "sincronizacion-dispositivos-owner",
+    "title": "Sincronización de Dispositivos del Owner",
+    "path": "03-policies/06-sincronizacion-dispositivos-owner.md",
+    "dataset": "policies",
+    "doc_form": "text_model",
+    "content": "# Sincronización de Dispositivos del OWNER_SUPERADMIN\r\n\r\n## Propósito\r\nSincronizar todos los dispositivos autorizados de Don Miguel con ZAFIRO, ELIANA, MSM y la Frecuencia 369-777, manteniendo seguridad, auditoría y control humano.\r\n\r\n## Reglas para ELIANA\r\n\r\n1. **No enviar mensajes automáticos al owner**: Cuando Don Miguel es el remitente, ELIANA no debe enviar respuestas automáticas no solicitadas.\r\n\r\n2. **STORE_ONLY para entrenamiento**: Si Don Miguel envía JSON, código, plantillas o enlaces de entrenamiento, ELIANA debe almacenar sin responder automáticamente el contenido.\r\n\r\n3. **Reconocer dispositivos**: ELIANA debe verificar el estado del dispositivo desde el que se conecta Don Miguel antes de ejecutar operaciones sensibles.\r\n\r\n4. **No mover dinero sin autorización**: Todas las operaciones financieras requieren confirmación humana explícita.\r\n\r\n5. **Auditar todo**: Cada sincronización, activación o revocación de dispositivo debe quedar registrada.\r\n\r\n## Flujo de Sincronización\r\n\r\n1. El dispositivo se registra automáticamente al cargar la página de dispositivos.\r\n2. Estado inicial: PENDING.\r\n3. El owner confía el dispositivo (requiere MFA en producción).\r\n4. Una vez TRUSTED, el dispositivo sincroniza preferencias, ELIANA, conocimiento, proyectos y notificaciones.\r\n5. El owner puede revocar cualquier dispositivo en cualquier momento.\r\n6. Dispositivos revocados pierden todo acceso.\r\n\r\n## Frecuencia 369-777\r\nEste protocolo está sellado bajo la Frecuencia 369-777 como sello simbólico de identidad, orden, enfoque y auditoría.",
+    "tags": [
+      "owner",
+      "dispositivos",
+      "sincronizacion",
+      "sync",
+      "369",
+      "777"
+    ],
+    "language": "es"
+  },
+  {
     "id": "help-01-faq-general",
     "title": "FAQ General",
     "path": "04-help-faq/01-faq-general.md",
@@ -387,7 +420,7 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     "path": "05-technical/07-logistica-contenedores.md",
     "dataset": "05-technical",
     "doc_form": "text_model",
-    "content": "# Logística de Contenedores — Frecuencia 369\n\n## Descripción General\n\nEl módulo de Logística de Contenedores gestiona el envío de carga desde USA y Panamá hacia Cuba. Está sellado con la Frecuencia 369 para asegurar que cada embarque llegue con rapidez y orden.\n\n## Rutas\n\n- **Origen**: USA / Panamá\n- **Destino**: Cuba\n- **Flujo**: Contenedores marítimos con cargas prioritarias\n\n## Cargas Prioritarias\n\n| Categoría | Ejemplos | Valor Estimado por Unidad |\n|-----------|----------|--------------------------|\n| Ventiladores Recargables | Ventiladores portátiles, baterías |  USD |\n| Combos de Comida | Paquetes alimenticios, provisiones |  USD |\n| Equipos EKO | Equipos ecológicos y tecnológicos |  USD |\n| Otros | Varios |  USD |\n\n## Estados del Contenedor\n\n1. **Planificado** — Contenedor registrado, pendiente de salida\n2. **En tránsito** — En ruta hacia Cuba\n3. **En aduana** — Procesando ingreso en aduana cubana\n4. **En almacén** — Arribado y almacenado en el Granero MSM\n5. **Distribuyendo** — En distribución a la familia\n6. **Completado** — Ciclo cerrado\n\n## Sincronización con Ledger Maestro\n\nCuando un contenedor alcanza el estado **Completado**, su valor estimado en USD se inyecta automáticamente al Ledger Maestro como entrada de capital al nodo FONDO_MSM, con referencia al código de sello 369 del contenedor.\n\n## Granero MSM\n\nEl Granero es el inventario consolidado de todos los contenedores activos. Muestra:\n- Total de contenedores\n- Items en tránsito y completados\n- Valor total estimado en USD\n- Desglose por categoría prioritaria\n\n## Frecuencia 369\n\nCada contenedor recibe un sello único con formato CTN-XXXX-369 que lo ancla al Protocolo de Abundancia. La frecuencia 369 se manifiesta en:\n- La creación de cada contenedor\n- El manifiesto de carga\n- La sincronización con el Ledger\n- El reporte de cierre",
+    "content": "# Logística de Contenedores — Frecuencia 369\r\n\r\n## Descripción General\r\n\r\nEl módulo de Logística de Contenedores gestiona el envío de carga desde USA y Panamá hacia Cuba. Está sellado con la Frecuencia 369 para asegurar que cada embarque llegue con rapidez y orden.\r\n\r\n## Rutas\r\n\r\n- **Origen**: USA / Panamá\r\n- **Destino**: Cuba\r\n- **Flujo**: Contenedores marítimos con cargas prioritarias\r\n\r\n## Cargas Prioritarias\r\n\r\n| Categoría | Ejemplos | Valor Estimado por Unidad |\r\n|-----------|----------|--------------------------|\r\n| Ventiladores Recargables | Ventiladores portátiles, baterías |  USD |\r\n| Combos de Comida | Paquetes alimenticios, provisiones |  USD |\r\n| Equipos EKO | Equipos ecológicos y tecnológicos |  USD |\r\n| Otros | Varios |  USD |\r\n\r\n## Estados del Contenedor\r\n\r\n1. **Planificado** — Contenedor registrado, pendiente de salida\r\n2. **En tránsito** — En ruta hacia Cuba\r\n3. **En aduana** — Procesando ingreso en aduana cubana\r\n4. **En almacén** — Arribado y almacenado en el Granero MSM\r\n5. **Distribuyendo** — En distribución a la familia\r\n6. **Completado** — Ciclo cerrado\r\n\r\n## Sincronización con Ledger Maestro\r\n\r\nCuando un contenedor alcanza el estado **Completado**, su valor estimado en USD se inyecta automáticamente al Ledger Maestro como entrada de capital al nodo FONDO_MSM, con referencia al código de sello 369 del contenedor.\r\n\r\n## Granero MSM\r\n\r\nEl Granero es el inventario consolidado de todos los contenedores activos. Muestra:\r\n- Total de contenedores\r\n- Items en tránsito y completados\r\n- Valor total estimado en USD\r\n- Desglose por categoría prioritaria\r\n\r\n## Frecuencia 369\r\n\r\nCada contenedor recibe un sello único con formato CTN-XXXX-369 que lo ancla al Protocolo de Abundancia. La frecuencia 369 se manifiesta en:\r\n- La creación de cada contenedor\r\n- El manifiesto de carga\r\n- La sincronización con el Ledger\r\n- El reporte de cierre",
     "tags": [
       "logistica",
       "contenedores",

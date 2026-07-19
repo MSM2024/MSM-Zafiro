@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { ArrowLeft, Shield, Users, FileText, BarChart3, Activity, Settings, AlertTriangle, MessageSquare, UserCheck, Eye, Ban, TrendingUp, Cpu, Zap, Bot, CheckCircle, Clock, RefreshCw, DollarSign, Star, Gem, Heart, Share2, Globe, BookOpen, Sparkles, Fingerprint, Building2, Search, Crown, FileSearch, Siren, ScrollText, Ship } from "lucide-react"
+import { ArrowLeft, Shield, Users, FileText, BarChart3, Activity, Settings, AlertTriangle, MessageSquare, UserCheck, Eye, Ban, TrendingUp, Cpu, Zap, Bot, CheckCircle, Clock, RefreshCw, DollarSign, Star, Gem, Heart, Share2, Globe, Sparkles, Fingerprint, Building2, Search, Crown, FileSearch, Siren, ScrollText, Ship, BookOpen } from "lucide-react"
 import { getIdentityStats } from "@/lib/identity"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -91,6 +91,8 @@ export default function AdminPage() {
             { id: "auditoria", label: "Auditoría", icon: ScrollText, href: "/admin/auditoria" },
             { id: "logistica", label: "Logística", icon: Ship, href: "/admin/logistica" },
             { id: "ratings", label: "Calificaciones", icon: Star, href: "/admin/ratings" },
+            { id: "metricas", label: "Métricas", icon: BarChart3, href: "/admin/metricas" },
+            { id: "biblioteca", label: "Biblioteca", icon: BookOpen, href: "/zafiro/biblioteca" },
             { id: "reportes", label: "Reportes", icon: AlertTriangle },
             { id: "contenido", label: "Contenido", icon: FileText },
             { id: "moderacion", label: "Moderación", icon: Eye },

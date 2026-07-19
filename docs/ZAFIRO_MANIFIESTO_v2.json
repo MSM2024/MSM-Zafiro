@@ -1,0 +1,425 @@
+{
+  "modo": "PROGRAMACIÓN DIRECTA PARA OPENCODE",
+  "proyecto": "ZAFIRO OS — Manifiesto de Manifestación Total",
+  "version": "2.0",
+  "fecha_base": "2026-07-16",
+  "empresa": "MSM MY STORE LLC",
+  "fundador": "Miguel Soria Martínez",
+  "estado_general": "EN_DESARROLLO_Y_VALIDACION",
+  "objetivo": "Convertir el manifiesto estratégico del 16 de julio en un plan técnico, operativo, financiero, visual y de seguridad completamente ejecutable dentro del ecosistema ZAFIRO, MSM LegacyBook, MSM MY STORE y Villa Esperanza.",
+  "regla_principal": "No declarar ningún módulo como activo, desplegado, sincronizado o terminado hasta verificar código, base de datos, dominio, despliegue, pruebas y funcionamiento real en producción.",
+  "principios": [
+    "Transformar cada declaración estratégica en tareas técnicas verificables",
+    "Separar visión espiritual, identidad de marca y controles tecnológicos reales",
+    "Usar 369 y 777 únicamente como etiquetas simbólicas dentro de metadatos",
+    "No usar lenguaje que sustituya pruebas técnicas, auditorías o controles legales",
+    "Priorizar seguridad, trazabilidad, escalabilidad y experiencia mobile first",
+    "Mantener integración modular con todo el ecosistema MSM",
+    "Entregar avances por fases con evidencia verificable"
+  ],
+  "fase_0_auditoria_inicial": {
+    "objetivo": "Determinar el estado real del ecosistema antes de modificar infraestructura.",
+    "acciones": [
+      "Inspeccionar todos los repositorios disponibles",
+      "Identificar proyectos activos en Vercel",
+      "Enumerar dominios, subdominios y DNS configurados",
+      "Detectar aplicaciones duplicadas, abandonadas o incompletas",
+      "Revisar variables de entorno",
+      "Comprobar autenticación actual",
+      "Comprobar integración con Supabase",
+      "Comprobar estado de base de datos y migraciones",
+      "Verificar si existe v1.0.11 en producción",
+      "Generar informe de brechas, riesgos y dependencias"
+    ],
+    "entregables": [
+      "inventory.md",
+      "deployment-audit.md",
+      "domain-map.md",
+      "security-gap-analysis.md",
+      "migration-plan.md"
+    ]
+  },
+  "fase_1_despliegue_e_infraestructura": {
+    "nombre": "Despliegue y Unificación del Ecosistema",
+    "objetivo": "Consolidar el ecosistema ZAFIRO bajo una arquitectura limpia, documentada y escalable.",
+    "acciones": [
+      "Definir repositorio principal y repositorios satélite",
+      "Establecer estructura monorepo o multirepo según auditoría",
+      "Configurar Vercel por entornos: desarrollo, staging y producción",
+      "Eliminar proyectos duplicados solo después de crear respaldo",
+      "Configurar dominios msmmystore.com, msmlegacybook.com y futuros subdominios",
+      "Crear mapa oficial de rutas",
+      "Configurar redirecciones permanentes",
+      "Activar HTTPS",
+      "Configurar CDN",
+      "Configurar observabilidad",
+      "Configurar logs estructurados",
+      "Configurar backups automáticos",
+      "Crear procedimiento de rollback"
+    ],
+    "dominios_sugeridos": {
+      "zafiro": "zafiro.msmmystore.com",
+      "legacybook": "legacy.msmmystore.com",
+      "economia": "economia.msmmystore.com",
+      "villa_esperanza": "villaesperanza.msmmystore.com",
+      "admin": "admin.msmmystore.com"
+    },
+    "criterios_de_aceptacion": [
+      "Cada dominio resuelve correctamente",
+      "No existen rutas rotas",
+      "Staging y producción están separados",
+      "Existe rollback documentado",
+      "Toda variable secreta está fuera del frontend",
+      "El despliegue pasa pruebas automáticas"
+    ]
+  },
+  "fase_2_seguridad": {
+    "nombre": "Angel Security",
+    "aclaracion": "Angel Security será el nombre comercial del módulo de seguridad, pero su protección debe basarse en controles técnicos reales.",
+    "controles": [
+      "Autenticación multifactor",
+      "Reautenticación para acciones críticas",
+      "Roles y permisos",
+      "Políticas RLS",
+      "Rate limiting",
+      "Protección CSRF",
+      "Validación Zod",
+      "Hash de archivos",
+      "Auditoría inmutable",
+      "Alertas por nuevos dispositivos",
+      "Gestión de sesiones",
+      "Cifrado en tránsito y reposo",
+      "Rotación de secretos",
+      "Escaneo de dependencias",
+      "Monitoreo de errores",
+      "Backups automáticos"
+    ],
+    "roles_minimos": [
+      "OWNER_SUPERADMIN",
+      "SYSTEM_ADMIN",
+      "FINANCE_ADMIN",
+      "CONTENT_ADMIN",
+      "SECURITY_AUDITOR",
+      "OPERATOR",
+      "USER"
+    ],
+    "flujos_2fa": [
+      "Registro de dispositivo",
+      "Activación por aplicación autenticadora",
+      "Generación de códigos de recuperación",
+      "Confirmación de correo",
+      "Bloqueo temporal por intentos fallidos",
+      "Revocación de sesiones"
+    ],
+    "criterios_de_aceptacion": [
+      "MFA obligatorio para OWNER_SUPERADMIN",
+      "Ningún usuario puede elevar sus propios privilegios",
+      "Toda acción crítica queda registrada",
+      "Los secretos nunca aparecen en cliente",
+      "Las políticas RLS pasan pruebas negativas y positivas"
+    ]
+  },
+  "fase_3_villa_esperanza": {
+    "nombre": "Villa Esperanza — Nodo Génesis",
+    "objetivo": "Crear la representación digital, financiera y visual del proyecto Villa Esperanza.",
+    "meta_financiera": {
+      "objetivo_usd": 5000000,
+      "estado": "META_ESTRATEGICA_NO_CAPITAL_CONFIRMADO",
+      "regla": "No mostrar como fondos disponibles hasta existir evidencia bancaria, contratos o compromisos verificados."
+    },
+    "modulos": {
+      "villa_azul": [
+        "Vista arquitectónica",
+        "Piscina infinita",
+        "Habitaciones",
+        "Áreas sociales",
+        "Planos y renders",
+        "Presupuesto",
+        "Estado de construcción"
+      ],
+      "cabanas_de_lujo": [
+        "Catálogo de cabañas",
+        "Capacidad",
+        "Disponibilidad",
+        "Reservas futuras",
+        "Galería",
+        "Presupuesto por unidad"
+      ],
+      "santuario_sagrado": [
+        "Descripción espiritual",
+        "Normas de convivencia",
+        "Agenda de actividades",
+        "Oración y meditación",
+        "Historia del lugar"
+      ],
+      "arbol_de_la_vida": [
+        "Vista 3D",
+        "Árbol genealógico",
+        "Memorial familiar",
+        "Nodos de legado",
+        "Integración MSM LegacyBook"
+      ],
+      "vistas_360": [
+        "Panorámicas web",
+        "Recorridos guiados",
+        "Compatibilidad móvil",
+        "Modo baja conexión",
+        "Galería inmersiva"
+      ]
+    },
+    "rutas": [
+      "/villa-esperanza",
+      "/villa-esperanza/villa-azul",
+      "/villa-esperanza/cabanas",
+      "/villa-esperanza/santuario",
+      "/villa-esperanza/arbol-de-la-vida",
+      "/villa-esperanza/recorrido-360",
+      "/villa-esperanza/financiamiento"
+    ],
+    "datos": [
+      "project_phases",
+      "project_budgets",
+      "project_assets",
+      "project_renderings",
+      "project_contributions",
+      "project_documents",
+      "project_updates",
+      "project_milestones"
+    ]
+  },
+  "fase_4_financiamiento": {
+    "nombre": "Motor de Financiamiento Villa Esperanza",
+    "objetivo": "Registrar aportes, compromisos, inversiones y gastos con trazabilidad total.",
+    "reglas": [
+      "No prometer retorno financiero sin estructura legal",
+      "Separar donación, aporte, inversión y patrocinio",
+      "Toda entrada debe tener fuente",
+      "Toda salida debe tener comprobante",
+      "No contar promesas como dinero recibido",
+      "Mostrar total recibido, comprometido, utilizado y disponible",
+      "Aplicar KYC según nivel de riesgo",
+      "Mantener auditoría"
+    ],
+    "tablas": [
+      "funding_campaigns",
+      "funding_commitments",
+      "funding_contributions",
+      "funding_sources",
+      "funding_allocations",
+      "funding_expenses",
+      "funding_receipts",
+      "funding_audit_logs"
+    ],
+    "dashboard": [
+      "Meta total",
+      "Fondos confirmados",
+      "Compromisos pendientes",
+      "Porcentaje alcanzado",
+      "Distribución de fondos",
+      "Gastos por fase",
+      "Alertas",
+      "Documentos"
+    ]
+  },
+  "fase_5_clientes_y_kyc": {
+    "nombre": "Cliente Confiable",
+    "objetivo": "Crear un protocolo de identificación, riesgo y confianza para clientes de MSM.",
+    "niveles": [
+      "BASIC",
+      "VERIFIED",
+      "TRUSTED",
+      "VIP",
+      "RESTRICTED"
+    ],
+    "datos_permitidos": [
+      "Nombre",
+      "Teléfono",
+      "Correo",
+      "País",
+      "Documento solo cuando proceda",
+      "Historial de operaciones",
+      "Nivel de riesgo",
+      "Consentimientos"
+    ],
+    "prohibiciones": [
+      "No solicitar claves",
+      "No guardar PIN",
+      "No guardar semillas cripto",
+      "No publicar documentos",
+      "No usar datos sin consentimiento"
+    ],
+    "memoria_eterna": {
+      "descripcion": "Historial autorizado de relación con el cliente",
+      "regla": "Debe existir opción de corrección, descarga y eliminación según política y legislación aplicable."
+    }
+  },
+  "fase_6_operaciones_financieras": {
+    "nombre": "Liquidación Auditada",
+    "objetivo": "Implementar un flujo verificable para las operaciones registradas.",
+    "acciones": [
+      "Registrar operación",
+      "Adjuntar comprobante",
+      "Verificar monto",
+      "Confirmar tasa",
+      "Aprobar operación",
+      "Crear asiento contable",
+      "Liquidar beneficiario",
+      "Registrar comisión",
+      "Cerrar operación",
+      "Generar reporte"
+    ],
+    "regla_operaciones_existentes": "No registrar siete operaciones como liquidadas hasta importar los registros reales y verificar comprobantes.",
+    "estrategia_inversion_1_por_ciento": {
+      "descripcion": "Separar opcionalmente el 1% de beneficios netos confirmados hacia un fondo de inversión o expansión.",
+      "formula": "aporte = beneficio_neto_confirmado * 0.01",
+      "condiciones": [
+        "Solo sobre beneficio neto",
+        "Aprobación del propietario",
+        "Registro contable",
+        "Cuenta separada",
+        "Reporte mensual"
+      ]
+    }
+  },
+  "fase_7_marketing": {
+    "nombre": "Marketing Mayarí Arriba",
+    "entregables": [
+      "Pack de 7 stickers angelicales",
+      "Anuncio 8K",
+      "Versión cuadrada",
+      "Versión vertical",
+      "Versión para estado de WhatsApp",
+      "Versión para Telegram",
+      "Versión para Facebook",
+      "Kit de marca"
+    ],
+    "reglas": [
+      "No usar afirmaciones financieras engañosas",
+      "Mantener claridad",
+      "Optimizar archivos para móvil",
+      "Usar colores azul zafiro, dorado y blanco",
+      "Incluir MSM o ZAFIRO según contexto",
+      "Mantener alta legibilidad"
+    ]
+  },
+  "fase_8_eliana": {
+    "nombre": "ELIANA — Orquestadora Inteligente",
+    "funciones": [
+      "Consultar estado de proyectos",
+      "Resumir avances",
+      "Detectar tareas atrasadas",
+      "Generar reportes",
+      "Clasificar documentos",
+      "Asistir clientes",
+      "Solicitar aprobación humana",
+      "Crear cronologías",
+      "Asistir MSM LegacyBook",
+      "Ayudar en Villa Esperanza"
+    ],
+    "reglas": [
+      "No inventar estados",
+      "No declarar despliegues inexistentes",
+      "No aprobar movimientos financieros",
+      "No modificar roles críticos",
+      "Citar fuentes internas",
+      "Marcar datos pendientes"
+    ]
+  },
+  "fase_9_dashboard_maestro": {
+    "nombre": "Dashboard 360 de Don Miguel",
+    "secciones": [
+      "Estado de despliegues",
+      "Dominios",
+      "Seguridad",
+      "Usuarios",
+      "Operaciones",
+      "Caja",
+      "Tasas",
+      "Villa Esperanza",
+      "LegacyBook",
+      "Campañas",
+      "Alertas",
+      "Auditoría"
+    ],
+    "componentes": [
+      "DeploymentStatusCard",
+      "DomainHealthCard",
+      "SecurityScoreCard",
+      "FinancialOverview",
+      "VillaFundingCard",
+      "KycSummaryCard",
+      "OperationsTable",
+      "AuditTimeline",
+      "SystemAlerts",
+      "ElianaCommandCenter"
+    ]
+  },
+  "modelo_de_datos": {
+    "tablas_principales": [
+      "users",
+      "profiles",
+      "roles",
+      "permissions",
+      "deployments",
+      "domains",
+      "security_events",
+      "mfa_devices",
+      "kyc_profiles",
+      "clients",
+      "ledger_accounts",
+      "ledger_transactions",
+      "ledger_entries",
+      "financial_proofs",
+      "investment_allocations",
+      "villa_projects",
+      "villa_milestones",
+      "villa_budget_items",
+      "funding_campaigns",
+      "funding_contributions",
+      "marketing_assets",
+      "documents",
+      "audit_logs"
+    ]
+  },
+  "api": [
+    "GET /api/system/status",
+    "GET /api/deployments",
+    "POST /api/deployments/verify",
+    "GET /api/domains",
+    "POST /api/security/2fa/enable",
+    "GET /api/villa/overview",
+    "POST /api/villa/contributions",
+    "GET /api/finance/overview",
+    "POST /api/operations",
+    "POST /api/operations/[id]/approve",
+    "POST /api/investment/allocate",
+    "GET /api/audit"
+  ],
+  "plan_de_ejecucion": [
+    {"orden": 1, "tarea": "Auditar repositorio, dominios y despliegues"},
+    {"orden": 2, "tarea": "Crear respaldo completo"},
+    {"orden": 3, "tarea": "Corregir infraestructura y dominios"},
+    {"orden": 4, "tarea": "Implementar Angel Security y 2FA"},
+    {"orden": 5, "tarea": "Crear Dashboard Maestro"},
+    {"orden": 6, "tarea": "Crear módulo Villa Esperanza"},
+    {"orden": 7, "tarea": "Crear motor de financiamiento"},
+    {"orden": 8, "tarea": "Crear KYC Cliente Confiable"},
+    {"orden": 9, "tarea": "Integrar ledger económico"},
+    {"orden": 10, "tarea": "Crear activos de marketing"},
+    {"orden": 11, "tarea": "Integrar ELIANA"},
+    {"orden": 12, "tarea": "Ejecutar pruebas y desplegar"}
+  ],
+  "pruebas": [
+    "Pruebas unitarias",
+    "Pruebas de integración",
+    "Pruebas RLS",
+    "Pruebas de autenticación",
+    "Pruebas de 2FA",
+    "Pruebas de ledger",
+    "Pruebas de permisos",
+    "Pruebas E2E",
+    "Pruebas responsive",
+    "Pruebas de rendimiento"
+  ],
+  "instruccion_final": "OpenCode debe convertir esta arquitectura en tareas reales dentro del repositorio. Comenzar con la auditoría del estado actual, crear respaldo, documentar hallazgos y ejecutar fase por fase. No marcar ninguna tarea como completada sin evidencia técnica, pruebas aprobadas y confirmación en producción."
+}

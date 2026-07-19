@@ -14,17 +14,16 @@ type Operacion = {
 }
 
 export default function EconomiaPanel() {
-  const [ops, setOps] = useState<Operacion[]>([])
+  const [ops, setOps] = useState<Operacion[]>(() => {
+    if (typeof window === "undefined") return []
+    try {
+      const raw = localStorage.getItem("zafiro_economia")
+      return raw ? JSON.parse(raw) : []
+    } catch { return [] }
+  })
   const [showForm, setShowForm] = useState(false)
   const [monto, setMonto] = useState("")
   const [concepto, setConcepto] = useState("")
-
-  useEffect(() => {
-    const raw = localStorage.getItem("zafiro_economia")
-    if (raw) {
-      try { setOps(JSON.parse(raw)) } catch { /* empty */ }
-    }
-  }, [])
 
   useEffect(() => {
     localStorage.setItem("zafiro_economia", JSON.stringify(ops))

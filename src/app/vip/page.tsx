@@ -23,13 +23,16 @@ const VIP_BENEFITS = [
 export default function VipPage() {
   usePageTitle('VIP — ZAFIRO')
   const router = useRouter()
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(() => {
+    try {
+      const session = getSession()
+      if (!session) return null
+      return bootstrapOwnerProfile() || getProfileByAuthId(session.id) || null
+    } catch { return null }
+  })
 
   useEffect(() => {
-    const session = getSession()
-    if (!session) { router.replace('/auth/login'); return }
-    const p = bootstrapOwnerProfile() || getProfileByAuthId(session.id)
-    if (p) setProfile(p)
+    if (!getSession()) router.replace('/auth/login')
   }, [router])
 
   const isVip = profile?.membershipTier === 'VIP' || profile?.membershipTier === 'ENTREPRENEUR_VIP'

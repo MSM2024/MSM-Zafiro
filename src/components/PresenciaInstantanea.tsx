@@ -23,15 +23,17 @@ const COMANDOS: Record<string, string> = {
 
 export default function PresenciaInstantanea() {
   const [config, setConfig] = useState<ConfigPresencia>(getConfigPresencia())
-  const [escuchando, setEscuchando] = useState(false)
+  const [escuchando, setEscuchando] = useState(true)
   const [ultimoComando, setUltimoComando] = useState("")
-  const [visible, setVisible] = useState(true)
-  const [soporteVoz, setSoporteVoz] = useState(false)
+  const [visible] = useState(true)
+  const [soporteVoz] = useState(() => {
+    if (typeof window === "undefined") return false
+    try { return PresenciaEngine.verificarSoporte() } catch { return false }
+  })
   const engineRef = useRef<PresenciaEngine | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    setSoporteVoz(PresenciaEngine.verificarSoporte())
     if (config.vozActiva && soporteVoz) {
       const engine = new PresenciaEngine("ZAFIRO")
       engine.onComando((comando) => {
@@ -53,7 +55,6 @@ export default function PresenciaInstantanea() {
       })
       engine.iniciar()
       engineRef.current = engine
-      setEscuchando(true)
       return () => engine.detener()
     }
   }, [config.vozActiva, soporteVoz])

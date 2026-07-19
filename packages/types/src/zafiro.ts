@@ -19,7 +19,11 @@ export type LegacyUserRole = "OWNER" | "CASHIER" | "VIEWER"
 // --- Role del sistema (QUIÉN eres en el sistema) ---
 export type UserRole =
   | "OWNER_SUPERADMIN"
-  | "ADMIN"
+  | "SYSTEM_ADMIN"
+  | "FINANCE_ADMIN"
+  | "CONTENT_ADMIN"
+  | "SECURITY_AUDITOR"
+  | "OPERATOR"
   | "COMPLIANCE_REVIEWER"
   | "SUPPORT_AGENT"
   | "ENTREPRENEUR"
@@ -298,8 +302,10 @@ export interface KycProviderResult {
 
 export type Permission =
   | "users.read"
+  | "users.create"
   | "users.update"
   | "users.suspend"
+  | "users.delete"
   | "roles.manage"
   | "memberships.manage"
   | "kyc.read"
@@ -309,28 +315,87 @@ export type Permission =
   | "kyb.review"
   | "kyb.approve"
   | "audit.read"
+  | "audit.export"
   | "system.configure"
+  | "system.monitor"
   | "plans.manage"
   | "marketplace.manage"
+  | "economy.read"
   | "economy.manage"
+  | "economy.transfer"
+  | "economy.report"
   | "security.manage"
+  | "security.audit"
+  | "finance.read"
+  | "finance.manage"
+  | "content.read"
+  | "content.create"
+  | "content.update"
+  | "content.delete"
+  | "content.publish"
+  | "operations.read"
+  | "operations.create"
+  | "operations.approve"
+  | "deployments.manage"
+  | "domains.manage"
+  | "eliana.configure"
+  | "eliana.knowledge"
 
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   OWNER_SUPERADMIN: [
-    "users.read", "users.update", "users.suspend",
+    "users.read", "users.create", "users.update", "users.suspend", "users.delete",
     "roles.manage", "memberships.manage",
     "kyc.read", "kyc.review", "kyc.approve", "kyc.reject",
     "kyb.review", "kyb.approve",
-    "audit.read", "system.configure",
-    "plans.manage", "marketplace.manage", "economy.manage", "security.manage",
+    "audit.read", "audit.export",
+    "system.configure", "system.monitor",
+    "plans.manage", "marketplace.manage", "economy.manage", "economy.transfer", "economy.report",
+    "security.manage", "security.audit",
+    "finance.read", "finance.manage",
+    "content.read", "content.create", "content.update", "content.delete", "content.publish",
+    "operations.read", "operations.create", "operations.approve",
+    "deployments.manage", "domains.manage",
+    "eliana.configure", "eliana.knowledge",
   ],
-  ADMIN: [
-    "users.read", "users.update",
-    "memberships.manage",
+  SYSTEM_ADMIN: [
+    "users.read", "users.create", "users.update",
+    "system.configure", "system.monitor",
+    "audit.read",
+    "security.audit",
+    "deployments.manage",
+    "eliana.configure",
+    "operations.read",
+    "content.read",
+  ],
+  FINANCE_ADMIN: [
+    "users.read",
+    "finance.read", "finance.manage",
+    "economy.read", "economy.transfer", "economy.report",
+    "audit.read",
+    "operations.read", "operations.create", "operations.approve",
+    "kyc.read",
+  ],
+  CONTENT_ADMIN: [
+    "users.read",
+    "content.read", "content.create", "content.update", "content.delete", "content.publish",
+    "eliana.knowledge",
+    "marketplace.manage",
+    "audit.read",
+  ],
+  SECURITY_AUDITOR: [
+    "users.read",
+    "audit.read", "audit.export",
+    "security.audit",
+    "system.monitor",
     "kyc.read", "kyc.review",
     "kyb.review",
-    "audit.read",
-    "plans.manage", "marketplace.manage",
+  ],
+  OPERATOR: [
+    "users.read",
+    "operations.read", "operations.create",
+    "content.read",
+    "marketplace.manage",
+    "economy.read",
   ],
   COMPLIANCE_REVIEWER: [
     "kyc.read", "kyc.review", "kyc.approve", "kyc.reject",

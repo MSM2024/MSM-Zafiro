@@ -163,7 +163,8 @@ ${cfg.activosCrypto.map((a) => `  • ${a}`).join("\n")}
 }
 
 export function getMensajeAnalisis(precioBTC: number, tendencia: string, rsi: number, volumen: number): string {
-  const senal = generarSenal("BTC", precioBTC, tendencia as any, rsi, volumen)
+  const tendenciaNormalized = tendencia === "NEUTRAL" ? "lateral" : tendencia.toLowerCase() as "alcista" | "bajista" | "lateral"
+  const senal = generarSenal("BTC", precioBTC, tendenciaNormalized, rsi, volumen)
   return `🔍 *Análisis de Mercado — ELIANA*
 
 *BTC/USDT:* $${precioBTC.toFixed(2)}

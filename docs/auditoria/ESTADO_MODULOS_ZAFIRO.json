@@ -1,0 +1,858 @@
+{
+  "meta": {
+    "proyecto": "MSM-Zafiro",
+    "repositorio": "https://github.com/MSM2024/MSM-Zafiro.git",
+    "rama": "main",
+    "commit": "278b81c",
+    "fecha_auditoria": "2026-07-18",
+    "total_modulos": 45,
+    "resumen": {
+      "FUNCIONAL_Y_PROBADO": 0,
+      "FUNCIONAL_SIN_PRUEBA": 20,
+      "PARCIAL": 7,
+      "INTERFAZ_SIN_BACKEND": 0,
+      "SIMULADO": 3,
+      "DESCONECTADO": 4,
+      "ROTO": 0,
+      "PENDIENTE": 2,
+      "NO_ENCONTRADO": 9,
+      "NO_VERIFICABLE": 0
+    }
+  },
+  "estados": [
+    "FUNCIONAL_Y_PROBADO",
+    "FUNCIONAL_SIN_PRUEBA",
+    "PARCIAL",
+    "INTERFAZ_SIN_BACKEND",
+    "SIMULADO",
+    "DESCONECTADO",
+    "ROTO",
+    "PENDIENTE",
+    "NO_ENCONTRADO",
+    "NO_VERIFICABLE"
+  ],
+  "modulos": [
+    {
+      "id": 1,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Pagina Principal",
+      "descripcion": "page.tsx renderiza homepage SPA con secciones (Inicio, Explorar, Gemologia, Circulos, Sponsors, Perfil). 20+ imagenes Unsplash CDN. Todos los datos desde zafiro-data.ts.",
+      "archivos_clave": [
+        "src/app/page.tsx",
+        "src/lib/zafiro-data.ts",
+        "src/lib/comentarios.ts"
+      ],
+      "rutas": ["/"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Renderiza en navegador, datos cargados desde CDN y archivos locales.",
+      "riesgos": [
+        "20+ imagenes dependen de Unsplash CDN, sin fallback local",
+        "Sin tests unitarios ni de integracion"
+      ]
+    },
+    {
+      "id": 2,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Registro",
+      "descripcion": "auth.ts registerUser() con fallback a localStorage cuando Supabase no esta configurado. Hash SHA-256 de passwords.",
+      "archivos_clave": [
+        "src/lib/auth.ts",
+        "src/lib/supabase.ts"
+      ],
+      "rutas": ["/auth/register"],
+      "estado": "PARCIAL",
+      "evidencia": "Ruta Supabase muerta (sin credenciales). Ruta localStorage funciona.",
+      "riesgos": [
+        "Supabase path dead — sin credenciales configuradas",
+        "SHA-256 sin salt no es seguro para produccion",
+        "localStorage no persiste entre dispositivos"
+      ]
+    },
+    {
+      "id": 3,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Login",
+      "descripcion": "auth.ts loginUser() con fallback a localStorage cuando Supabase no esta configurado.",
+      "archivos_clave": [
+        "src/lib/auth.ts",
+        "src/lib/supabase.ts"
+      ],
+      "rutas": ["/auth/login"],
+      "estado": "PARCIAL",
+      "evidencia": "Ruta Supabase muerta. Ruta localStorage funciona con credenciales locales.",
+      "riesgos": [
+        "Supabase path dead — sin credenciales configuradas",
+        "Sin MFA/2FA funcional",
+        "localStorage no es storage seguro"
+      ]
+    },
+    {
+      "id": 4,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Perfiles",
+      "descripcion": "profile.ts: CRUD via localStorage. Campo avatar tiene src vacio por defecto.",
+      "archivos_clave": [
+        "src/lib/profile.ts",
+        "src/components/Avatar.tsx"
+      ],
+      "rutas": ["/mi-perfil", "/perfil/[username]", "/profile-page"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "CRUD funciona en navegador. Cache invalidado al guardar.",
+      "riesgos": [
+        "Campo avatar src vacio produce img tag roto",
+        "Sin persistencia en servidor",
+        "Sin validacion server-side"
+      ]
+    },
+    {
+      "id": 5,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Roles y Permisos",
+      "descripcion": "types/zafiro.ts define UserRole (10 roles). angel-security.ts tiene ROLE_PERMISSIONS map. require-role.ts tiene ACTION_ROLE_MAP. Todo basado en localStorage, sin RBAC real.",
+      "archivos_clave": [
+        "packages/types/src/zafiro.ts",
+        "src/lib/angel-security.ts",
+        "src/lib/require-role.ts"
+      ],
+      "rutas": ["/admin/usuarios"],
+      "estado": "SIMULADO",
+      "evidencia": "Roles definidos en tipos, permisos mapeados, pero todo en localStorage sin verificacion server-side.",
+      "riesgos": [
+        "Sin verificacion server-side de permisos",
+        "Roles manipulables desde localStorage",
+        "Sin middleware de autorizacion"
+      ]
+    },
+    {
+      "id": 6,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Membresias VIP",
+      "descripcion": "memberships.ts: interfaz UserMembership, creacion de Stripe checkout session, handler de webhook. Todo localStorage. stripe-server.ts retorna URLs simuladas cuando no hay key de Stripe.",
+      "archivos_clave": [
+        "src/lib/memberships.ts",
+        "src/lib/stripe-server.ts",
+        "src/app/vip/page.tsx",
+        "src/app/vip/beneficios/page.tsx"
+      ],
+      "rutas": ["/vip", "/vip/beneficios", "/mi-perfil/membresia"],
+      "estado": "SIMULADO",
+      "evidencia": "UI funcional. Stripe retorna URLs simuladas. Webhook handler existe pero no procesa pagos reales.",
+      "riesgos": [
+        "Sin conexion real a Stripe",
+        "Pagos simulados sin validacion",
+        "Webhook sin procesamiento real"
+      ]
+    },
+    {
+      "id": 7,
+      "ecosistema": "ZAFIRO",
+      "nombre": "KYC",
+      "descripcion": "identity.ts: 664 lineas de KYC basado en localStorage (casos, documentos, revisiones, consentimiento). Paginas: /kyc/inicio, /kyc/consentimiento, /kyc/datos, /kyc/documento, /kyc/estado.",
+      "archivos_clave": [
+        "src/lib/identity.ts",
+        "src/app/kyc/inicio/page.tsx",
+        "src/app/kyc/consentimiento/page.tsx",
+        "src/app/kyc/datos/page.tsx",
+        "src/app/kyc/documento/page.tsx",
+        "src/app/kyc/estado/page.tsx"
+      ],
+      "rutas": ["/kyc/inicio", "/kyc/consentimiento", "/kyc/datos", "/kyc/documento", "/kyc/estado"],
+      "estado": "SIMULADO",
+      "evidencia": "Flujo completo de UI funciona. Datos persisten en localStorage. Sin verificacion real de identidad.",
+      "riesgos": [
+        "Sin verificacion real de documentos",
+        "Sin integracion con proveedores KYC",
+        "Datos sensibles en localStorage",
+        "Sin validacion server-side"
+      ]
+    },
+    {
+      "id": 8,
+      "ecosistema": "ZAFIRO",
+      "nombre": "KYB",
+      "descripcion": "identity.ts incluye tipos BusinessProfile, BusinessMember. Paginas /admin/kyb y /admin/kyb/[caseId] existen.",
+      "archivos_clave": [
+        "src/lib/identity.ts",
+        "src/app/admin/kyb/page.tsx",
+        "src/app/admin/kyb/[caseId]/page.tsx"
+      ],
+      "rutas": ["/admin/kyb", "/admin/kyb/[caseId]"],
+      "estado": "PARCIAL",
+      "evidencia": "Tipos definidos. Paginas de admin existen. Flujo incompleto.",
+      "riesgos": [
+        "Flujo de verificacion empresarial incompleto",
+        "Sin integracion con registros empresariales",
+        "Sin validacion server-side"
+      ]
+    },
+    {
+      "id": 9,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Panel Administrativo",
+      "descripcion": "/admin con 22 sub-rutas. Dashboard de administracion con estadisticas de automatizacion hardcodeadas.",
+      "archivos_clave": [
+        "src/app/admin/page.tsx",
+        "src/app/admin/usuarios/page.tsx",
+        "src/app/admin/vip/page.tsx",
+        "src/app/admin/kyc/page.tsx",
+        "src/app/admin/kyb/page.tsx",
+        "src/app/admin/riesgos/page.tsx",
+        "src/app/admin/auditoria/page.tsx",
+        "src/app/admin/cripto/page.tsx",
+        "src/app/admin/knowledge-import/page.tsx",
+        "src/app/admin/tasas/page.tsx",
+        "src/app/admin/bpa/page.tsx",
+        "src/app/admin/logistica/page.tsx",
+        "src/app/admin/ratings/page.tsx"
+      ],
+      "rutas": [
+        "/admin",
+        "/admin/usuarios",
+        "/admin/vip",
+        "/admin/kyc",
+        "/admin/kyb",
+        "/admin/riesgos",
+        "/admin/auditoria",
+        "/admin/cripto",
+        "/admin/knowledge-import",
+        "/admin/tasas",
+        "/admin/bpa",
+        "/admin/logistica",
+        "/admin/ratings"
+      ],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "22 sub-rutas renderizan. Dashboard muestra estadisticas (hardcodeadas).",
+      "riesgos": [
+        "Estadisticas hardcodeadas, no reflejan datos reales",
+        "Sin proteccion server-side de rutas admin",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 10,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Comunidad",
+      "descripcion": "Paginas estaticas: /help, /about, /rules, /terms, /privacy, /ecosystem, /vision, /mission, /values.",
+      "archivos_clave": [
+        "src/app/help/page.tsx",
+        "src/app/about/page.tsx",
+        "src/app/rules/page.tsx",
+        "src/app/terms/page.tsx",
+        "src/app/privacy/page.tsx",
+        "src/app/ecosystem/page.tsx",
+        "src/app/vision/page.tsx",
+        "src/app/mission/page.tsx",
+        "src/app/values/page.tsx"
+      ],
+      "rutas": ["/help", "/about", "/rules", "/terms", "/privacy", "/ecosystem", "/vision", "/mission", "/values"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Todas las paginas renderizan contenido estatico correctamente.",
+      "riesgos": [
+        "Contenido hardcodeado, no editable desde admin",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 11,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Circulos / Comunidades",
+      "descripcion": "Mencionado en navegacion UI. No se encontro modulo dedicado.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos dedicados. Solo mencion en componentes de navegacion.",
+      "riesgos": [
+        "Feature prometida en UI pero no implementada"
+      ]
+    },
+    {
+      "id": 12,
+      "ecosistema": "ZAFIRO",
+      "nombre": "Notificaciones",
+      "descripcion": "Componente NotificationsDropdown.tsx existe. No se encontro sistema persistente de notificaciones.",
+      "archivos_clave": [
+        "src/components/NotificationsDropdown.tsx"
+      ],
+      "rutas": [],
+      "estado": "PARCIAL",
+      "evidencia": "Componente UI existe. Sin backend ni persistencia de notificaciones.",
+      "riesgos": [
+        "Sin sistema de notificaciones push",
+        "Sin persistencia server-side",
+        "Sin notificaciones por email"
+      ]
+    },
+    {
+      "id": 13,
+      "ecosistema": "ELIANA",
+      "nombre": "Chat",
+      "descripcion": "eliana-core.ts orquestador. API route /api/eliana/chat. Web UI en /eliana. 3 proveedores (Gemini, OpenAI, Anthropic). Knowledge base con RAG. Sistema de memoria. Correlation tracing.",
+      "archivos_clave": [
+        "src/lib/eliana/eliana-core.ts",
+        "src/app/api/eliana/chat/route.ts",
+        "src/app/eliana/page.tsx"
+      ],
+      "rutas": ["/eliana", "/api/eliana/chat"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Orquestador completo. API route configurada. UI funcional. Multi-provider con fallback.",
+      "riesgos": [
+        "Depende de API keys externas (GEMINI_API_KEY)",
+        "Sin tests de integracion",
+        "Sin rate limiting documentado"
+      ]
+    },
+    {
+      "id": 14,
+      "ecosistema": "ELIANA",
+      "nombre": "WhatsApp",
+      "descripcion": "Webhook en /api/whatsapp/webhook. process-message.ts en paquete @zafiro/eliana. Usa Meta Graph API v22.0. WHATSAPP_ACCESS_TOKEN no configurado.",
+      "archivos_clave": [
+        "src/app/api/whatsapp/webhook/route.ts",
+        "packages/eliana/src/process-message.ts"
+      ],
+      "rutas": ["/api/whatsapp/webhook"],
+      "estado": "DESCONECTADO",
+      "evidencia": "Codigo existe. WHATSAPP_ACCESS_TOKEN no configurado en .env.local.",
+      "riesgos": [
+        "Sin token de Meta Graph API",
+        "Sin verificacion de webhook signature",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 15,
+      "ecosistema": "ELIANA",
+      "nombre": "Knowledge Base",
+      "descripcion": "38 documentos de conocimiento. Motor RAG con chunker. Pagina /admin/eliana/conocimiento. Knowledge pack en knowledge-pack/.",
+      "archivos_clave": [
+        "src/lib/eliana/knowledge/",
+        "src/app/admin/eliana/conocimiento/page.tsx",
+        "knowledge-pack/"
+      ],
+      "rutas": ["/admin/eliana/conocimiento"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "38 docs de conocimiento. RAG engine funcional. UI de admin existe.",
+      "riesgos": [
+        "Sin tests del motor RAG",
+        "Sin validacion de calidad de documentos",
+        "Sin pipeline de actualizacion automatica"
+      ]
+    },
+    {
+      "id": 16,
+      "ecosistema": "MARKETPLACE",
+      "nombre": "Productos",
+      "descripcion": "Sin implementacion local. Solo referencias via enlaces a msmmystore.com.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "DESCONECTADO",
+      "evidencia": "Solo enlaces externos a msmmystore.com.",
+      "riesgos": [
+        "Sin catalogo local de productos",
+        "Dependencia total de sitio externo"
+      ]
+    },
+    {
+      "id": 17,
+      "ecosistema": "MARKETPLACE",
+      "nombre": "Carrito",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature fundamental del marketplace no implementada"
+      ]
+    },
+    {
+      "id": 18,
+      "ecosistema": "MARKETPLACE",
+      "nombre": "Pedidos",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature fundamental del marketplace no implementada"
+      ]
+    },
+    {
+      "id": 19,
+      "ecosistema": "MARKETPLACE",
+      "nombre": "Entregas",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature fundamental del marketplace no implementada"
+      ]
+    },
+    {
+      "id": 20,
+      "ecosistema": "ECONOMIA",
+      "nombre": "Dashboard",
+      "descripcion": "Pagina /economia, EconomiaPanel.tsx, EconomiaService.ts.",
+      "archivos_clave": [
+        "src/app/economia/page.tsx",
+        "src/components/EconomiaPanel.tsx",
+        "src/lib/EconomiaService.ts"
+      ],
+      "rutas": ["/economia"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Pagina renderiza. Panel y servicio existen.",
+      "riesgos": [
+        "Sin tests",
+        "Sin datos reales de transacciones"
+      ]
+    },
+    {
+      "id": 21,
+      "ecosistema": "ECONOMIA",
+      "nombre": "Ledger",
+      "descripcion": "ledger.ts: flujo de 5 pasos (entrada -> validacion -> sincronizacion -> distribucion -> cierre). Pagina /admin/ledger.",
+      "archivos_clave": [
+        "src/lib/ledger.ts",
+        "src/app/admin/ledger/page.tsx"
+      ],
+      "rutas": ["/admin/ledger"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Flujo de 5 pasos implementado. Pagina de admin existe.",
+      "riesgos": [
+        "Sin persistencia server-side del ledger",
+        "Sin validacion criptografica real",
+        "Sin tests del flujo completo"
+      ]
+    },
+    {
+      "id": 22,
+      "ecosistema": "ECONOMIA",
+      "nombre": "Caja CUP",
+      "descripcion": "Referenciado en ledger.ts (nodo CAJA_ROCIO). Sin modulo dedicado.",
+      "archivos_clave": [
+        "src/lib/ledger.ts"
+      ],
+      "rutas": [],
+      "estado": "PARCIAL",
+      "evidencia": "Nodo referenciado en ledger. Sin interfaz dedicada.",
+      "riesgos": [
+        "Sin gestion real de caja",
+        "Sin conciliacion",
+        "Sin reportes de caja"
+      ]
+    },
+    {
+      "id": 23,
+      "ecosistema": "ECONOMIA",
+      "nombre": "Caja USD",
+      "descripcion": "Similar a CUP. Referenciado en ledger.ts sin modulo dedicado.",
+      "archivos_clave": [
+        "src/lib/ledger.ts"
+      ],
+      "rutas": [],
+      "estado": "PARCIAL",
+      "evidencia": "Nodo referenciado en ledger. Sin interfaz dedicada.",
+      "riesgos": [
+        "Sin gestion real de caja",
+        "Sin conciliacion",
+        "Sin conversion de divisas automatica"
+      ]
+    },
+    {
+      "id": 24,
+      "ecosistema": "ECONOMIA",
+      "nombre": "Tasas Cuba",
+      "descripcion": "tasas.ts + pagina /admin/tasas.",
+      "archivos_clave": [
+        "src/lib/tasas.ts",
+        "src/app/admin/tasas/page.tsx"
+      ],
+      "rutas": ["/admin/tasas"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Servicio de tasas y pagina admin existen.",
+      "riesgos": [
+        "Sin fuente de datos en tiempo real",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 25,
+      "ecosistema": "ECONOMIA",
+      "nombre": "BPA Mirror",
+      "descripcion": "bpa-mirror.ts + pagina /admin/bpa. Mirror v1.0.",
+      "archivos_clave": [
+        "src/lib/bpa-mirror.ts",
+        "src/app/admin/bpa/page.tsx"
+      ],
+      "rutas": ["/admin/bpa"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Mirror BPA v1.0 implementado. Pagina admin existe.",
+      "riesgos": [
+        "Sin verificacion de datos contra fuente real BPA",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 26,
+      "ecosistema": "EDITORIAL",
+      "nombre": "Blog",
+      "descripcion": "Solo referenciado via enlaces a blog.msmmystore.com. Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "DESCONECTADO",
+      "evidencia": "Solo enlaces externos a blog.msmmystore.com.",
+      "riesgos": [
+        "Sin blog local",
+        "Dependencia total de sitio externo"
+      ]
+    },
+    {
+      "id": 27,
+      "ecosistema": "EDITORIAL",
+      "nombre": "Escritores",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature del ecosistema editorial no implementada"
+      ]
+    },
+    {
+      "id": 28,
+      "ecosistema": "EDITORIAL",
+      "nombre": "Articulos",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature del ecosistema editorial no implementada"
+      ]
+    },
+    {
+      "id": 29,
+      "ecosistema": "EDITORIAL",
+      "nombre": "Libros",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature del ecosistema editorial no implementada"
+      ]
+    },
+    {
+      "id": 30,
+      "ecosistema": "EDITORIAL",
+      "nombre": "Flujo de Revision",
+      "descripcion": "Sin implementacion local.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin archivos encontrados.",
+      "riesgos": [
+        "Feature del ecosistema editorial no implementada"
+      ]
+    },
+    {
+      "id": 31,
+      "ecosistema": "PWA",
+      "nombre": "Service Worker",
+      "descripcion": "sw.js: cache-first para paginas, network-first para API. Cachea /, /offline, manifest, icons.",
+      "archivos_clave": [
+        "public/sw.js",
+        "public/manifest.json",
+        "public/icons/icon-192.svg",
+        "public/icons/icon-512.svg"
+      ],
+      "rutas": [],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "SW configurado con cache strategies. Manifest y icons presentes.",
+      "riesgos": [
+        "Sin tests de SW",
+        "Sin estrategia de actualizacion de cache documentada",
+        "Sin testing en multiples dispositivos"
+      ]
+    },
+    {
+      "id": 32,
+      "ecosistema": "PWA",
+      "nombre": "Offline",
+      "descripcion": "Pagina /offline existe. SW hace fallback a /offline cuando fetch falla.",
+      "archivos_clave": [
+        "src/app/offline/page.tsx",
+        "public/sw.js"
+      ],
+      "rutas": ["/offline"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Pagina offline renderiza. SW configurado con fallback.",
+      "riesgos": [
+        "Sin testing de comportamiento offline real",
+        "Sin cola de operaciones offline"
+      ]
+    },
+    {
+      "id": 33,
+      "ecosistema": "PWA",
+      "nombre": "IndexedDB",
+      "descripcion": "No encontrado. Toda la persistencia es via localStorage.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "NO_ENCONTRADO",
+      "evidencia": "Sin uso de IndexedDB en el codebase.",
+      "riesgos": [
+        "localStorage tiene limites de存储 mas bajos que IndexedDB",
+        "Sin soporte para datos estructurados complejos offline"
+      ]
+    },
+    {
+      "id": 34,
+      "ecosistema": "SEGURIDAD",
+      "nombre": "RLS",
+      "descripcion": "11 archivos de migracion SQL con politicas RLS. Nunca ejecutados (sin Supabase).",
+      "archivos_clave": [
+        "supabase/migrations/"
+      ],
+      "rutas": [],
+      "estado": "PENDIENTE",
+      "evidencia": "Migraciones SQL existen pero nunca fueron ejecutadas.",
+      "riesgos": [
+        "Sin Row Level Security activo",
+        "Datos sin proteccion en servidor",
+        "Migraciones sin testing"
+      ]
+    },
+    {
+      "id": 35,
+      "ecosistema": "SEGURIDAD",
+      "nombre": "MFA",
+      "descripcion": "security-lock.ts: PIN Maestro, Founder Key, emergency lockout. Todo en sessionStorage/localStorage. require-aal2.ts: Guard para Supabase AAL2 (MFA).",
+      "archivos_clave": [
+        "src/lib/security-lock.ts",
+        "src/lib/require-aal2.ts"
+      ],
+      "rutas": ["/mi-perfil/seguridad"],
+      "estado": "PARCIAL",
+      "evidencia": "PIN y Founder Key funcionan localmente. Guard AAL2 existe pero Supabase no configurado.",
+      "riesgos": [
+        "MFA basado en localStorage no es seguro real",
+        "Guard AAL2 inutil sin Supabase",
+        "Sin MFA via TOTP/SMS real"
+      ]
+    },
+    {
+      "id": 36,
+      "ecosistema": "SEGURIDAD",
+      "nombre": "Auditoria",
+      "descripcion": "angel-security.ts: AngelAuditEntry, SecurityEvent logging a localStorage. Owner audit log (owner.ts). writeAudit() en security-middleware.ts.",
+      "archivos_clave": [
+        "src/lib/angel-security.ts",
+        "src/lib/owner.ts",
+        "src/lib/security-middleware.ts",
+        "src/app/admin/auditoria/page.tsx"
+      ],
+      "rutas": ["/admin/auditoria"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Sistema de auditoria implementado. Logging a localStorage. Pagina admin existe.",
+      "riesgos": [
+        "Logs en localStorage se pierden al limpiar cache",
+        "Sin logs server-side",
+        "Sin retencion/rotacion de logs"
+      ]
+    },
+    {
+      "id": 37,
+      "ecosistema": "SEGURIDAD",
+      "nombre": "Backups",
+      "descripcion": "Sin sistema automatizado de backups. Script manual de git bundle en AGENTS.md.",
+      "archivos_clave": [],
+      "rutas": [],
+      "estado": "PENDIENTE",
+      "evidencia": "Script manual documentado en AGENTS.md. Sin automatizacion.",
+      "riesgos": [
+        "Sin backups automatizados",
+        "Sin backup de datos localStorage",
+        "Sin recuperacion ante desastres"
+      ]
+    },
+    {
+      "id": 38,
+      "ecosistema": "3D",
+      "nombre": "Holograma Beta",
+      "descripcion": "Paquete holo-cinema, componente HoloCinemaCanvas.tsx, pagina /holo-cinema. Usa @react-three/fiber, drei, postprocessing, three.",
+      "archivos_clave": [
+        "packages/holo-cinema/",
+        "src/app/holo-cinema/page.tsx"
+      ],
+      "rutas": ["/holo-cinema"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Paquete 3D completo. Componente Canvas. Pagina funcional.",
+      "riesgos": [
+        "Performance en dispositivos moviles",
+        "Sin tests",
+        "Dependencia de three.js (bundle size)"
+      ]
+    },
+    {
+      "id": 39,
+      "ecosistema": "BRANDING",
+      "nombre": "Diamante ZAFIRO",
+      "descripcion": "eliana-diamond.svg en /public. 15 assets WebP en /public/assets/zafiro/. Manifest ZAFIRO_ASSETS en config.",
+      "archivos_clave": [
+        "public/eliana-diamond.svg",
+        "public/assets/zafiro/",
+        "src/lib/config.ts"
+      ],
+      "rutas": [],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "SVG principal y 15 WebP assets presentes. Manifest de assets configurado.",
+      "riesgos": [
+        "Assets originales JPG eliminados, solo WebP",
+        "Sin fallback para navegadores sin soporte WebP"
+      ]
+    },
+    {
+      "id": 40,
+      "ecosistema": "AUTH",
+      "nombre": "Supabase",
+      "descripcion": "supabase.ts: getSupabaseClient() retorna null (sin credenciales). Todo el codigo auth tiene fallback a localStorage. 11 migraciones SQL existentes pero nunca ejecutadas.",
+      "archivos_clave": [
+        "src/lib/supabase.ts",
+        "supabase/migrations/"
+      ],
+      "rutas": [],
+      "estado": "DESCONECTADO",
+      "evidencia": "Cliente retorna null. Sin credenciales en .env.local. Migraciones sin ejecutar.",
+      "riesgos": [
+        "Sin autenticacion real",
+        "Sin base de datos server-side",
+        "Sin RLS activo",
+        "Bloqueante para multiples modulos"
+      ]
+    },
+    {
+      "id": 41,
+      "ecosistema": "OWNER",
+      "nombre": "Profile",
+      "descripcion": "owner.ts: OWNER_PROFILE para com8msm@gmail.com, sealOwnerMembership(), isOwnerEmail().",
+      "archivos_clave": [
+        "src/lib/owner.ts"
+      ],
+      "rutas": [],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Perfil owner configurado. Funciones de validacion de email y membresia.",
+      "riesgos": [
+        "Email hardcodeado en codigo fuente",
+        "Sin rotacion de privilegios",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 42,
+      "ecosistema": "OWNER",
+      "nombre": "Devices",
+      "descripcion": "owner-devices.ts: registro, confianza, revocacion, sync. 4 API routes. Pagina /zafiro/owner/dispositivos.",
+      "archivos_clave": [
+        "src/lib/owner-devices.ts",
+        "src/app/api/owner/devices/register/route.ts",
+        "src/app/api/owner/devices/trust/route.ts",
+        "src/app/api/owner/devices/revoke/route.ts",
+        "src/app/api/owner/devices/sync/route.ts",
+        "src/app/zafiro/owner/dispositivos/page.tsx"
+      ],
+      "rutas": [
+        "/api/owner/devices/register",
+        "/api/owner/devices/trust",
+        "api/owner/devices/revoke",
+        "api/owner/devices/sync",
+        "/zafiro/owner/dispositivos"
+      ],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Sistema de dispositivos completo. 4 API routes. Panel de admin.",
+      "riesgos": [
+        "Sin persistencia server-side",
+        "API routes sin proteccion real",
+        "Sin tests"
+      ]
+    },
+    {
+      "id": 43,
+      "ecosistema": "ELIANA",
+      "nombre": "Omnicanal",
+      "descripcion": "omnicanal.ts: Directorio, Expedientes, Inventario Vivo, Reportes, Panel Status. Paginas admin para cada uno.",
+      "archivos_clave": [
+        "src/lib/eliana/omnicanal.ts",
+        "src/app/admin/omnicanal/directorio/page.tsx",
+        "src/app/admin/omnicanal/expedientes/page.tsx",
+        "src/app/admin/omnicanal/inventario/page.tsx",
+        "src/app/admin/omnicanal/reportes/page.tsx",
+        "src/app/admin/omnicanal/panel/page.tsx"
+      ],
+      "rutas": [
+        "/admin/omnicanal/directorio",
+        "/admin/omnicanal/expedientes",
+        "/admin/omnicanal/inventario",
+        "/admin/omnicanal/reportes",
+        "/admin/omnicanal/panel"
+      ],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Modulo nuevo. Servicio y paginas admin implementados. Sin produccion.",
+      "riesgos": [
+        "Modulo nuevo sin testing en produccion",
+        "Sin tests",
+        "Sin integracion verificada con canales"
+      ]
+    },
+    {
+      "id": 44,
+      "ecosistema": "FAMILIA",
+      "nombre": "Nube Familiar",
+      "descripcion": "familia.ts + 7 rutas bajo /familia/*. Encuentro Soria Martinez 16-ago-2026, arbol genealogico, galeria, cronologia, historias, invitacion WhatsApp.",
+      "archivos_clave": [
+        "src/lib/familia.ts",
+        "src/app/familia/"
+      ],
+      "rutas": [
+        "/familia",
+        "/familia/arbol",
+        "/familia/galeria",
+        "/familia/cronologia",
+        "/familia/historias",
+        "/familia/encuentro",
+        "/familia/invitacion"
+      ],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "7 rutas implementadas. Servicio de datos familiar completo.",
+      "riesgos": [
+        "Datos sensibles de familia en localStorage",
+        "Sin tests",
+        "Sin proteccion de privacidad familiar"
+      ]
+    },
+    {
+      "id": 45,
+      "ecosistema": "LOGISTICA",
+      "nombre": "Contenedores",
+      "descripcion": "logistica-contenedores.ts + pagina /admin/logistica. USA/Panama -> Cuba. Frecuencia 369. Sincronizado con Ledger Maestro.",
+      "archivos_clave": [
+        "src/lib/logistica-contenedores.ts",
+        "src/app/admin/logistica/page.tsx"
+      ],
+      "rutas": ["/admin/logistica"],
+      "estado": "FUNCIONAL_SIN_PRUEBA",
+      "evidencia": "Modulo nuevo. Servicio y pagina admin. Sincronizacion con ledger.",
+      "riesgos": [
+        "Modulo nuevo sin testing en produccion",
+        "Sin tests",
+        "Sin integracion con tracking real de envios"
+      ]
+    }
+  ]
+}

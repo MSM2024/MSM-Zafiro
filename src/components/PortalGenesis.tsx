@@ -367,9 +367,9 @@ function AngelPresence() {
   )
 }
 
-export default function PortalGenesis() {
+export default function PortalGenesis({ onEnter }: { onEnter?: () => void }) {
   return (
-    <section className="relative w-full min-h-[80vh] md:min-h-screen overflow-hidden bg-[#050816] flex flex-col items-center justify-center px-4 py-8 md:py-0">
+    <section className="relative w-full min-h-screen overflow-hidden bg-[#050816] flex flex-col items-center justify-center px-4 py-8 md:py-0">
       <AngelPresence />
 
       <div className="absolute inset-0 overflow-hidden">
@@ -395,7 +395,7 @@ export default function PortalGenesis() {
           className="mb-3 md:mb-4"
         >
           <span className="text-[10px] md:text-xs font-mono font-bold tracking-[0.3em] text-[#00D9FF]/60 uppercase">
-            ⚡ Portal Génesis ⚡
+            ⚡ Portal de Entrada ⚡
           </span>
         </motion.div>
 
@@ -405,7 +405,7 @@ export default function PortalGenesis() {
           transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
           className="mb-2"
         >
-          <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-none">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tight leading-none">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00D9FF] via-[#7C3AED] to-[#2563EB]">
               ZAFIRO
             </span>
@@ -429,7 +429,7 @@ export default function PortalGenesis() {
             Donde el conocimiento, la conciencia, la fe y el propósito convergen en un solo ecosistema.
           </p>
           <p className="text-[10px] md:text-xs font-mono text-[#00D9FF]/40 italic">
-            "No publicas solamente tu vida; publicas tus preguntas, tu conocimiento, tu propósito y el legado que deseas dejar al mundo."
+            &ldquo;No publicas solamente tu vida; publicas tus preguntas, tu conocimiento, tu propósito y el legado que deseas dejar al mundo.&rdquo;
           </p>
         </motion.div>
 
@@ -439,21 +439,35 @@ export default function PortalGenesis() {
           transition={{ delay: 2, duration: 0.8 }}
           className="mt-6 md:mt-10 flex flex-col sm:flex-row gap-3 md:gap-4"
         >
-          <motion.a
-            href="/auth/register"
-            className="px-6 md:px-10 py-3 md:py-4 rounded-2xl bg-gradient-to-r from-[#00D9FF] to-[#2563EB] text-white text-xs md:text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-all shadow-lg shadow-[#00D9FF]/20"
+          <motion.button
+            onClick={onEnter}
+            className="group relative px-8 md:px-12 py-3 md:py-4 rounded-2xl font-bold uppercase tracking-wider transition-all text-xs md:text-sm"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Entrar al Universo
-          </motion.a>
+            <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-[#00D9FF] via-[#7C3AED] to-[#2563EB] opacity-75 group-hover:opacity-100 blur-sm group-hover:blur-md transition-all duration-500" />
+            <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-[#00D9FF] via-[#7C3AED] to-[#2563EB] opacity-0 group-hover:opacity-40 blur-xl transition-all duration-700" />
+            <span className="relative flex items-center justify-center gap-2 text-white">
+              Entrar al Universo
+              <motion.span
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                →
+              </motion.span>
+            </span>
+          </motion.button>
           <motion.a
             href="/about"
-            className="px-6 md:px-10 py-3 md:py-4 rounded-2xl border border-[#00D9FF]/30 text-[#00D9FF] text-xs md:text-sm font-bold uppercase tracking-wider hover:bg-[#00D9FF]/5 transition-all"
+            className="group relative px-8 md:px-12 py-3 md:py-4 rounded-2xl font-bold uppercase tracking-wider transition-all text-xs md:text-sm"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Conocer la Visión
+            <div className="absolute inset-0 rounded-2xl border border-[#00D9FF]/30 group-hover:border-[#00D9FF]/60 transition-all duration-500" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00D9FF]/0 to-[#00D9FF]/5 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+            <span className="relative text-[#00D9FF] group-hover:text-white transition-colors duration-500">
+              Conocer la Visión
+            </span>
           </motion.a>
         </motion.div>
 
@@ -483,19 +497,25 @@ export default function PortalGenesis() {
           transition={{ delay: 3, duration: 1 }}
           className="mt-4 md:mt-6 text-[8px] md:text-[9px] font-mono text-slate-700"
         >
-          Sellado en el nombre poderoso de Jesús para la gloria de Dios. Amén. 🙏💎✨
+          Sellado en el nombre poderoso de Jesús para la gloria de Dios. Amén.
         </motion.div>
       </div>
 
-      <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-10">
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-slate-600 text-xs"
-        >
-          ▼ DESCUBRE MÁS ▼
-        </motion.div>
-      </div>
+      <motion.div
+        className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-10"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <div className="text-slate-600 text-xs font-mono tracking-wider flex flex-col items-center gap-1">
+          <span>DESCUBRE MÁS</span>
+          <motion.span
+            animate={{ y: [0, 3, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+          >
+            ▼
+          </motion.span>
+        </div>
+      </motion.div>
     </section>
   )
 }

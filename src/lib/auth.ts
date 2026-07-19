@@ -1,7 +1,8 @@
 'use client'
 
 import { applyReferralCode } from "./referidos"
-import { createProfile, seedMiguelProfile } from "./profile"
+import { createProfile as createV1Profile, seedMiguelProfile } from "./profile"
+import { createProfile as createV2Profile } from "./identity"
 import { getSupabaseClient, isSupabaseAvailable } from "./supabase"
 import { sendEmail } from "./email-service"
 import type { ZafiroUser, ZafiroSession, LegacyUserRole } from "../../packages/types/src/zafiro"
@@ -46,7 +47,8 @@ export async function registerUser(name: string, email: string, password: string
     const sbId = data.user.id
     localStorage.setItem(SESSION_KEY, JSON.stringify({ email, name, id: sbId, role: "VIEWER" }))
     if (referralCode) applyReferralCode(referralCode, sbId, email)
-    createProfile(sbId, email, name)
+    createV1Profile(sbId, email, name)
+    createV2Profile(sbId, name, email)
     return { ok: true }
   }
 
@@ -60,7 +62,8 @@ export async function registerUser(name: string, email: string, password: string
   saveUsers(users)
   localStorage.setItem(SESSION_KEY, JSON.stringify({ email, name, id: user.id }))
   if (referralCode) applyReferralCode(referralCode, user.id, email)
-  createProfile(user.id, email, name)
+  createV1Profile(user.id, email, name)
+  createV2Profile(user.id, name, email)
   return { ok: true }
 }
 

@@ -1,29 +1,33 @@
 {
-  "currentTask": "P0 — ELIANA WhatsApp: Integrate response-router",
-  "currentPhase": "Development",
-  "branch": "feature/eliana-response-quality",
-  "baseCommit": "77a7914",
-  "latestCommit": "77a7914",
-  "previewUrl": "https://zafiro-os-1-0-0-7te614czr-msmmystore.vercel.app",
+  "currentTask": "Biblioteca Viva ZAFIRO — Perfil Autor + Gestión de Libros + Lector Inteligente",
+  "currentPhase": "Complete",
+  "branch": "main",
+  "baseCommit": "278b81c",
+  "latestCommit": "0d78432",
+  "previewUrl": "https://zafiro.msmmystore.com",
   "completedTasks": [
-    "Create execution control files (docs/ejecucion/)",
-    "P0 — ELIANA Web: Response quality pipeline (response-router, prompt-injection-guard, context-builder, source-selector, answer-validator, fallback-manager)",
-    "Update eliana-core.ts to v1.1.0 with response-router integration",
-    "Update chat API route to use new response flow",
-    "Enhance chat UI (copy button, sources, provider badge, confidence indicator)"
+    "Creation of execution control files (docs/ejecucion/)",
+    "P0 — ELIANA Web: Response pipeline (response-router, injection guard, context-builder, source-selector, answer-validator, fallback-manager, eliana-core v1.1.0)",
+    "P0 — ELIANA Web: Chat UI enhancements (copy, sources, provider badge, confidence)",
+    "P0 — ELIANA WhatsApp: whatsapp-handler.ts using response-router, webhook route updated",
+    "P2 — MSM PAYMENT: YA PAGUÉ confirmation + TX hash input + localStorage history",
+    "P3 — HOLO COMPANIONS: HoloCompanion draggable with 3 forms, position persistence",
+    "P0 — Métricas Reales: /admin/metricas with live localStorage audit, rate limiter, perf monitoring, capacity testing (100/1K/10K users)",
+    "Bugfix — Registration gap: registerUser() now creates both v1 + v2 profiles",
+    "P1 — BIBLIOTECA VIVA ZAFIRO: Full book management system (types, storage, importador, eliana-bridge, BookCard, reader with chapters/bookmarks/notes/audio/progress, status workflow SUBIDO→PUBLICADO, SQL migration for Supabase)"
   ],
-  "partialTasks": [
-    "P0 — ELIANA WhatsApp: Webhook needs new handler that uses response-router instead of old processMessage"
-  ],
+  "partialTasks": [],
   "blockedTasks": [
     "P1 — Supabase Auth: No credentials configured (NEXT_PUBLIC_SUPABASE_URL missing)",
     "P1 — Supabase RLS: No database to apply policies to",
-    "P1 — MFA/TOTP: Requires Supabase Auth",
     "P1 — Email Cleaner Gmail: GOOGLE_OAUTH_CLIENT_ID not configured",
     "P1 — Stripe Live: VERCEL_OIDC_TOKEN exposed in .env.local",
-    "P2 — MSM Editorial: Separate domain blog.msmmystore.com"
+    "P2 — MSM Editorial / Blog: Separate domain blog.msmmystore.com",
+    "P2 — AudioLibro TTS: Web Speech API works but limited to browser TTS voices — no premium voices or download"
   ],
-  "requiresOwnerApproval": [],
-  "nextTask": "P2 — MSM PAYMENT: Improve payment UI",
-  "updatedAt": "2026-07-18T23:00:00Z"
+  "requiresOwnerApproval": [
+    "PUBLICAR_LIBRO_ZAFIRO — Importar libro de Don Miguel, revisar, aprobar y publicar"
+  ],
+  "nextTask": "Awaiting book file from Don Miguel to import as borrador privado, analyze structure, present preview, and wait for PUBLICAR_LIBRO_ZAFIRO order",
+  "updatedAt": "2026-07-18T22:00:00Z"
 }

@@ -20,7 +20,7 @@ function SceneNode({ node }: { node: SceneNode }) {
 
   if (node.type === "plane") {
     return (
-      <mesh position={transform.position} rotation={transform.rotation as any}>
+      <mesh position={transform.position} rotation={transform.rotation as unknown as [number, number, number]}>
         <planeGeometry args={[8, 8]} />
         <meshStandardMaterial {...mat} side={2} />
       </mesh>

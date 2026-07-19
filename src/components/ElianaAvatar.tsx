@@ -12,7 +12,7 @@ const COLORS = ["#00D9FF", "#FF6B35", "#FFD700", "#7B68EE", "#00E676", "#FF4081"
 
 export default function ElianaAvatar({ size = 120, pulse = true }: Props) {
   const [mounted, setMounted] = useState(false)
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => { setMounted(true) }, []) // eslint-disable-line react-hooks/set-state-in-effect
 
   if (!mounted) return null
 

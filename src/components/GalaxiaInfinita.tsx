@@ -6,6 +6,25 @@ import { Stars, useTexture } from "@react-three/drei"
 import { EffectComposer, Bloom, ChromaticAberration } from "@react-three/postprocessing"
 import * as THREE from "three"
 
+function generateGalaxyGeometry(count = 3000) {
+  const pos = new Float32Array(count * 3)
+  const col = new Float32Array(count * 3)
+  for (let i = 0; i < count; i++) {
+    const radius = 5 + Math.random() * 15
+    const theta = Math.random() * Math.PI * 2
+    const phi = Math.acos(2 * Math.random() - 1)
+    pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
+    pos[i * 3 + 1] = radius * Math.cos(phi) * 0.3
+    pos[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta)
+    const c = new THREE.Color().setHSL(0.55 + Math.random() * 0.15, 0.8, 0.4 + Math.random() * 0.3)
+    col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b
+  }
+  const geo = new THREE.BufferGeometry()
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3))
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3))
+  return geo
+}
+
 const matOpacity = (m: THREE.Material | THREE.Material[]): number =>
   Array.isArray(m) ? m[0]?.opacity ?? 0 : m.opacity
 const setMatOpacity = (m: THREE.Material | THREE.Material[], val: number): void => {
@@ -136,13 +155,10 @@ function DiamondCore({ zoom }: { zoom: number }) {
     uColor1: { value: new THREE.Color("#00D9FF") },
     uColor2: { value: new THREE.Color("#7B68EE") },
     uColor3: { value: new THREE.Color("#FFD700") },
-  }), [])
-
-  useEffect(() => {
-    uniforms.uZoom.value = zoom
-  }, [zoom, uniforms])
+  }), [zoom])
 
   useFrame(() => {
+    // eslint-disable-next-line react-hooks/immutability
     uniforms.uTime.value = time
   })
 
@@ -245,25 +261,7 @@ function NetworkLines({ zoom }: { zoom: number }) {
 function ParticleGalaxy({ zoom }: { zoom: number }) {
   const ref = useRef<THREE.Points>(null!)
 
-  const geometry = useMemo(() => {
-    const count = 3000
-    const pos = new Float32Array(count * 3)
-    const col = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      const radius = 5 + Math.random() * 15
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
-      pos[i * 3 + 1] = radius * Math.cos(phi) * 0.3
-      pos[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta)
-      const c = new THREE.Color().setHSL(0.55 + Math.random() * 0.15, 0.8, 0.4 + Math.random() * 0.3)
-      col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b
-    }
-    const geo = new THREE.BufferGeometry()
-    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3))
-    geo.setAttribute("color", new THREE.BufferAttribute(col, 3))
-    return geo
-  }, [])
+  const geometry = useMemo(() => generateGalaxyGeometry(), [])
 
   useFrame((_, delta) => {
     if (ref.current) {

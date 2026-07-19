@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { KeyRound, ShieldCheck } from "lucide-react"
 import {
   hasFounderKey, setupFounderKey, verifyFounderKey, isFounderSessionActive,
@@ -11,19 +11,13 @@ import {
  * antes de mostrar saldos, inventarios o realizar transferencias.
  */
 export default function FounderChallenge({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<"loading" | "setup" | "challenge" | "granted">("loading")
+  const [state, setState] = useState<"loading" | "setup" | "challenge" | "granted">(() => {
+    if (isFounderSessionActive()) return "granted"
+    if (!hasFounderKey()) return "setup"
+    return "challenge"
+  })
   const [key, setKey] = useState("")
   const [error, setError] = useState("")
-
-  useEffect(() => {
-    if (isFounderSessionActive()) {
-      setState("granted")
-    } else if (!hasFounderKey()) {
-      setState("setup")
-    } else {
-      setState("challenge")
-    }
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

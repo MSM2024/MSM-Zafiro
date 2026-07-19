@@ -59,7 +59,7 @@ export class EconomiaService extends FrequencyOriginService {
     if (input.monto <= 0) throw new Error("Monto inválido");
   }
 
-  private construirRespuestaVisual(op: any) {
+  private construirRespuestaVisual(op: Record<string, unknown>) {
     // Usa MODELOS OFICIALES de frecuencia-origen.config.ts
     return `✅ *Información recibida*
 Código: \`\`\`${op.codigo}\`\`\`
@@ -80,6 +80,6 @@ _Verificaremos los datos antes de confirmar._`;
   }
 
   // Para el panel que pediste
-  private offlineCore = { guardar: async (_t: string, _d: any) => {} };
-  private registrarEvento = async (_e: any) => {};
+  private offlineCore = { guardar: async (_t: string, _d: unknown) => {} };
+  private registrarEvento = async (_e: unknown) => {};
 }

@@ -213,19 +213,15 @@ export const knowledgeNodes: Record<string, KnowledgeNode> = {
 };
 
 export const defaultSponsors: SponsorCampaign[] = [
-  { id: "sp-1", companyName: "Nothing Tech", campaignName: "Lienzo Monocromo Cuántico", tagline: "Nothing OS integra widgets cuánticos nativos.", details: "Sintoniza tu flujo asíncrono de conocimiento sin interferencias en un lienzo monocromo puro.", logo: "N", image: BRAND_WIDE, targetCategory: "Ciberseguridad", targetAudience: "Sintonizadores Avanzados", countries: ["Global", "España", "EE.UU."], languages: ["Español", "Inglés"], budget: 800, spent: 320, duration: "30 días", ctaText: "Ver Widgets", impressions: 14520, clicks: 1240, conversions: 412, status: "Activa" },
-  { id: "sp-2", companyName: "Vercel Systems", campaignName: "Inferencia en el Borde", tagline: "Despliega modelos de inferencia en el borde global.", details: "Latencia ultra-baja de 0.02ms para tus enjambres de agentes de IA.", logo: "▲", image: CONCEPT_DESK, targetCategory: "Inteligencia Artificial", targetAudience: "Todos los Sintonizadores", countries: ["Global", "México", "Colombia"], languages: ["Español", "Inglés"], budget: 1500, spent: 750, duration: "Sintonía Continua", ctaText: "Probar Inferencia", impressions: 28940, clicks: 3410, conversions: 980, status: "Activa" },
-  { id: "sp-3", companyName: "Stripe Quantum", campaignName: "Monetización Asíncrona", tagline: "Pagos asíncronos instantáneos para economías de datos.", details: "Monetiza tus aportaciones científicas con transferencias inmediatas de valor real.", logo: "💳", image: BRAND_IMG, targetCategory: "Economía de Datos", targetAudience: "Líderes de Opinión", countries: ["EE.UU.", "España", "México"], languages: ["Español", "Inglés"], budget: 1200, spent: 450, duration: "15 días", ctaText: "Configurar Stripe", impressions: 11200, clicks: 890, conversions: 240, status: "Activa" },
-  { id: "sp-4", companyName: "OpenAI Research", campaignName: "Razonamiento Profundo", tagline: "Sistemas avanzados de enjambres inteligentes.", details: "Modelos optimizados de razonamiento lógico continuo para la resolución de anomalías cuánticas.", logo: "🤖", image: CONCEPT_MOB, targetCategory: "Inteligencia Artificial", targetAudience: "Sintonizadores Avanzados", countries: ["Global"], languages: ["Inglés"], budget: 2000, spent: 1120, duration: "Sintonía Continua", ctaText: "Explorar Modelos", impressions: 34900, clicks: 4520, conversions: 1540, status: "Activa" },
-  { id: "sp-5", companyName: "Linear Labs", campaignName: "Física Gravitacional", tagline: "Física de datos gravitacionales para telemetría espacial.", details: "Seguimiento milimétrico de órbita mediante algoritmos de red de tensión profunda.", logo: "⊘", image: INCUBADORA, targetCategory: "Ciencia Espacial", targetAudience: "Líderes de Opinión", countries: ["Global", "EE.UU."], languages: ["Español", "Inglés"], budget: 600, spent: 180, duration: "7 días", ctaText: "Ver Telemetría", impressions: 8900, clicks: 650, conversions: 110, status: "Activa" },
-  { id: "sp-6", companyName: "BioSynthetica", campaignName: "Software Celular Activo", tagline: "Programación bacteriana para degradar microplásticos.", details: "Reprogramación autónoma de células de levadura para regenerar ecosistemas acuáticos.", logo: "🧬", image: STORYBOARD, targetCategory: "Biotecnología", targetAudience: "Todos los Sintonizadores", countries: ["España", "Colombia", "México"], languages: ["Español"], budget: 950, spent: 410, duration: "15 días", ctaText: "Sintonizar Bio", impressions: 12100, clicks: 1040, conversions: 320, status: "Activa" }
+  { id: "sp-msm", companyName: "MSM MY STORE", campaignName: "Ecosistema MSM", tagline: "Tu imperio digital comienza aquí.", details: "Explora el ecosistema MSM: ZAFIRO, Marketplace, Editorial, Economía y más. Un solo inicio de sesión para todo tu imperio.", logo: "M", image: BRAND_IMG, targetCategory: "Economía de Datos", targetAudience: "Todos los Sintonizadores", countries: ["Global"], languages: ["Español"], budget: 0, spent: 0, duration: "Sintonía Continua", ctaText: "Visitar msmmystore.com", impressions: 0, clicks: 0, conversions: 0, status: "Activa" },
+  { id: "sp-wa", companyName: "MSM WhatsApp", campaignName: "Canal Directo MSM", tagline: "Conecta directo con Don Miguel.", details: "Comunícate directamente con el fundador del ecosistema MSM vía WhatsApp. Soporte, consultas y oportunidades de negocio.", logo: "📱", image: BRAND_WIDE, targetCategory: "Inteligencia Artificial", targetAudience: "Todos los Sintonizadores", countries: ["Global"], languages: ["Español"], budget: 0, spent: 0, duration: "Sintonía Continua", ctaText: "Escribir a wa.me/17723015523", impressions: 0, clicks: 0, conversions: 0, status: "Activa" },
+  { id: "sp-wa-channel", companyName: "WhatsApp Channel", campaignName: "Canal Oficial MSM", tagline: "Únete al canal de comunicación oficial.", details: "Recibe anuncios, promociones y contenido exclusivo del ecosistema MSM directamente en tu WhatsApp.", logo: "💬", image: STORYBOARD, targetCategory: "Inteligencia Artificial", targetAudience: "Todos los Sintonizadores", countries: ["Global"], languages: ["Español"], budget: 0, spent: 0, duration: "Sintonía Continua", ctaText: "Unirse al Canal", impressions: 0, clicks: 0, conversions: 0, status: "Activa" }
 ];
 
 export const nobleSponsors = [
-  { name: "Nothing Tech", support: "Bóvedas Estéticas", tag: "NOTHING OS", color: "from-slate-300 to-slate-400" },
-  { name: "Vercel Systems", support: "Inferencia Veloz", tag: "EDGE NETWORK", color: "from-slate-100 to-slate-200" },
-  { name: "Linear Labs", support: "Física de Datos", tag: "FLOW TRACKING", color: "from-slate-400 to-slate-500" },
-  { name: "OpenAI Research", support: "Enjambres de Agentes", tag: "AGI COMPILING", color: "from-indigo-400 to-indigo-500" }
+  { name: "MSM MY STORE", support: "Ecosistema Digital", tag: "msmmystore.com", color: "from-[#00D9FF] to-blue-600" },
+  { name: "MSM WhatsApp", support: "Canal Directo", tag: "wa.me/17723015523", color: "from-emerald-400 to-emerald-600" },
+  { name: "WhatsApp Channel", support: "Canal Oficial", tag: "MSM Comunicación", color: "from-purple-400 to-purple-600" }
 ];
 
 export const chartData = {
@@ -239,6 +235,13 @@ export const daysOfWeek = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
 const SPONSORS_KEY = "zafiro_sponsors"
 const QUESTIONS_KEY = "zafiro_questions"
+
+export function clearSponsors(): SponsorCampaign[] {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(SPONSORS_KEY)
+  }
+  return defaultSponsors
+}
 
 export function loadPersistedSponsors(): SponsorCampaign[] {
   if (typeof window === "undefined") return defaultSponsors

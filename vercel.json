@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "scope": "msm-my-store",
+  "project": "zafiro-os-1-0-0",
+  "public": true,
+  "regions": ["iad1"],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/preview", "destination": "/", "permanent": false }
+  ],
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/eliana/chat/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/stripe/webhook/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
