@@ -87,7 +87,11 @@
 
 ## Bloqueantes
 1. **Supabase sin credenciales** — auth, DB, RLS, todo bloqueado
-2. **VERCEL_OIDC_TOKEN expuesto** en .env.local — rotar desde Vercel Dashboard
+2. **VERCEL_TOKEN** — actualizado en GitHub Secrets con nuevo token Vercel
+   - **VERCEL_ORG_ID**: `team_eYjbIlfQF6GWALFMxqAXYyZo` (set)
+   - **VERCEL_PROJECT_ID_ZAFIRO**: `prj_B1Mvz1NVUbjOp3BexRqyKxmPcSMt` (set)
+   - **VERCEL_PROJECT_ID_MSM**: `prj_LjoIShD2l8A3n5QoC5M6fh2GrDL6` (set)
+   - **vercel.json scope**: corregido de `msm-my-store` → `msmmystore`
 3. **Sin tests** — 0 tests en todo el proyecto
 
 ## Feature Status (99 features total)
