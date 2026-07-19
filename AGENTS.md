@@ -18,8 +18,13 @@
 - **Backup**: `git bundle create "..\ZAFIRO_BACKUP_$(Get-Date -Format yyyyMMdd)\full.bundle" --all`
 
 ## Estado Actual (2026-07-18)
-- **Build**: 0 errores, 151 rutas
+- **Build**: 0 errores, 153 rutas
 - **Último commit**: `278b81c` — main, deployeado en Vercel
+- **ORDEN POST LIBRO ELIANA 3D**: Nueva identidad visual de ELIANA — 5 componentes (SplashScreen, Portrait, AvatarCard, ChatWidget, HologramBeta), assets SVG (`eliana-face.svg`, `eliana-ui-icons.svg`), splash+chat reemplazados en `ClientLayout.tsx`, integración visual en `/eliana`
+- **Book "De Cero a Dueño Digital"**: PUBLICADO via `seedDeCeroADuenoDigital(true)`, sync a ELIANA knowledge, accesible en `/zafiro/biblioteca`
+- **ELIANA 3D components**: `ElianaPortrait` (SVG reutilizable, size/animated/aura/reduced), `ElianaAvatarCard` (3 variantes: default/compact/full, status dot, CTAs), `ElianaChatWidget` (FAB+panel completo con avatar, burbujas, typing indicator, 4 sugerencias), `ElianaSplashScreen` (partículas, geometría sagrada, 4 fases animación), `ElianaHologramBeta` (canvas 60 partículas, 3 anillos, diamante central)
+- **Libs nuevas**: `eliana3d/` — 5 componentes en `src/components/eliana3d/`
+- **Assets nuevos**: `public/assets/eliana/eliana-face.svg`, `public/assets/eliana/eliana-ui-icons.svg`
 - **Logística Contenedores**: `/admin/logistica` — módulo nuevo USA/Panamá→Cuba, Frecuencia 369, sincronizado con Ledger Maestro
 - **Sponsors**: Limpiados — ahora solo `msmmystore.com`, `wa.me/17723015523`, `WhatsApp Channel`
 - **Perfiles**: Cache invalidado al guardar — cambios reflejados al instante entre páginas
@@ -53,7 +58,7 @@
 - **Seguidores holograma**: `src/lib/followers/types.ts` (10 plataformas), `storage.ts` (10 localStorage keys), `adapters.ts` (10 adaptadores), `HolographicFollowersScene.tsx` (8 botones, 4 modos), `FollowersOrbit.tsx`, `PlatformNode.tsx`, `WorldFollowerMap.tsx`, `GrowthTimeline.tsx`, `TargetProjection.tsx`, `/admin/seguidores-holograma`
 - **Velocidad Luz 369/777**: `src/lib/performance/` (network-mode, connection-monitor, request-cache, adaptive-loader, sync-engine, performance-budget), componentes UI (NetworkModeIndicator, AdaptiveImage, DeferredModule, OfflineStatus), `/admin/rendimiento`, docs (3 archivos)
 
-## Routes (151)
+## Routes (153)
 - **App**: `/` (SPA: Inicio, Explorar, Gemología, Círculos, Sponsors, Perfil)
 - **Auth**: `/auth/login`, `/auth/register`, `/auth/recover`, `/auth/verify`
 - **Identidad**: `/mi-perfil`, `/mi-perfil/seguridad`, `/mi-perfil/membresia`, `/mi-perfil/verificacion`
@@ -65,7 +70,7 @@
 - **Documentación**: `/about`, `/what-we-do`, `/how-it-works`, `/eliana`, `/ecosystem`, `/vision`, `/mission`, `/values`, `/help`, `/terms`, `/privacy`, `/rules`
 - **OS**: `/os`, `/os/apps`, `/os/files`, `/os/notifications`, `/os/search`
 - **Extras**: `/universo`, `/perfil/[username]`, `/galaxia`, `/holo-cinema`, `/dashboard`, `/economia`, `/trading`, `/constitucion`, `/impacto`, `/imperio`, `/offline`, `/visual-preview`, `/memberships`, `/messages`, `/settings`, `/rewards`, `/referidos`, `/profile-page`, `/profile-page/edit`, `/profile-page/connections`, `/profile-page/projects`, `/sponsors-page`, `/gemologia`, `/contact`, `/zafiro/owner/dispositivos`, `/pagar`
-- **API**: `/api/chat`, `/api/economia/cierre`, `/api/sync`, `/api/whatsapp/webhook`, `/api/owner/devices/register`, `/api/owner/devices/trust`, `/api/owner/devices/revoke`, `/api/owner/devices/sync`, `/api/email-cleaner/analyze`, `/api/email-cleaner/audit`, `/api/email-cleaner/connect`, `/api/email-cleaner/execute`, `/api/email-cleaner/revoke`, `/api/email-cleaner/trusted-senders`, `/api/mente-maestra/leads`, `/api/feature-flags`
+- **API**: `/api/chat`, `/api/economia/cierre`, `/api/sync`, `/api/whatsapp/webhook`, `/api/owner/devices/register`, `/api/owner/devices/trust`, `/api/owner/devices/revoke`, `/api/owner/devices/sync`, `/api/email-cleaner/analyze`, `/api/email-cleaner/audit`, `/api/email-cleaner/connect`, `/api/email-cleaner/execute`, `/api/email-cleaner/revoke`, `/api/email-cleaner/trusted-senders`, `/api/mente-maestra/leads`, `/api/feature-flags`, `/api/eliana/chat`, `/api/eliana/audit`, `/api/eliana/feedback`, `/api/eliana/knowledge/search`, `/api/eliana/knowledge/upload`
 
 ## Conventions
 - All pages `'use client'` — use `usePageTitle("Name")` from `@/lib/usePageTitle`

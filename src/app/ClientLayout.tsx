@@ -3,11 +3,11 @@
 import { useState, useEffect, useCallback } from "react"
 import { usePathname } from "next/navigation"
 import Footer from "@/components/Footer"
-import ElianaFloatingButton from "@/components/ElianaFloatingButton"
 import NetworkBackground from "@/components/ui/NetworkBackground"
 import PresenciaInstantanea from "@/components/PresenciaInstantanea"
 import ZafiroLockScreen from "@/components/ZafiroLockScreen"
-import ZafiroSplashScreen from "@/components/zafiro/ZafiroSplashScreen"
+import ElianaSplashScreen from "@/components/eliana3d/ElianaSplashScreen"
+import ElianaChatWidget from "@/components/eliana3d/ElianaChatWidget"
 import HoloCompanion from "@/components/HoloCompanion"
 
 const SPLASH_SEEN_KEY = 'zafiro_splash_seen'
@@ -32,7 +32,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [])
 
   if (showSplash) {
-    return <ZafiroSplashScreen onComplete={handleSplashComplete} />
+    return <ElianaSplashScreen onComplete={handleSplashComplete} />
   }
 
   if (!splashReady) {
@@ -49,7 +49,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
       {!isHome && <Footer />}
       <PresenciaInstantanea />
-      <ElianaFloatingButton />
+      <ElianaChatWidget />
       <HoloCompanion />
     </ZafiroLockScreen>
   )

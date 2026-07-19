@@ -13,6 +13,9 @@ import {
   Send, Bot, User, Sparkles, AlertTriangle, CheckCircle,
   RefreshCw, Wifi, Globe, Smartphone, Clock, Shield, Copy, Check,
 } from 'lucide-react'
+import ElianaPortrait from '@/components/eliana3d/ElianaPortrait'
+import ElianaAvatarCard from '@/components/eliana3d/ElianaAvatarCard'
+import ElianaHologramBeta from '@/components/eliana3d/ElianaHologramBeta'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -169,6 +172,8 @@ function ElianaChat() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Info Panel */}
             <div className="hidden lg:block space-y-3">
+              <ElianaAvatarCard status={status === 'connected' ? 'online' : 'offline'} />
+              <ElianaHologramBeta />
               <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
                 <h3 className="text-xs font-semibold text-white mb-3">Estado en Tiempo Real</h3>
                 <div className="space-y-2">
@@ -225,7 +230,9 @@ function ElianaChat() {
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {messages.length === 0 && (
                     <div className="text-center py-12">
-                      <Bot className="w-12 h-12 text-[#00D9FF]/30 mx-auto mb-3" />
+                      <div className="mx-auto mb-3 w-12 h-12">
+                        <ElianaPortrait size={48} reduced />
+                      </div>
                       <p className="text-sm text-slate-400">Yo soy ELIANA, el núcleo sintético de ZAFIRO.</p>
                       <p className="text-xs text-slate-500 mt-1">Pregúntame lo que necesites.</p>
                     </div>
@@ -235,8 +242,8 @@ function ElianaChat() {
                     return (
                     <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
                       {msg.role === 'assistant' && (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D9FF]/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
-                          <Bot className="w-4 h-4 text-[#00D9FF]" />
+                        <div className="flex-shrink-0">
+                          <ElianaPortrait size={32} reduced />
                         </div>
                       )}
                       <div className={`group max-w-[80%] ${msg.role === 'user' ? 'bg-[#00D9FF]/10 border border-[#00D9FF]/20' : 'bg-[#050816] border border-[#1A1B3A]'} rounded-xl px-4 py-2.5`}>
@@ -278,8 +285,8 @@ function ElianaChat() {
                   })}
                   {loading && (
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D9FF]/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
-                        <Bot className="w-4 h-4 text-[#00D9FF]" />
+                      <div className="flex-shrink-0">
+                        <ElianaPortrait size={32} reduced />
                       </div>
                       <div className="bg-[#050816] border border-[#1A1B3A] rounded-xl px-4 py-2.5">
                         <div className="flex gap-1">

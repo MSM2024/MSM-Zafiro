@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <linearGradient id="eliana-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D9FF"/>
+      <stop offset="50%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="eliana-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#00D9FF"/>
+    </linearGradient>
+  </defs>
+  <symbol id="eliana-logo" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2L4 8v8l8 6 8-6V8l-8-6z" fill="url(#eliana-gradient)" opacity="0.15"/>
+    <path d="M12 2L4 8v8l8 6 8-6V8l-8-6z" stroke="url(#eliana-gradient)" stroke-width="1.5"/>
+    <path d="M12 8l-4 3v4l4 3 4-3v-4l-4-3z" fill="url(#eliana-accent)" opacity="0.2"/>
+    <circle cx="12" cy="12" r="2" fill="#00D9FF" opacity="0.6"/>
+  </symbol>
+  <symbol id="eliana-sparkle" viewBox="0 0 16 16" fill="none">
+    <path d="M8 1L9.5 5.5L14 7L9.5 8.5L8 13L6.5 8.5L2 7L6.5 5.5L8 1Z" fill="url(#eliana-gradient)" opacity="0.6"/>
+  </symbol>
+  <symbol id="eliana-ring" viewBox="0 0 20 20" fill="none">
+    <circle cx="10" cy="10" r="8" stroke="url(#eliana-gradient)" stroke-width="1" opacity="0.4"/>
+    <circle cx="10" cy="10" r="5" stroke="url(#eliana-accent)" stroke-width="0.8" opacity="0.3"/>
+  </symbol>
+  <symbol id="eliana-diamond-mini" viewBox="0 0 16 16" fill="none">
+    <polygon points="8,1 13,5 8,9 3,5" fill="#00D9FF" opacity="0.7"/>
+    <polygon points="8,1 13,5 10.5,6 8,3" fill="#38BDF8" opacity="0.5"/>
+    <polygon points="3,5 8,9 10.5,6 8,3" fill="#0284C7" opacity="0.3"/>
+    <polygon points="8,9 13,5 10.5,6" fill="#0EA5E9" opacity="0.4"/>
+    <polygon points="8,9 3,5 5.5,6" fill="#7C3AED" opacity="0.4"/>
+  </symbol>
+</svg>
