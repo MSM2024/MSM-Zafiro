@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "motion/react"
-import { X, Send, Minus, Sparkles, MessageCircle, ChevronDown } from "lucide-react"
+import { X, Send, Minus, Sparkles, MessageCircle, ChevronDown, Trash2, AlertTriangle } from "lucide-react"
 import ElianaPortrait from "./ElianaPortrait"
 
 interface Message {
@@ -17,15 +17,28 @@ const suggestions = [
   "¿Cómo funciona la Frecuencia 369?",
 ]
 
+const STORAGE_HISTORY = "zafiro_eliana_chat_history"
+
 export default function ElianaChatWidget() {
   const [open, setOpen] = useState(false)
   const [minimized, setMinimized] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([{ role: "assistant", content: "Bienvenido a ZAFIRO. Soy ELIANA, tu asistente digital soberano. ¿En qué puedo ayudarte?" }])
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_HISTORY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch { /* silent */ }
+    return [{ role: "assistant" as const, content: "Bienvenido a ZAFIRO. Soy ELIANA, tu asistente digital soberano. ¿En qué puedo ayudarte?" }]
+  })
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [reduced, setReduced] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -35,12 +48,28 @@ export default function ElianaChatWidget() {
   }, [])
 
   useEffect(() => {
+    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(messages))
+  }, [messages])
+
+  useEffect(() => {
     if (open && inputRef.current) inputRef.current.focus()
   }, [open])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" })
-  }, [messages, reduced])
+  }, [messages, loading, reduced])
+
+  useEffect(() => {
+    if (!open) return
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (showClearConfirm) { setShowClearConfirm(false); return }
+        setMinimized(true)
+      }
+    }
+    window.addEventListener("keydown", handleKey)
+    return () => window.removeEventListener("keydown", handleKey)
+  }, [open, showClearConfirm])
 
   const handleSend = useCallback(async () => {
     if (!input.trim() || loading) return
@@ -56,18 +85,21 @@ export default function ElianaChatWidget() {
         body: JSON.stringify({ message: userMsg }),
       })
       const data = await res.json()
-      setMessages((prev) => [...prev, { role: "assistant", content: data.response || data.message || "No pude procesar tu solicitud." }])
+      const reply = data.response || data.message || "No pude procesar tu solicitud."
+      setMessages((prev) => [...prev, { role: "assistant", content: reply }])
     } catch {
-      const localResponses: Record<string, string> = {
-        "¿qué es zafiro?": "ZAFIRO es el Universo Digital Soberano de MSM my store — un ecosistema de identidad, comercio, conocimiento y economía.",
-        "¿quién es don miguel?": "Don Miguel Soria Martínez es el Fundador y Owner del ecosistema MSM.",
-        "frecuencia 369": "La Frecuencia 369 es el ciclo de sincronización del ecosistema MSM — 3 días de reflexión, 6 de acción, 9 de cosecha.",
-        "hola": "¡Hola! Soy ELIANA, tu asistente digital. ¿En qué puedo ayudarte?",
-      }
       const lower = userMsg.toLowerCase()
       let reply = "Lo siento, no tengo una respuesta para eso ahora. Intenta preguntar de otra forma."
-      for (const [key, val] of Object.entries(localResponses)) {
-        if (lower.includes(key)) { reply = val; break }
+      if (lower.includes("qué es zafiro") || lower.includes("que es zafiro")) {
+        reply = "ZAFIRO es el Universo Digital Soberano de MSM my store — un ecosistema de identidad, comercio, conocimiento y economía."
+      } else if (lower.includes("don miguel") || lower.includes("quién es")) {
+        reply = "Don Miguel Soria Martínez es el Fundador y Owner del ecosistema MSM."
+      } else if (lower.includes("frecuencia 369") || lower.includes("369")) {
+        reply = "La Frecuencia 369 es el ciclo de sincronización del ecosistema MSM — 3 días de reflexión, 6 de acción, 9 de cosecha."
+      } else if (lower.includes("hola") || lower.includes("buenas")) {
+        reply = "¡Hola! Soy ELIANA, tu asistente digital. ¿En qué puedo ayudarte?"
+      } else if (lower.includes("libro")) {
+        reply = "El libro 'DE CERO A DUEÑO DIGITAL' está disponible en la Biblioteca ZAFIRO. Puedes acceder desde /zafiro/biblioteca."
       }
       setMessages((prev) => [...prev, { role: "assistant", content: reply }])
     }
@@ -78,51 +110,79 @@ export default function ElianaChatWidget() {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend() }
   }
 
+  const clearConversation = () => {
+    setMessages([{ role: "assistant", content: "Bienvenido a ZAFIRO. Soy ELIANA, tu asistente digital soberano. ¿En qué puedo ayudarte?" }])
+    setShowClearConfirm(false)
+  }
+
   return (
     <>
-      {/* FAB */}
       {!open && (
         <motion.button
-          className="fixed bottom-6 right-4 z-[9999] w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00D9FF] to-blue-600 shadow-lg shadow-[#00D9FF]/20 flex items-center justify-center"
+          onClick={() => setOpen(true)}
+          className="fixed bottom-6 right-4 z-[9999] w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00D9FF] to-blue-600 shadow-lg shadow-[#00D9FF]/20 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setOpen(true)}
+          aria-label="Abrir ELIANA chat"
         >
           <MessageCircle className="w-6 h-6 text-white" />
-          <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#050816]" />
+          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#050816]" />
         </motion.button>
       )}
 
-      {/* Chat Panel */}
       <AnimatePresence>
         {open && !minimized && (
           <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-label="Chat con ELIANA"
             className="fixed bottom-6 right-4 z-[9999] w-[360px] max-w-[calc(100vw-2rem)] max-h-[600px] rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-slate-800/60 shadow-2xl flex flex-col overflow-hidden"
             initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Header */}
             <div className="shrink-0 flex items-center gap-3 p-3 border-b border-slate-800/60 bg-slate-900/80">
               <div className="relative">
-                <ElianaPortrait size={32} animated={false} showAura={false} reduced />
-                <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border border-slate-900" />
+                <ElianaPortrait size={32} animated={!reduced} showAura reduced />
+                <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border border-slate-900" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-white">ELIANA</p>
-                <p className="text-[9px] text-slate-500">En línea · v1.1.0</p>
+                <p className="text-[9px] text-slate-500">En l&iacute;nea</p>
               </div>
-              <button onClick={() => setMinimized(true)} className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-white transition-all">
+              <button
+                onClick={() => setShowClearConfirm(true)}
+                className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-red-400 transition-all"
+                aria-label="Limpiar conversaci&oacute;n"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setMinimized(true)}
+                className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-white transition-all"
+                aria-label="Minimizar chat"
+              >
                 <Minus className="w-4 h-4" />
               </button>
-              <button onClick={() => setOpen(false)} className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-white transition-all">
+              <button
+                onClick={() => setOpen(false)}
+                className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-white transition-all"
+                aria-label="Cerrar chat"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin">
+              {showClearConfirm && (
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                  <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                  <p className="text-[10px] text-red-300 flex-1">¿Borrar toda la conversaci&oacute;n?</p>
+                  <button onClick={clearConversation} className="text-[10px] px-2 py-0.5 rounded bg-red-500/20 text-red-300 hover:bg-red-500/30">S&iacute;</button>
+                  <button onClick={() => setShowClearConfirm(false)} className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 hover:text-white">No</button>
+                </div>
+              )}
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
@@ -137,7 +197,7 @@ export default function ElianaChatWidget() {
                     </div>
                   )}
                   <div
-                    className={`max-w-[80%] px-3 py-2 rounded-xl text-xs leading-relaxed ${
+                    className={`max-w-[80%] px-3 py-2 rounded-xl text-xs leading-relaxed whitespace-pre-wrap ${
                       msg.role === "user"
                         ? "bg-[#00D9FF]/20 text-white rounded-tr-sm"
                         : "bg-slate-800/50 text-slate-200 rounded-tl-sm"
@@ -154,9 +214,9 @@ export default function ElianaChatWidget() {
                   </div>
                   <div className="bg-slate-800/50 rounded-xl rounded-tl-sm px-3 py-2">
                     <div className="flex gap-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-bounce" style={{ animationDelay: "300ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-bounce" style={{ animationDelay: "300ms" }} />
                     </div>
                   </div>
                 </div>
@@ -164,8 +224,7 @@ export default function ElianaChatWidget() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Suggestions */}
-            {messages.length <= 2 && (
+            {messages.length <= 2 && !loading && (
               <div className="shrink-0 px-3 pb-2">
                 <div className="flex flex-wrap gap-1.5">
                   {suggestions.map((s, i) => (
@@ -181,7 +240,6 @@ export default function ElianaChatWidget() {
               </div>
             )}
 
-            {/* Input */}
             <div className="shrink-0 p-3 border-t border-slate-800/60">
               <div className="flex items-center gap-2">
                 <input
@@ -192,12 +250,15 @@ export default function ElianaChatWidget() {
                   onKeyDown={handleKeyDown}
                   placeholder="Escribe tu mensaje..."
                   className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-[#00D9FF]/30 transition-all"
+                  disabled={loading}
+                  aria-label="Mensaje para ELIANA"
                 />
                 <motion.button
                   onClick={handleSend}
                   disabled={!input.trim() || loading}
                   className="p-2 rounded-xl bg-[#00D9FF]/20 border border-[#00D9FF]/30 text-[#00D9FF] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#00D9FF]/30 transition-all"
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Enviar mensaje"
                 >
                   <Send className="w-4 h-4" />
                 </motion.button>
@@ -207,7 +268,6 @@ export default function ElianaChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Minimized indicator */}
       <AnimatePresence>
         {minimized && (
           <motion.button
@@ -217,6 +277,7 @@ export default function ElianaChatWidget() {
             exit={{ opacity: 0, y: 10 }}
             whileHover={{ scale: 1.02 }}
             onClick={() => setMinimized(false)}
+            aria-label="Abrir chat de ELIANA"
           >
             <ElianaPortrait size={20} animated={false} showAura={false} reduced />
             <span className="text-xs text-white font-bold">ELIANA</span>
