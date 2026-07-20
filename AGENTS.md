@@ -21,9 +21,11 @@
 
 ## Estado Actual (2026-07-20)
 - **Build**: 0 errores, 173 rutas
-- **Tests**: 27 tests (vitest) — offline-queue, feed, marketplace
+- **Tests**: 64 tests (vitest, 7 suites) — offline-queue, feed, marketplace, rewards, messages, qa, notifications
 - **UI**: PageShell con page transitions (feed, preguntas, circulos, messages, marketplace), Skeleton/LoadingScreen/EmptyState reutilizables
-- **Último commit**: `f03e809` — main + beta, deployeado en Vercel
+- **PWA**: service worker con push notifications, install prompt, manifest con shortcuts y screenshots, registro automático en ClientLayout
+- **Admin Dashboard 360**: gráficos de pedidos por estado, productos por categoría, revenue trend line
+- **Último commit**: `31d4ca8` — main + beta, deployeado en Vercel
 - **CONECTAR 5 PILARES (INTEGRACIÓN COMPLETA)**: Editorial→Marketplace bridge, cross-pillar notification center, search, leaderboard, export, stats widget, activity timeline, broadcast sync, API endpoint
 - **Editorial→Marketplace bridge**: `marketplace-bridge.ts` con syncBookToMarketplace / unsync / getBookMarketplaceProduct, botones "Comprar" en biblioteca pública y perfiles de escritores
 - **Cross-pillar notifications**: `src/lib/notifications.ts` — motor que agrega eventos de los 5 pilares, localStorage, notificaciones auto-generadas por acción
