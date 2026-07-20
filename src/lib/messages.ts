@@ -1,6 +1,7 @@
 'use client'
 
 import { enqueueOperation } from '@/lib/offline-queue'
+import { earnPTS } from '@/lib/rewards'
 
 export interface Message {
   id: string
@@ -101,6 +102,8 @@ export function sendMessage(convId: string, senderId: string, senderName: string
     conv.unreadCount = msgs.filter(m => m.senderId !== senderId && !m.read).length
     saveConversations(all)
   }
+
+  try { earnPTS(senderId, "send_message") } catch {}
 
   enqueueOperation({
     entity: "message",

@@ -1,6 +1,7 @@
 'use client'
 
 import { enqueueOperation } from '@/lib/offline-queue'
+import { earnPTS } from '@/lib/rewards'
 
 export type PostVisibility = "public" | "circle" | "followers"
 
@@ -66,6 +67,10 @@ export function createPost(post: {
   const posts = getPosts()
   posts.unshift(newPost)
   savePosts(posts)
+
+  if (typeof window !== "undefined") {
+    try { earnPTS(post.authorId, "create_post") } catch {}
+  }
 
   enqueueOperation({
     entity: "post",

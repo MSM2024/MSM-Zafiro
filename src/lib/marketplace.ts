@@ -3,6 +3,8 @@
 import { addLedgerEntry as addLedger } from '@/lib/ledger'
 import { addNotification } from '@/lib/notifications'
 import { enqueueOperation } from '@/lib/offline-queue'
+import { earnPTS } from '@/lib/rewards'
+import { getSession } from '@/lib/auth'
 
 export type ProductCategory = "digital" | "physical" | "service" | "membership" | "merchandise"
 
@@ -184,6 +186,7 @@ export function addProduct(product: Omit<Product, "id" | "createdAt" | "updatedA
   }
   products.push(newProduct)
   saveProducts(products)
+  try { const s = getSession(); if (s?.id) earnPTS(s.id, "create_product") } catch {}
   return newProduct
 }
 
@@ -403,6 +406,8 @@ export function createOrder(input: {
     type: "create",
     data: order,
   })
+
+  try { const s = getSession(); if (s?.id) earnPTS(s.id, "create_order") } catch {}
 
   return order
 }

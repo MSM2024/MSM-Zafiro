@@ -1,6 +1,7 @@
 'use client'
 
 import { addNotification } from '@/lib/notifications'
+import { earnPTS } from '@/lib/rewards'
 
 export interface Store {
   id: string
@@ -104,6 +105,7 @@ export function registerStore(input: {
       type: "info", pillar: "marketplace", read: false, actionUrl: "/admin/marketplace",
     })
   } catch {}
+  try { earnPTS(input.ownerId, "register_store") } catch {}
   return store
 }
 

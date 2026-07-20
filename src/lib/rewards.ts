@@ -25,7 +25,8 @@ export type RewardAction =
   | "create_question" | "answer_question" | "received_like"
   | "explore_sponsor" | "create_sponsor_campaign" | "daily_login"
   | "join_circle" | "refer_friend" | "streak_7_days" | "answer_accepted"
-  | "referral_bonus"
+  | "referral_bonus" | "create_post" | "send_message" | "create_order"
+  | "create_product" | "register_store"
 
 const ACTION_REWARDS: Record<RewardAction, { pts: number; dailyMax: number; label: string }> = {
   create_question: { pts: 100, dailyMax: 5, label: "Crear una pregunta" },
@@ -39,6 +40,11 @@ const ACTION_REWARDS: Record<RewardAction, { pts: number; dailyMax: number; labe
   streak_7_days: { pts: 500, dailyMax: 1, label: "Racha de 7 días" },
   answer_accepted: { pts: 30, dailyMax: 999, label: "Respuesta aceptada" },
   referral_bonus: { pts: 100, dailyMax: 999, label: "Bono por referido" },
+  create_post: { pts: 15, dailyMax: 20, label: "Publicar en el feed" },
+  send_message: { pts: 5, dailyMax: 50, label: "Enviar un mensaje" },
+  create_order: { pts: 100, dailyMax: 10, label: "Realizar un pedido" },
+  create_product: { pts: 50, dailyMax: 5, label: "Crear un producto" },
+  register_store: { pts: 500, dailyMax: 1, label: "Registrar un comercio" },
 }
 
 const LEVEL_THRESHOLDS = [0, 1000, 3000, 7000, 15000, 30000, 60000, 100000, 200000, 500000]
@@ -52,6 +58,10 @@ const BADGE_DEFS = [
   { id: "legend", name: "Leyenda", desc: "Alcanzaste 100,000 PTS", icon: "Trophy" },
   { id: "circle_full", name: "Círculo Completo", desc: "Eres miembro de 5 círculos", icon: "Users" },
   { id: "mentor", name: "Mentor", desc: "Tu respuesta recibió 100 likes", icon: "Award" },
+  { id: "social", name: "Red Social", desc: "Publicaste 50 veces en el feed", icon: "Star" },
+  { id: "communicator", name: "Comunicador", desc: "Enviaste 100 mensajes", icon: "Star" },
+  { id: "merchant", name: "Comerciante", desc: "Registraste tu primer comercio", icon: "Award" },
+  { id: "buyer", name: "Comprador", desc: "Realizaste 10 pedidos", icon: "Trophy" },
 ]
 
 function getToday(): string {

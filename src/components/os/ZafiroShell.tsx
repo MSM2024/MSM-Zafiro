@@ -8,6 +8,8 @@ import { getAllNotifications } from "@/lib/notifications"
 import type { BroadcastMessage } from "@/lib/broadcast"
 import { useBadgeChecker } from "@/hooks/useBadgeChecker"
 import { NewBadgesAlert } from "@/components/BadgesDisplay"
+import { getPTSAccount } from "@/lib/rewards"
+import { getSession } from "@/lib/auth"
 
 interface Props {
   children: ReactNode
@@ -71,7 +73,16 @@ function NotificationBell() {
 export default function ZafiroShell({ children }: Props) {
   const [launcherOpen, setLauncherOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [ptsBalance, setPtsBalance] = useState(0)
   const newBadges = useBadgeChecker()
+
+  useEffect(() => {
+    const session = getSession()
+    if (session?.id) {
+      const account = getPTSAccount(session.id)
+      setPtsBalance(account.balance)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#050816] flex flex-col">
@@ -94,6 +105,9 @@ export default function ZafiroShell({ children }: Props) {
           <NotificationBell />
           <Link href="/settings" className="w-8 h-8 rounded-lg bg-slate-900/60 flex items-center justify-center hover:bg-slate-800/60 transition-all">
             <Settings className="w-4 h-4 text-slate-400" />
+          </Link>
+          <Link href="/rewards" className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[9px] font-bold text-amber-400 hover:bg-amber-500/20 transition-all">
+            {ptsBalance.toLocaleString()} PTS
           </Link>
           <div className="h-5 w-px bg-slate-800" />
           <button className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D9FF] to-violet-600 flex items-center justify-center text-xs font-bold text-white">
