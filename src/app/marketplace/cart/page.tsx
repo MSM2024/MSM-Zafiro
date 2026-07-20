@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { usePageTitle } from "@/lib/usePageTitle"
-import { getCart, getCartTotal, getProducts, updateCartItem, removeFromCart, clearCart, createOrder, getOrders } from "@/lib/marketplace"
+import { getCart, getCartTotal, getProducts, updateCartItem, removeFromCart, clearCart, createOrder, getOrders, getItemEffectivePrice } from "@/lib/marketplace"
 import { ShoppingCart, ArrowLeft, Trash2, Plus, Minus, CreditCard, Check, AlertTriangle, Package } from "lucide-react"
 
 export default function CartPage() {
@@ -44,7 +44,7 @@ export default function CartPage() {
     setChecking(true)
     try {
       const order = createOrder({
-        items: cartItems.map(i => ({ productId: i.productId, quantity: i.quantity })),
+        items: cartItems.map(i => ({ productId: i.productId, quantity: i.quantity, variantSelections: i.variantSelections })),
         customerName: form.name,
         customerEmail: form.email,
         shippingAddress: form.address || undefined,
@@ -118,33 +118,36 @@ export default function CartPage() {
           <>
             <div className="space-y-2 mb-6">
               {cartItems.map(item => (
-                <div key={item.productId} className="flex items-center gap-4 p-3 rounded-xl bg-slate-900/50 border border-slate-800/60">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center shrink-0">
-                    <Package className="w-5 h-5 text-slate-700" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <Link href={`/marketplace/${item.productId}`} className="text-sm font-bold text-white hover:text-[#00D9FF] transition-colors truncate block">
-                      {item.product!.name}
-                    </Link>
-                    <p className="text-[10px] text-slate-500">${item.product!.price.toFixed(2)} {item.product!.currency}</p>
-                  </div>
-                  <div className="flex items-center gap-1 p-1 rounded-lg bg-slate-800/50 border border-slate-700/50">
-                    <button onClick={() => handleUpdate(item.productId, item.quantity - 1)}
-                      className="w-6 h-6 rounded-md bg-slate-700/50 text-white text-[10px] hover:bg-slate-700 transition-all cursor-pointer">
-                      <Minus className="w-2.5 h-2.5 mx-auto" />
+                  <div key={`${item.productId}_${item.variantSelections?.map(v=>v.optionId).join('_') || ''}`} className="flex items-center gap-4 p-3 rounded-xl bg-slate-900/50 border border-slate-800/60">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center shrink-0">
+                      <Package className="w-5 h-5 text-slate-700" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Link href={`/marketplace/${item.productId}`} className="text-sm font-bold text-white hover:text-[#00D9FF] transition-colors truncate block">
+                        {item.product!.name}
+                      </Link>
+                      {item.variantSelections && item.variantSelections.length > 0 && (
+                        <p className="text-[9px] text-[#00D9FF] mt-0.5">{item.variantSelections.map(v => v.optionValue).join(' · ')}</p>
+                      )}
+                      <p className="text-[10px] text-slate-500">${getItemEffectivePrice(item.product!, item.variantSelections).toFixed(2)} {item.product!.currency}</p>
+                    </div>
+                    <div className="flex items-center gap-1 p-1 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                      <button onClick={() => handleUpdate(item.productId, item.quantity - 1)}
+                        className="w-6 h-6 rounded-md bg-slate-700/50 text-white text-[10px] hover:bg-slate-700 transition-all cursor-pointer">
+                        <Minus className="w-2.5 h-2.5 mx-auto" />
+                      </button>
+                      <span className="w-6 text-center text-[10px] font-bold">{item.quantity}</span>
+                      <button onClick={() => handleUpdate(item.productId, item.quantity + 1)}
+                        className="w-6 h-6 rounded-md bg-slate-700/50 text-white text-[10px] hover:bg-slate-700 transition-all cursor-pointer">
+                        <Plus className="w-2.5 h-2.5 mx-auto" />
+                      </button>
+                    </div>
+                    <p className="text-sm font-black w-20 text-right">${(getItemEffectivePrice(item.product!, item.variantSelections) * item.quantity).toFixed(2)}</p>
+                    <button onClick={() => handleRemove(item.productId)}
+                      className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-all cursor-pointer">
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
-                    <span className="w-6 text-center text-[10px] font-bold">{item.quantity}</span>
-                    <button onClick={() => handleUpdate(item.productId, item.quantity + 1)}
-                      className="w-6 h-6 rounded-md bg-slate-700/50 text-white text-[10px] hover:bg-slate-700 transition-all cursor-pointer">
-                      <Plus className="w-2.5 h-2.5 mx-auto" />
-                    </button>
                   </div>
-                  <p className="text-sm font-black w-20 text-right">${(item.product!.price * item.quantity).toFixed(2)}</p>
-                  <button onClick={() => handleRemove(item.productId)}
-                    className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-all cursor-pointer">
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
               ))}
             </div>
 

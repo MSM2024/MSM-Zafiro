@@ -19,8 +19,23 @@ export interface Product {
   featured: boolean
   storeId?: string
   variants?: ProductVariant[]
+  variantGroups?: VariantGroup[]
   createdAt: string
   updatedAt: string
+}
+
+export interface VariantGroup {
+  id: string
+  name: string
+  options: VariantOption[]
+}
+
+export interface VariantOption {
+  id: string
+  value: string
+  priceAdjustment?: number
+  stockOverride?: number
+  imageUrl?: string
 }
 
 export interface ProductVariant {
@@ -28,6 +43,13 @@ export interface ProductVariant {
   options: string[]
   price?: number
   stock?: number
+}
+
+export interface VariantSelection {
+  groupId: string
+  groupName: string
+  optionId: string
+  optionValue: string
 }
 
 export interface ProductStoreInfo {
@@ -40,6 +62,7 @@ export interface ProductStoreInfo {
 export interface CartItem {
   productId: string
   quantity: number
+  variantSelections?: VariantSelection[]
   addedAt: string
 }
 
@@ -53,9 +76,18 @@ export interface Cart {
 
 export type OrderStatus = "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded"
 
+export interface OrderItem {
+  productId: string
+  productName: string
+  price: number
+  currency: string
+  quantity: number
+  variantInfo?: string
+}
+
 export interface Order {
   id: string
-  items: { productId: string; productName: string; price: number; currency: string; quantity: number }[]
+  items: OrderItem[]
   total: number
   currency: string
   customerName: string
@@ -183,13 +215,18 @@ function saveCart(cart: Cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart))
 }
 
-export function addToCart(productId: string, quantity: number = 1): Cart {
+export function addToCart(productId: string, quantity: number = 1, variantSelections?: VariantSelection[]): Cart {
   const cart = getCart()
-  const existing = cart.items.find(i => i.productId === productId)
+  const variantKey = variantSelections ? variantSelections.map(v => `${v.optionId}`).sort().join('_') : ''
+  const existing = cart.items.find(i => {
+    if (i.productId !== productId) return false
+    const iKey = i.variantSelections ? i.variantSelections.map(v => `${v.optionId}`).sort().join('_') : ''
+    return iKey === variantKey
+  })
   if (existing) {
     existing.quantity += quantity
   } else {
-    cart.items.push({ productId, quantity, addedAt: new Date().toISOString() })
+    cart.items.push({ productId, quantity, variantSelections, addedAt: new Date().toISOString() })
   }
   saveCart(cart)
   return cart
@@ -225,12 +262,36 @@ export function getCartTotal(cart: Cart): { subtotal: number; currency: string; 
   for (const item of cart.items) {
     const product = products.find(p => p.id === item.productId)
     if (product) {
-      subtotal += product.price * item.quantity
+      let price = product.price
+      if (item.variantSelections && product.variantGroups) {
+        for (const sel of item.variantSelections) {
+          const group = product.variantGroups.find(g => g.id === sel.groupId)
+          if (group) {
+            const opt = group.options.find(o => o.id === sel.optionId)
+            if (opt?.priceAdjustment) price += opt.priceAdjustment
+          }
+        }
+      }
+      subtotal += price * item.quantity
       currency = product.currency
       itemCount += item.quantity
     }
   }
   return { subtotal, currency, itemCount }
+}
+
+export function getItemEffectivePrice(product: Product, variantSelections?: VariantSelection[]): number {
+  let price = product.price
+  if (variantSelections && product.variantGroups) {
+    for (const sel of variantSelections) {
+      const group = product.variantGroups.find(g => g.id === sel.groupId)
+      if (group) {
+        const opt = group.options.find(o => o.id === sel.optionId)
+        if (opt?.priceAdjustment) price += opt.priceAdjustment
+      }
+    }
+  }
+  return price
 }
 
 // ============================================================
@@ -251,7 +312,7 @@ export function getOrdersByCustomer(handle: string): Order[] {
 }
 
 export function createOrder(input: {
-  items: { productId: string; quantity: number }[]
+  items: { productId: string; quantity: number; variantSelections?: VariantSelection[] }[]
   customerName: string
   customerEmail: string
   customerHandle?: string
@@ -262,12 +323,17 @@ export function createOrder(input: {
   const products = getProducts()
   const orderItems = input.items.map(item => {
     const product = products.find(p => p.id === item.productId)
+    const effectivePrice = product ? getItemEffectivePrice(product, item.variantSelections) : 0
+    const variantInfo = item.variantSelections && item.variantSelections.length > 0
+      ? item.variantSelections.map(v => `${v.groupName}: ${v.optionValue}`).join(', ')
+      : undefined
     return {
       productId: item.productId,
       productName: product?.name || "Producto eliminado",
-      price: product?.price || 0,
+      price: effectivePrice,
       currency: product?.currency || "USD",
       quantity: item.quantity,
+      variantInfo,
     }
   })
   const total = orderItems.reduce((s, item) => s + item.price * item.quantity, 0)
