@@ -15,11 +15,15 @@
 - **Start**: `Start-Process -FilePath "cmd.exe" -ArgumentList "/c npx next dev -p 3001" -NoNewWindow`
 - **Kill**: `Get-Process -Name node | Stop-Process -Force`
 - **Build**: `cmd.exe /c "npm run build"`
+- **Test**: `npx vitest run`
+- **Test (watch)**: `npx vitest`
 - **Backup**: `git bundle create "..\ZAFIRO_BACKUP_$(Get-Date -Format yyyyMMdd)\full.bundle" --all`
 
-## Estado Actual (2026-07-19)
-- **Build**: 0 errores, 165 rutas
-- **Último commit**: `278b81c` — main, deployeado en Vercel
+## Estado Actual (2026-07-20)
+- **Build**: 0 errores, 173 rutas
+- **Tests**: 27 tests (vitest) — offline-queue, feed, marketplace
+- **UI**: PageShell con page transitions (feed, preguntas, circulos, messages, marketplace), Skeleton/LoadingScreen/EmptyState reutilizables
+- **Último commit**: `f03e809` — main + beta, deployeado en Vercel
 - **CONECTAR 5 PILARES (INTEGRACIÓN COMPLETA)**: Editorial→Marketplace bridge, cross-pillar notification center, search, leaderboard, export, stats widget, activity timeline, broadcast sync, API endpoint
 - **Editorial→Marketplace bridge**: `marketplace-bridge.ts` con syncBookToMarketplace / unsync / getBookMarketplaceProduct, botones "Comprar" en biblioteca pública y perfiles de escritores
 - **Cross-pillar notifications**: `src/lib/notifications.ts` — motor que agrega eventos de los 5 pilares, localStorage, notificaciones auto-generadas por acción
@@ -72,7 +76,7 @@
    - **VERCEL_PROJECT_ID_ZAFIRO**: `prj_B1Mvz1NVUbjOp3BexRqyKxmPcSMt` (set)
    - **VERCEL_PROJECT_ID_MSM**: `prj_LjoIShD2l8A3n5QoC5M6fh2GrDL6` (set)
    - **vercel.json scope**: corregido de `msm-my-store` → `msmmystore`
-3. **Sin tests** — 0 tests en todo el proyecto
+3. **Sin tests resuelto** — 27 tests (vitest, 3 suites)
 
 ## Feature Status (99 features total)
 - ✅ 37% funcional
