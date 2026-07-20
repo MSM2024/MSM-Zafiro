@@ -78,7 +78,7 @@ export default function OsHomePage() {
   ]
 
   const apps = [
-    { name: "Mi Perfil", icon: Gem, href: "/zafiro/perfil", color: "from-[#00D9FF] to-blue-600" },
+    { name: "Mi Perfil", icon: Gem, href: "/profile-page", color: "from-[#00D9FF] to-blue-600" },
     { name: "ELIANA", icon: MessageCircle, href: "/eliana", color: "from-violet-500 to-purple-600" },
     { name: "Marketplace", icon: ShoppingBag, href: "/marketplace", color: "from-emerald-500 to-teal-600" },
     { name: "Editorial", icon: BookOpen, href: "/editorial", color: "from-amber-500 to-orange-600" },

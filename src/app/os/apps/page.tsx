@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Diamond, MessageCircle, ShoppingBag, BookOpen, DollarSign, Globe, Users, FolderOpen, Film, Settings, Grid3X3 } from "lucide-react"
 
 const ALL_APPS = [
-  { name: "Mi Perfil", icon: Diamond, href: "/zafiro/perfil", color: "from-[#00D9FF] to-blue-600", desc: "Gestiona tu identidad y membresía", offline: true },
+  { name: "Mi Perfil", icon: Diamond, href: "/profile-page", color: "from-[#00D9FF] to-blue-600", desc: "Gestiona tu identidad y membresía", offline: true },
   { name: "ELIANA", icon: MessageCircle, href: "/eliana", color: "from-violet-500 to-purple-600", desc: "Asistente inteligente del ecosistema", offline: true },
   { name: "Marketplace", icon: ShoppingBag, href: "https://msmmystore.com", color: "from-emerald-500 to-teal-600", desc: "Compra y venta en MSM", offline: false, external: true },
   { name: "Editorial", icon: BookOpen, href: "/editorial", color: "from-amber-500 to-orange-600", desc: "Artículos, libros y devocionales", offline: false },

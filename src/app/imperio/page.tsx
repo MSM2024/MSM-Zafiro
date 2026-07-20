@@ -22,8 +22,8 @@ import { ActivityTimeline } from "@/components/ActivityTimeline"
 const PILLARS = [
   {
     id: "identidad", title: "ZAFIRO Identity", desc: "Perfiles, VIP, KYC — La identidad del Imperio",
-    icon: Gem, href: "/zafiro/perfil", color: "from-[#00D9FF] to-blue-600", links: [
-      { label: "Mi Perfil", href: "/zafiro/perfil" }, { label: "VIP", href: "/vip" },
+    icon: Gem, href: "/profile-page", color: "from-[#00D9FF] to-blue-600", links: [
+      { label: "Mi Perfil", href: "/profile-page" }, { label: "VIP", href: "/vip" },
       { label: "KYC", href: "/kyc/inicio" }, { label: "Usuarios", href: "/admin/usuarios" },
     ]
   },
@@ -205,7 +205,7 @@ export default function ImperioPage() {
                 { label: "Economía", icon: BarChart3, href: "/economia", color: "text-cyan-400" },
                 { label: "Trading", icon: TrendingUp, href: "/trading", color: "text-purple-400" },
                 { label: "Editorial", icon: BookOpen, href: "/editorial", color: "text-indigo-400" },
-                { label: "Mi Perfil", icon: Users, href: "/zafiro/perfil", color: "text-[#00D9FF]" },
+                { label: "Mi Perfil", icon: Users, href: "/profile-page", color: "text-[#00D9FF]" },
                 { label: "Admin", icon: Shield, href: "/admin", color: "text-red-400" },
                 { label: "Notificaciones", icon: Bell, href: "/os/notifications", color: "text-amber-400" },
               ].map(a => {

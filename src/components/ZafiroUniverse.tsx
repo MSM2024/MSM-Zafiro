@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react"
 import {
   Sparkles, Gem, Sun, Moon, Wifi, Battery, Search, Flame, MessageSquare, Users, Award,
   Plus, Send, X, Eye, MessageCircle, Signal, Globe, User, Heart,
-  CheckCircle, BookOpen, CreditCard, Sliders, Activity,
+  CheckCircle, BookOpen, CreditCard, Sliders, Activity, HelpCircle,
   Home as HomeIcon, FlaskConical, ScrollText, Settings, Crown
 } from "lucide-react"
 import Link from "next/link"
@@ -372,13 +372,14 @@ export default function ZafiroUniverse() {
           {[
             { id: "Inicio", label: "Inicio", icon: HomeIcon },
             { id: "Explorar", label: "Explorar", icon: Globe },
-            { id: "Comunidades", label: "Círculos", icon: Users },
+            { id: "Comunidades", label: "Círculos", icon: Users, href: "/circulos" },
             { id: "Gemología", label: "Gemología", icon: Gem },
             { id: "Sponsors", label: "Sponsors", icon: Award },
             { id: "Feed", label: "Feed", icon: MessageCircle, href: "/feed" },
+            { id: "Preguntas", label: "Preguntas", icon: HelpCircle, href: "/preguntas" },
             { id: "Imperio", label: "Imperio", icon: Crown, href: "/imperio" },
             { id: "Universo", label: "Universo", icon: Activity, href: "/universo" },
-            { id: "Perfil", label: "Mi Perfil", icon: User },
+            { id: "Perfil", label: "Mi Perfil", icon: User, href: "/profile-page" },
           ].map(item => {
             const Icon = item.icon
             const isActive = activeNav === item.id

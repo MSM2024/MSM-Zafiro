@@ -21,7 +21,7 @@ interface AppEntry {
 }
 
 const QUICK_APPS: AppEntry[] = [
-  { id: 'profile', name: 'Mi Perfil', icon: '👤', route: '/zafiro/perfil' },
+  { id: 'profile', name: 'Mi Perfil', icon: '👤', route: '/profile-page' },
   { id: 'eliana', name: 'ELIANA', icon: '💎', route: '/eliana' },
   { id: 'marketplace', name: 'Marketplace', icon: '🏪', route: 'https://msmmystore.com' },
   { id: 'editorial', name: 'Editorial', icon: '📖', route: '/editorial' },
