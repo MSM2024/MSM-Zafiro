@@ -1,5 +1,7 @@
 'use client'
 
+import { enqueueOperation } from '@/lib/offline-queue'
+
 export interface Message {
   id: string
   senderId: string
@@ -99,6 +101,14 @@ export function sendMessage(convId: string, senderId: string, senderName: string
     conv.unreadCount = msgs.filter(m => m.senderId !== senderId && !m.read).length
     saveConversations(all)
   }
+
+  enqueueOperation({
+    entity: "message",
+    entityId: msg.id,
+    type: "create",
+    data: { convId, message: msg },
+  })
+
   return msg
 }
 

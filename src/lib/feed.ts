@@ -1,5 +1,7 @@
 'use client'
 
+import { enqueueOperation } from '@/lib/offline-queue'
+
 export type PostVisibility = "public" | "circle" | "followers"
 
 export interface FeedPost {
@@ -64,6 +66,14 @@ export function createPost(post: {
   const posts = getPosts()
   posts.unshift(newPost)
   savePosts(posts)
+
+  enqueueOperation({
+    entity: "post",
+    entityId: newPost.id,
+    type: "create",
+    data: newPost,
+  })
+
   return newPost
 }
 

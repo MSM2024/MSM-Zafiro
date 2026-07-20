@@ -30,6 +30,28 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
     setSplashReady(true)
 
+    registerSyncHandler("post", async (item) => {
+      try {
+        const data = item.data as { id: string } & Record<string, any>
+        const posts = JSON.parse(localStorage.getItem('zafiro_feed_posts') || '[]')
+        if (posts.find((p: any) => p.id === data.id)) return true
+        posts.unshift(data)
+        localStorage.setItem('zafiro_feed_posts', JSON.stringify(posts))
+        return true
+      } catch { return false }
+    })
+
+    registerSyncHandler("message", async (item) => {
+      try {
+        const { convId, message } = item.data as { convId: string; message: any }
+        const msgs = JSON.parse(localStorage.getItem('zafiro_msg_' + convId) || '[]')
+        if (msgs.find((m: any) => m.id === message.id)) return true
+        msgs.push(message)
+        localStorage.setItem('zafiro_msg_' + convId, JSON.stringify(msgs))
+        return true
+      } catch { return false }
+    })
+
     registerSyncHandler("order", async (item) => {
       try {
         const payload = item.data as Order
