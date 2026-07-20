@@ -375,6 +375,7 @@ export default function ZafiroUniverse() {
             { id: "Comunidades", label: "Círculos", icon: Users },
             { id: "Gemología", label: "Gemología", icon: Gem },
             { id: "Sponsors", label: "Sponsors", icon: Award },
+            { id: "Feed", label: "Feed", icon: MessageCircle, href: "/feed" },
             { id: "Imperio", label: "Imperio", icon: Crown, href: "/imperio" },
             { id: "Universo", label: "Universo", icon: Activity, href: "/universo" },
             { id: "Perfil", label: "Mi Perfil", icon: User },
