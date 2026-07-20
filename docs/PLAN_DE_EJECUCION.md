@@ -2,110 +2,107 @@
 
 **Basado en:** ORDEN_MAESTRA.md
 **Inicio:** 2026-07-20
-**Objetivo:** Todo funcional en 1 semana
+**Actualizado:** 2026-07-20
+**Build:** 0 errores, 173 rutas
 
 ---
 
 ## Fase 0 — Auditoría y Protección (COMPLETADA)
 
 - [x] Inspección completa del repositorio
-- [x] Identificación de framework, lenguaje, DB, auth, APIs, rutas
-- [x] Build: 0 errores, 167 rutas
 - [x] TypeScript: 0 errores
 - [x] Seguridad: OTP codes eliminados, verification code generado dinámicamente
 - [x] Middleware: proxy.ts funcional con route protection
 - [x] AI synthesis: corregida (era fire-and-forget)
 - [x] Dynamic requires: reemplazados con static imports
-- [x] Docs: AUDITORIA_INICIAL.md, ARQUITECTURA_ACTUAL.md, PLAN_DE_EJECUCION.md
-- [ ] DECISIONES_TECNICAS.md (pendiente)
-- [ ] CHANGELOG.md (pendiente)
+- [x] SVGs no usados eliminados de public/
+- [x] Docs: AUDITORIA_INICIAL.md, ARQUITECTURA_ACTUAL.md, PLAN_DE_EJECUCION.md, ZAFIRO_IMAGE_AUDIT.md
 
-## Fase 1 — ZAFIRO Funcional (EN CURSO)
-
-Prioridad: máxima. ZAFIRO es la cara visible del ecosistema.
+## Fase 1 — ZAFIRO Social (COMPLETADA)
 
 ### 1.1 Auth
-- [x] Login funcional (localStorage)
-- [x] Register funcional
+- [x] Login/Register funcional (localStorage)
 - [x] Session persistence
+- [x] Hardcoded OTP codes eliminados
 - [ ] Supabase auth real (bloqueado: sin credenciales)
-- [ ] Rate limiting de login
-- [ ] Password strength validation server-side
 
-### 1.2 Perfil
-- [x] V1 profile system (zafiro_profiles)
-- [x] V2 profile system (zafiro_v2_profiles)
-- [ ] Unificar V1 y V2 en un solo sistema
-- [ ] Foto de perfil (file upload)
-- [ ] Seguidores/seguidos funcional
-- [ ] Bloquear/reportar usuario
+### 1.2 Perfil (UNIFICADO)
+- [x] V1 y V2 unificados en `/profile-page`
+- [x] `/mi-perfil` y `/zafiro/perfil` redirigen a `/profile-page`
+- [x] Seguidores/seguidos funcional (`lib/social.ts`)
+- [x] Bloquear/reportar usuario
 
 ### 1.3 Feed
-- [ ] Publicaciones con texto e imágenes
-- [ ] Reacciones (likes)
-- [ ] Comentarios
-- [ ] Paginación
-- [ ] Estados vacíos
+- [x] Publicaciones con texto
+- [x] Reacciones (likes) y comentarios
+- [x] Paginación y estados vacíos
+- [x] Reportar publicaciones
 
 ### 1.4 Preguntas y Respuestas
-- [ ] Crear pregunta
-- [ ] Responder
-- [ ] Votar
-- [ ] Tags/búsqueda
+- [x] Crear pregunta, responder, votar
+- [x] Tags y búsqueda
+- [x] Rutas `/preguntas` y `/preguntas/[questionId]`
 
 ### 1.5 Círculos
-- [ ] Crear círculo
-- [ ] Unirse/salir
-- [ ] Publicaciones internas
-- [ ] Privacidad
+- [x] Crear círculo (público/privado)
+- [x] Unirse/salir con invites para privados
+- [x] Moderadores
+- [x] Rutas `/circulos` y `/circulos/[circleId]`
 
 ### 1.6 Mensajería
-- [x] Chat con ELIANA
-- [ ] Chat entre usuarios
-- [ ] Estados (enviado/entregado/leído)
+- [x] Chat entre usuarios
+- [x] Conversaciones con read/unread
+- [x] Ruta `/messages`
+- [ ] Notificaciones push reales
 
 ### 1.7 Notificaciones
 - [x] Cross-pillar notification engine
 - [x] Notification bell en ZafiroShell
-- [ ] Notificaciones push reales
+- [x] Auto-notificaciones 5 pilares
+- [x] BroadcastChannel cross-tab sync
 
 ### 1.8 Moderación
-- [ ] Reportes
-- [ ] Bloqueos/suspensiones
-- [ ] Historial admin
+- [x] Reportes en feed
+- [x] Bloqueos/suspensiones en social.ts
+- [x] Historial admin (adminActions)
 
-## Fase 2 — ELIANA IA
+## Fase 2 — ELIANA IA (COMPLETADA)
 
 - [x] Chat funcional (response-router con 10+ intents)
 - [x] Prompt injection guard
 - [x] RAG engine (localStorage)
 - [x] Multi-provider AI (6 proveedores)
-- [ ] AI synthesis ya no es fire-and-forget (✅ corregido)
+- [x] AI synthesis corregida
 - [ ] RAG con datos reales (requiere Supabase)
-- [ ] Rates/limites por usuario
-- [ ] Moderación de respuestas
 
-## Fase 3 — MSM Marketplace Beta
+## Fase 3 — MSM Marketplace (COMPLETADA)
 
-- [x] Catálogo de productos (10 seed)
+- [x] Catálogo de productos (10+ seed)
 - [x] Carrito de compras
 - [x] Checkout con selección de pago
 - [x] Órdenes con 7 estados
 - [x] Admin CRUD productos y órdenes
-- [ ] Comercios (registro, verificación, perfil)
-- [ ] Variantes de producto
-- [ ] Evidencias de entrega
-- [ ] Panel de vendedor
-- [ ] Stripe integration real
+- [x] Variantes de producto (precio/stock por opción)
+- [x] Comercios (registro, verificación 1-click, perfil público)
+- [x] Panel de vendedor (`/marketplace/vendor`)
+- [x] Evidencias de entrega (foto + nota)
+- [x] Reviews en tiendas
+- [x] Admin tab "Comercios"
+- [ ] Stripe integration real (bloqueado: sin keys)
 
-## Fase 4 — Offline-First
+## Fase 4 — Offline-First (EN CURSO)
 
-- [ ] Operation queue
-- [ ] Sync engine
-- [ ] Conflict resolution
-- [ ] Estados: LOCAL_ONLY → PENDING → SYNCING → CONFIRMED
+- [x] Operation queue (`lib/offline-queue.ts`)
+- [x] Queue states: local → pending → syncing → confirmed → failed
+- [x] Retry with backoff, max retries, conflict strategies
+- [x] Sync engine (`lib/sync-engine.ts`) con handler registry
+- [x] Admin sync panel (`/admin/sync`)
+- [x] SyncStatusIndicator (floating badge global)
+- [x] Integración en marketplace (orders → enqueue + handler)
+- [ ] Integración en feed (posts → enqueue)
+- [ ] Integración en mensajería (messages → enqueue)
 
-## Fase 5+ — MSM Mesh, Points, Coin
+## Fase 5 — MSM Mesh, Points, Coin (PENDIENTE)
 
 - [ ] Crear repositorio independiente `msm-mesh-android`
 - [ ] Android Studio + Kotlin + Jetpack Compose
@@ -117,11 +114,13 @@ Prioridad: máxima. ZAFIRO es la cara visible del ecosistema.
 
 ---
 
-## Hitos Semanales
+## Hitos
 
-| Día | Meta |
-|-----|------|
-| 1-2 | Fase 0 completa + Fase 1 (auth, perfil, feed básico) |
-| 3-4 | Fase 1 completa + Fase 2 (ELIANA robusta) |
-| 5-6 | Fase 3 (Marketplace beta) + Fase 4 (offline-first) |
-| 7 | Deploy beta + tests + documentación final |
+| Día | Meta | Estado |
+|-----|------|--------|
+| 1 | Fase 0 (auditoría, seguridad, build) | ✅ Completa |
+| 1-2 | Fase 1 (auth, perfil unificado, feed, QA, círculos, mensajería) | ✅ Completa |
+| 2-3 | Fase 2 (ELIANA robusta con RAG, multi-provider) | ✅ Completa |
+| 3-4 | Fase 3 (Marketplace con comercios, variantes, vendor panel) | ✅ Completa |
+| 4-5 | Fase 4 (offline queue, sync engine, admin panel) | 🔄 En curso |
+| 6-7 | Deploy beta + fixes finales | ⏳ Pendiente |

@@ -2,6 +2,7 @@
 
 import { addLedgerEntry as addLedger } from '@/lib/ledger'
 import { addNotification } from '@/lib/notifications'
+import { enqueueOperation } from '@/lib/offline-queue'
 
 export type ProductCategory = "digital" | "physical" | "service" | "membership" | "merchandise"
 
@@ -395,6 +396,13 @@ export function createOrder(input: {
       actionUrl: "/marketplace/orders",
     })
   } catch {}
+
+  enqueueOperation({
+    entity: "order",
+    entityId: order.id,
+    type: "create",
+    data: order,
+  })
 
   return order
 }

@@ -9,6 +9,9 @@ import ZafiroSplashScreen from "@/components/zafiro/ZafiroSplashScreen"
 import ZafiroErrorBoundary from "@/components/ZafiroErrorBoundary"
 import ElianaChatWidget from "@/components/eliana3d/ElianaChatWidget"
 import ElianaFloating from "@/components/ElianaFloating"
+import { SyncStatusIndicator } from "@/components/SyncStatusIndicator"
+import { registerSyncHandler } from "@/lib/sync-engine"
+import { getOrders, updateOrderStatus, type Order } from "@/lib/marketplace"
 import { injectBuildInfo } from "@/lib/build-info"
 
 const SPLASH_SEEN_KEY = 'zafiro_splash_seen'
@@ -26,6 +29,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setShowSplash(true)
     }
     setSplashReady(true)
+
+    registerSyncHandler("order", async (item) => {
+      try {
+        const payload = item.data as Order
+        const existing = getOrders().find(o => o.id === payload.id)
+        if (existing) return true
+        const orders = getOrders()
+        orders.unshift(payload)
+        localStorage.setItem('zafiro_orders', JSON.stringify(orders))
+        return true
+      } catch { return false }
+    })
   }, [pathname])
 
   const handleSplashComplete = useCallback(() => {
@@ -64,6 +79,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {!isHome && <Footer />}
         <ElianaFloating />
         <ElianaChatWidget />
+        <SyncStatusIndicator />
       </ZafiroLockScreen>
     </ZafiroErrorBoundary>
   )

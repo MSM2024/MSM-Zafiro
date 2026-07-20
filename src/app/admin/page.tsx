@@ -152,6 +152,7 @@ export default function AdminPage() {
             { id: "actividad", label: "Actividad", icon: ExternalLink, href: "/actividad" },
             { id: "exportar", label: "Exportar", icon: Database, href: "/admin/exportar" },
             { id: "datos", label: "Datos", icon: HardDrive, href: "/admin/datos" },
+            { id: "sync", label: "Sync", icon: Clock, href: "/admin/sync" },
             { id: "diagnostico", label: "Diagnostico", icon: Cpu },
           ].map((t) => {
             const Icon = t.icon
