@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { usePageTitle } from '@/lib/usePageTitle'
 import { getProfiles, getIdentityStats } from '@/lib/identity'
-import { getActiveProducts, getOrders } from '@/lib/marketplace'
+import { getActiveProducts, getOrders, getProductsByCategory } from '@/lib/marketplace'
 import { getLedgerEntries, getNodeBalance, getDailyCloses } from '@/lib/ledger'
 import { getDevocionales, getWriters, getEditorialStats } from '@/lib/editorial'
 import { getBooks } from '@/lib/biblioteca/storage'
@@ -15,7 +15,7 @@ import {
   Globe, Shield, Users, AlertTriangle, CheckCircle, XCircle,
   ShoppingCart, BookOpen, DollarSign, Crown, BarChart3, Gem,
   TrendingUp, Sparkles, Package, Wallet, Activity, ArrowUpRight, Bell, ExternalLink,
-  Stamp, Download, HeartHandshake,
+  Stamp, Download, HeartHandshake, BarChartHorizontal,
 } from 'lucide-react'
 import { getAllNotifications, PILLAR_LABELS, getPillarColor } from '@/lib/notifications'
 import type { AppNotification } from '@/lib/notifications'
@@ -44,7 +44,15 @@ function getHealthChecks(stats: ReturnType<typeof computeStats>) {
   ]
 }
 
-function computeStats() {
+function computeStats(): {
+  usuarios: number; vip: number; kycAprobados: number; productos: number;
+  pedidos: number; ventas: number; ledgerEntries: number; ledgerPending: number;
+  bpaCup: number; libros: number; devocionales: number; escritores: number;
+  sellos: number; orderStatusCounts: Record<string, number>;
+  productCategoryCounts: Record<string, number>;
+  revenueByDay: { date: string; total: number }[];
+  entryTypes: Record<string, number>;
+} {
   const idStats = getIdentityStats()
   const profiles = getProfiles()
   const products = getActiveProducts()
@@ -56,6 +64,22 @@ function computeStats() {
   const writers = getWriters()
   const seals = getPublishedSeals()
   const sales = orders.reduce((s, o) => s + o.total, 0)
+  const orderStatusCounts: Record<string, number> = {}
+  orders.forEach(o => { orderStatusCounts[o.status] = (orderStatusCounts[o.status] || 0) + 1 })
+  const productCategoryCounts: Record<string, number> = {}
+  products.forEach(p => { productCategoryCounts[p.category] = (productCategoryCounts[p.category] || 0) + 1 })
+  const revenueByDay: { date: string; total: number }[] = []
+  const dayMap: Record<string, number> = {}
+  orders.filter(o => o.status === 'delivered' || o.status === 'confirmed').forEach(o => {
+    const day = o.createdAt?.slice(0, 10) || 'unknown'
+    dayMap[day] = (dayMap[day] || 0) + o.total
+  })
+  Object.entries(dayMap).sort().slice(-7).forEach(([date, total]) => revenueByDay.push({ date, total }))
+  const entryTypes = entries.reduce((acc, e) => {
+    const t = (e as any).type || e.direction || 'other'
+    acc[t] = (acc[t] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
   return {
     usuarios: profiles.length,
     vip: idStats?.vip || 0,
@@ -70,6 +94,10 @@ function computeStats() {
     devocionales: devs.length,
     escritores: writers.length,
     sellos: seals.length,
+    orderStatusCounts,
+    productCategoryCounts,
+    revenueByDay,
+    entryTypes,
   }
 }
 
@@ -96,7 +124,9 @@ export default function Dashboard360Page() {
     } catch { /* */ }
     const snap: Record<string, number> = {}
     const s = computeStats()
-    for (const [k, v] of Object.entries(s)) snap[k] = v
+    for (const [k, v] of Object.entries(s)) {
+      if (typeof v === 'number') snap[k] = v
+    }
     localStorage.setItem(HEALTH_KEY, JSON.stringify(snap))
     setStats(s)
     setNotifications(getAllNotifications().slice(0, 6))
@@ -104,7 +134,11 @@ export default function Dashboard360Page() {
 
   const health = getHealthChecks(stats)
   const healthyCount = health.filter(h => h.ok).length
-  const trend = (key: keyof typeof stats) => prevStats ? diffTrend(stats[key], prevStats[key] ?? 0) : null
+  const trend = (key: string) => {
+    const current = (stats as any)[key]
+    if (typeof current !== 'number') return null
+    return prevStats ? diffTrend(current, prevStats[key] ?? 0) : null
+  }
 
   const handleExport = () => {
     setExporting(true)
@@ -218,6 +252,102 @@ export default function Dashboard360Page() {
               </motion.div>
             )
           })}
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/60">
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
+              <h2 className="text-xs font-bold text-white">Pedidos por Estado</h2>
+            </div>
+            <div className="space-y-1.5">
+              {Object.entries(stats.orderStatusCounts).length === 0 ? (
+                <p className="text-[10px] text-slate-500 text-center py-4">Sin datos</p>
+              ) : (
+                Object.entries(stats.orderStatusCounts)
+                  .sort((a, b) => b[1] - a[1]).map(([status, count]) => {
+                    const maxCount = Math.max(...Object.values(stats.orderStatusCounts))
+                    const pct = maxCount > 0 ? (count / maxCount) * 100 : 0
+                    const barColor: Record<string, string> = {
+                      pending: 'bg-amber-500/60', confirmed: 'bg-blue-500/60',
+                      processing: 'bg-purple-500/60', shipped: 'bg-cyan-500/60',
+                      delivered: 'bg-emerald-500/60', cancelled: 'bg-red-500/60',
+                      refunded: 'bg-orange-500/60',
+                    }
+                    return (
+                      <div key={status} className="flex items-center gap-2">
+                        <span className="text-[9px] text-slate-400 w-16 truncate capitalize">{status}</span>
+                        <div className="flex-1 h-3 rounded-full bg-slate-800 overflow-hidden">
+                          <div className={`h-full rounded-full ${barColor[status] || 'bg-slate-600'}`} style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="text-[9px] text-slate-300 w-5 text-right">{count}</span>
+                      </div>
+                    )
+                  })
+              )}
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
+            className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/60">
+            <div className="flex items-center gap-2 mb-3">
+              <Package className="w-3.5 h-3.5 text-[#00D9FF]" />
+              <h2 className="text-xs font-bold text-white">Productos por Categoría</h2>
+            </div>
+            <div className="space-y-1.5">
+              {Object.entries(stats.productCategoryCounts).length === 0 ? (
+                <p className="text-[10px] text-slate-500 text-center py-4">Sin datos</p>
+              ) : (
+                Object.entries(stats.productCategoryCounts)
+                  .sort((a, b) => b[1] - a[1]).map(([cat, count]) => {
+                    const total = Object.values(stats.productCategoryCounts).reduce((s, v) => s + v, 0)
+                    const pct = total > 0 ? Math.round((count / total) * 100) : 0
+                    const colors: Record<string, string> = {
+                      digital: 'bg-blue-500/60', physical: 'bg-emerald-500/60',
+                      service: 'bg-purple-500/60', membership: 'bg-amber-500/60',
+                      merchandise: 'bg-cyan-500/60',
+                    }
+                    return (
+                      <div key={cat} className="flex items-center gap-2">
+                        <span className="text-[9px] text-slate-400 w-14 truncate capitalize">{cat}</span>
+                        <div className="flex-1 h-3 rounded-full bg-slate-800 overflow-hidden">
+                          <div className={`h-full rounded-full ${colors[cat] || 'bg-slate-600'}`} style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="text-[9px] text-slate-300 w-8 text-right">{pct}%</span>
+                      </div>
+                    )
+                  })
+              )}
+            </div>
+          </motion.div>
+
+          {stats.revenueByDay.length > 1 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
+              className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/60 md:col-span-2">
+              <div className="flex items-center gap-2 mb-3">
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                <h2 className="text-xs font-bold text-white">Ingresos (últimos {stats.revenueByDay.length} días)</h2>
+              </div>
+              <div className="flex items-end gap-1 h-24 px-1">
+                {(() => {
+                  const maxRev = Math.max(...stats.revenueByDay.map(d => d.total))
+                  return stats.revenueByDay.map((d, i) => {
+                    const h = maxRev > 0 ? (d.total / maxRev) * 100 : 0
+                    return (
+                      <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+                        <span className="text-[7px] text-slate-500">${d.total.toFixed(0)}</span>
+                        <div className="w-full rounded-sm bg-emerald-500/40 hover:bg-emerald-500/60 transition-all"
+                          style={{ height: `${Math.max(h, 2)}%` }} />
+                        <span className="text-[6px] text-slate-600">{d.date.slice(5)}</span>
+                      </div>
+                    )
+                  })
+                })()}
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Notifications + Activity */}

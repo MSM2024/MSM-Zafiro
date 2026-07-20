@@ -9,12 +9,30 @@ import ZafiroSplashScreen from "@/components/zafiro/ZafiroSplashScreen"
 import ZafiroErrorBoundary from "@/components/ZafiroErrorBoundary"
 import ElianaChatWidget from "@/components/eliana3d/ElianaChatWidget"
 import ElianaFloating from "@/components/ElianaFloating"
+import InstallPrompt from "@/components/InstallPrompt"
 import { SyncStatusIndicator } from "@/components/SyncStatusIndicator"
 import { registerSyncHandler } from "@/lib/sync-engine"
 import { getOrders, updateOrderStatus, type Order } from "@/lib/marketplace"
 import { injectBuildInfo } from "@/lib/build-info"
 
 const SPLASH_SEEN_KEY = 'zafiro_splash_seen'
+const SW_REGISTERED_KEY = 'zafiro_sw_registered'
+
+function registerSW() {
+  if (typeof window === 'undefined' || localStorage.getItem(SW_REGISTERED_KEY)) return
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .then(() => {
+        try { localStorage.setItem(SW_REGISTERED_KEY, 'true') } catch {}
+      })
+      .catch(() => {})
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data?.type === 'CLEAR_CACHE') {
+        caches.keys().then(keys => keys.forEach(k => caches.delete(k)))
+      }
+    })
+  }
+}
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -23,6 +41,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [splashReady, setSplashReady] = useState(false)
 
   useEffect(() => {
+    registerSW()
     injectBuildInfo()
     const seen = sessionStorage.getItem(SPLASH_SEEN_KEY)
     if (!seen && pathname === '/') {
@@ -101,6 +120,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {!isHome && <Footer />}
         <ElianaFloating />
         <ElianaChatWidget />
+        <InstallPrompt />
         <SyncStatusIndicator />
       </ZafiroLockScreen>
     </ZafiroErrorBoundary>
