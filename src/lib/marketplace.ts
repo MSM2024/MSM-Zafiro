@@ -17,8 +17,24 @@ export interface Product {
   stock: number
   status: "active" | "inactive" | "out_of_stock"
   featured: boolean
+  storeId?: string
+  variants?: ProductVariant[]
   createdAt: string
   updatedAt: string
+}
+
+export interface ProductVariant {
+  name: string
+  options: string[]
+  price?: number
+  stock?: number
+}
+
+export interface ProductStoreInfo {
+  id: string
+  name: string
+  storeId?: string
+  storeName?: string
 }
 
 export interface CartItem {

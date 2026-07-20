@@ -7,7 +7,8 @@ import { usePageTitle } from "@/lib/usePageTitle"
 import { getSession } from "@/lib/auth"
 import { isOwnerEmail } from "@/lib/owner"
 import { getProducts, getOrders, updateProduct, updateOrderStatus, addProduct, type Product, type Order, type OrderStatus, type ProductCategory } from "@/lib/marketplace"
-import { ArrowLeft, ShoppingCart, Package, TrendingUp, DollarSign, AlertTriangle, Check, X, Eye, Edit3, Search, Filter, Star, BarChart3, Shield, Plus } from "lucide-react"
+import { getStoresList, getStore, updateStore, verifyStore, getStoreStats } from "@/lib/marketplace-stores"
+import { ArrowLeft, ShoppingCart, Package, TrendingUp, DollarSign, AlertTriangle, Check, X, Eye, Edit3, Search, Filter, Star, BarChart3, Shield, Plus, Store, UserCheck } from "lucide-react"
 
 const STATUS_OPTS: OrderStatus[] = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled", "refunded"]
 const STATUS_COLORS: Record<string, string> = {
@@ -123,6 +124,7 @@ export default function AdminMarketplacePage() {
         <nav className="flex gap-1 mb-6 overflow-x-auto pb-2">
           {[
             { id: "products", label: "Productos", icon: Package },
+            { id: "stores", label: "Comercios", icon: Store },
             { id: "orders", label: "Pedidos", icon: ShoppingCart },
             { id: "stats", label: "Estadísticas", icon: BarChart3 },
           ].map(t => (
@@ -273,6 +275,73 @@ export default function AdminMarketplacePage() {
                 </table>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ===== STORES ===== */}
+        {tab === "stores" && (
+          <div>
+            {(() => {
+              const stores = getStoresList()
+              const sStats = getStoreStats()
+              return (
+                <>
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-[#00D9FF]">{sStats.total}</p>
+                      <p className="text-[10px] text-slate-400">Total</p>
+                    </div>
+                    <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-emerald-400">{sStats.verified}</p>
+                      <p className="text-[10px] text-slate-400">Verificados</p>
+                    </div>
+                    <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-3 text-center">
+                      <p className="text-lg font-bold text-amber-400">{sStats.pending}</p>
+                      <p className="text-[10px] text-slate-400">Pendientes</p>
+                    </div>
+                  </div>
+                  {stores.length === 0 ? (
+                    <div className="text-center py-8 bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl">
+                      <Store className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+                      <p className="text-xs text-slate-500">No hay comercios registrados</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {stores.map(s => (
+                        <div key={s.id} className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00D9FF] to-blue-600 flex items-center justify-center text-sm font-bold">{s.name.charAt(0)}</div>
+                              <div>
+                                <p className="text-sm font-medium text-white">{s.name}</p>
+                                <p className="text-[10px] text-slate-400">{s.ownerName} · {s.category}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                                s.verificationStatus === 'verified' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10' :
+                                s.verificationStatus === 'pending' ? 'text-amber-400 border-amber-500/20 bg-amber-500/10' :
+                                'text-slate-400 border-slate-500/20 bg-slate-500/10'
+                              }`}>{s.verificationStatus}</span>
+                              <button onClick={() => { verifyStore(s.id, 'verified'); refresh() }}
+                                className="text-[10px] text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 px-2 py-1 rounded-lg transition-colors">
+                                <UserCheck className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-xs text-slate-400 line-clamp-1">{s.description}</p>
+                          <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-500">
+                            <span>{s.productCount} productos</span>
+                            <span>{s.orderCount} órdenes</span>
+                            <span>{s.rating > 0 ? `${s.rating} ⭐` : 'Sin rating'}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </div>
         )}
 
