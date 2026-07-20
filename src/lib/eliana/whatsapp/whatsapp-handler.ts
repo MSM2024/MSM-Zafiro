@@ -319,7 +319,7 @@ Canal: ${TELEGRAM_CHANNEL}`
     return { text: getTradingMessage(), intent, correlationId, filtered: false }
   }
 
-  const routed = routeResponse(inbound.text)
+  const routed = await routeResponse(inbound.text)
   if (routed.text) {
     trace('knowledge', 'routed', 'handled', `source: ${routed.provider}`)
     return {

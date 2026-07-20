@@ -2,6 +2,7 @@
 
 import type { Book, Chapter, Bookmark, ReadingNote, ReadingProgress, BookStatus } from './types'
 import { genId, now, lsGet, lsSet } from './helpers'
+import { addNotification } from "@/lib/notifications"
 
 const BOOKS_KEY = 'zafiro_biblioteca_libros'
 const CHAPTERS_KEY = 'zafiro_biblioteca_capitulos'
@@ -29,6 +30,18 @@ export function addBook(book: Book): Book {
   const books = getBooks()
   books.push(book)
   saveBooks(books)
+  if (book.status === "PUBLICADO" || book.status === "APROBADO") {
+    try {
+      addNotification({
+        title: "Nuevo libro en la biblioteca",
+        message: `"${book.title}" por ${book.authorName} — ${book.chapterCount} capítulos`,
+        type: "success",
+        pillar: "editorial",
+        read: false,
+        actionUrl: `/zafiro/biblioteca/${book.id}`,
+      })
+    } catch {}
+  }
   return book
 }
 
@@ -36,8 +49,22 @@ export function updateBook(bookId: string, updates: Partial<Book>): Book | undef
   const books = getBooks()
   const idx = books.findIndex(b => b.id === bookId)
   if (idx === -1) return undefined
+  const prevStatus = books[idx].status
   books[idx] = { ...books[idx], ...updates, updatedAt: now() }
   saveBooks(books)
+  const newStatus = books[idx].status
+  if ((newStatus === "PUBLICADO" || newStatus === "APROBADO") && prevStatus !== newStatus) {
+    try {
+      addNotification({
+        title: "Libro publicado en biblioteca",
+        message: `"${books[idx].title}" por ${books[idx].authorName} — ahora disponible`,
+        type: "success",
+        pillar: "editorial",
+        read: false,
+        actionUrl: `/zafiro/biblioteca/${bookId}`,
+      })
+    } catch {}
+  }
   return books[idx]
 }
 

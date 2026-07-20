@@ -33,11 +33,11 @@ export interface RoutedResponse {
   correlationId: string
 }
 
-export function routeResponse(
+export async function routeResponse(
   message: string,
   session?: { email?: string; name?: string },
   history?: Array<{ role: string; text: string }>
-): RoutedResponse {
+): Promise<RoutedResponse> {
   const correlationId = generateCorrelationId()
   const email = session?.email || 'anonymous'
   const isOwner = email === 'com8msm@gmail.com'
@@ -138,7 +138,7 @@ export function routeResponse(
     trace('knowledge', 'rag_query', 'found', `sources: ${ragResult.sources.length}`)
 
     if (availableProviders.length > 0) {
-      return synthesizeWithAI(message, ragResult.response, ragResult.sources, intent, history, session, correlationId)
+      return await synthesizeWithAI(message, ragResult.response, ragResult.sources, intent, history, session, correlationId)
     }
 
     const naturalResponse = synthesizeKnowledgeLocally(ragResult.response, message)
@@ -158,7 +158,7 @@ export function routeResponse(
     const userSummary = getUserSummary(email)
     const knowledgeContext = `Usuario: ${ctx.userName}\n${userSummary ? `Perfil:\n${userSummary}\n` : ''}${ctx.rulesContext ? `Reglas: ${ctx.rulesContext}\n` : ''}`
 
-    return synthesizeWithAI(message, '', [], intent, history, session, correlationId, knowledgeContext)
+    return await synthesizeWithAI(message, '', [], intent, history, session, correlationId, knowledgeContext)
   }
 
   // 9. Need clarification
@@ -192,7 +192,7 @@ export function routeResponse(
   return { text, intent, answerType: 'ANSWERED', sources: [], confidence: 'low', provider: 'local', model: 'no-knowledge', knowledgeUsed: false, correlationId }
 }
 
-function synthesizeWithAI(
+async function synthesizeWithAI(
   message: string,
   ragResponse: string,
   ragSources: string[],
@@ -201,7 +201,7 @@ function synthesizeWithAI(
   session: { email?: string; name?: string } | undefined,
   correlationId: string,
   extraContext?: string
-): RoutedResponse {
+): Promise<RoutedResponse> {
   const ctx = buildContext(session)
   const convHistory = buildConversationHistory(history || [])
   const userSummary = getUserSummary(session?.email || '')
@@ -212,13 +212,23 @@ function synthesizeWithAI(
 
   const systemPrompt = `${ctx.systemPrompt}\n\n${userSummary ? `Datos del usuario:\n${userSummary}` : ''}\n\n${knowledgeContext}\n\nInstrucciones:\n- Responde directamente la pregunta del usuario.\n- Usa la información proporcionada solo cuando sea pertinente.\n- Si no tienes información suficiente, dilo con claridad.\n- No menciones que tienes acceso a un contexto interno.\n- No muestres encabezados de documentos ni etiquetas técnicas.\n- Usa español por defecto, respeta el idioma del usuario.\n- Párrafos cortos, lenguaje claro.`
 
-  callAIWithFallback(message, convHistory, systemPrompt).then(result => {
-    if (result.text) {
-      const validated = validateResponse(result.text)
-      const cleanText = ensureNaturalLanguage(validateResponseForSecrets(validated.text))
-      recordAction('eliana', 'ai_response', message, cleanText.slice(0, 100), intent, true)
+  const aiResult = await callAIWithFallback(message, convHistory, systemPrompt)
+  if (aiResult.text) {
+    const validated = validateResponse(aiResult.text)
+    const cleanText = ensureNaturalLanguage(validateResponseForSecrets(validated.text))
+    recordAction('eliana', 'ai_response', message, cleanText.slice(0, 100), intent, true)
+    return {
+      text: cleanText,
+      intent,
+      answerType: 'ANSWERED',
+      sources: ragSources,
+      confidence: 'high',
+      provider: aiResult.provider || 'ai',
+      model: aiResult.model || 'provider',
+      knowledgeUsed: true,
+      correlationId,
     }
-  })
+  }
 
   const fallbackText = ragResponse
     ? synthesizeKnowledgeLocally(ragResponse, message)

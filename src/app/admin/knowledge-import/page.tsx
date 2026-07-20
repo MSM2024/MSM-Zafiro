@@ -5,8 +5,10 @@ import { importKnowledgeEntries, getKnowledgeBase, approveKnowledgeEntry, reject
 import { detectConflicts } from "@/lib/conflict-detector"
 import type { KnowledgeEntry, KnowledgeImportResult } from "@/config/knowledge-schema"
 import { MoveLeft, Check, X, Trash2, AlertTriangle, Upload, FileText, Search } from "lucide-react"
+import { usePageTitle } from "@/lib/usePageTitle"
 
 export default function KnowledgeImportPage() {
+  usePageTitle("Importar Conocimiento — Admin ZAFIRO")
   const [result, setResult] = useState<KnowledgeImportResult | null>(null)
   const [entries, setEntries] = useState<KnowledgeEntry[]>(getKnowledgeBase)
   const [tab, setTab] = useState<"import" | "manage" | "audit">("import")

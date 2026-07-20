@@ -247,6 +247,21 @@ export function markSealProgress(sealId: number, status: 'unread' | 'reading' | 
     progress.push(entry)
   }
   saveProgress(progress)
+
+  if (status === 'completed') {
+    try {
+      const seal = getSealByNumber(sealId)
+      const { addNotification } = require("@/lib/notifications")
+      addNotification({
+        title: `Sello #${sealId} completado`,
+        message: seal?.tema || `Sello #${sealId} — reflexión completada`,
+        type: "success",
+        pillar: "sellos",
+        read: false,
+        actionUrl: `/sellos/${sealId}`,
+      })
+    } catch {}
+  }
 }
 
 export function getFavorites(): number[] {

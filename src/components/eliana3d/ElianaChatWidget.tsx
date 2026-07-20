@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "motion/react"
-import { X, Send, Minus, Sparkles, MessageCircle, ChevronDown, Trash2, AlertTriangle } from "lucide-react"
+import { X, Send, Minus, Trash2, AlertTriangle } from "lucide-react"
 import ElianaPortrait from "./ElianaPortrait"
+import AIDisclosureBadge from "@/components/AIDisclosureBadge"
 
 interface Message {
   role: "user" | "assistant"
@@ -21,7 +22,6 @@ const STORAGE_HISTORY = "zafiro_eliana_chat_history"
 
 export default function ElianaChatWidget() {
   const [open, setOpen] = useState(false)
-  const [minimized, setMinimized] = useState(false)
   const [messages, setMessages] = useState<Message[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_HISTORY)
@@ -36,13 +36,20 @@ export default function ElianaChatWidget() {
   const [loading, setLoading] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [reduced, setReduced] = useState(false)
+  const closePanel = useCallback(() => {
+    setOpen(false)
+    window.dispatchEvent(new CustomEvent("eliana:chat-close"))
+  }, [])
   const inputRef = useRef<HTMLInputElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    const handler = () => setOpen(true)
+    const handler = () => {
+      setOpen(true)
+      window.dispatchEvent(new CustomEvent("eliana:chat-state", { detail: { open: true } }))
+    }
     window.addEventListener("eliana:open", handler)
     return () => window.removeEventListener("eliana:open", handler)
   }, [])
@@ -64,7 +71,7 @@ export default function ElianaChatWidget() {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (showClearConfirm) { setShowClearConfirm(false); return }
-        setMinimized(true)
+        closePanel()
       }
     }
     window.addEventListener("keydown", handleKey)
@@ -117,21 +124,8 @@ export default function ElianaChatWidget() {
 
   return (
     <>
-      {!open && (
-        <motion.button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-4 z-[9999] w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00D9FF] to-blue-600 shadow-lg shadow-[#00D9FF]/20 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Abrir ELIANA chat"
-        >
-          <MessageCircle className="w-6 h-6 text-white" />
-          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#050816]" />
-        </motion.button>
-      )}
-
       <AnimatePresence>
-        {open && !minimized && (
+        {open && (
           <motion.div
             ref={panelRef}
             role="dialog"
@@ -151,6 +145,7 @@ export default function ElianaChatWidget() {
                 <p className="text-xs font-bold text-white">ELIANA</p>
                 <p className="text-[9px] text-slate-500">En l&iacute;nea</p>
               </div>
+              <AIDisclosureBadge />
               <button
                 onClick={() => setShowClearConfirm(true)}
                 className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-red-400 transition-all"
@@ -159,14 +154,14 @@ export default function ElianaChatWidget() {
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
               <button
-                onClick={() => setMinimized(true)}
+                onClick={closePanel}
                 className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-white transition-all"
                 aria-label="Minimizar chat"
               >
                 <Minus className="w-4 h-4" />
               </button>
               <button
-                onClick={() => setOpen(false)}
+                onClick={closePanel}
                 className="p-1 rounded-lg hover:bg-slate-800/50 text-slate-500 hover:text-white transition-all"
                 aria-label="Cerrar chat"
               >
@@ -268,23 +263,6 @@ export default function ElianaChatWidget() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {minimized && (
-          <motion.button
-            className="fixed bottom-6 right-4 z-[9999] flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 backdrop-blur-xl border border-slate-800/60 shadow-lg"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            whileHover={{ scale: 1.02 }}
-            onClick={() => setMinimized(false)}
-            aria-label="Abrir chat de ELIANA"
-          >
-            <ElianaPortrait size={20} animated={false} showAura={false} reduced />
-            <span className="text-xs text-white font-bold">ELIANA</span>
-            <ChevronDown className="w-3 h-3 text-slate-500" />
-          </motion.button>
-        )}
-      </AnimatePresence>
     </>
   )
 }

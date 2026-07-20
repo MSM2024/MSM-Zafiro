@@ -53,19 +53,17 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-        <meta name="theme-color" content="#050816" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+        <meta name="theme-color" content="#000000" />
         <meta name="color-scheme" content="dark" />
+        <meta httpEquiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
         <link rel="icon" type="image/svg+xml" href="/icons/icon-192.svg" />
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
         <link rel="manifest" href="/manifest.webmanifest" />
-        <script dangerouslySetInnerHTML={{ __html: `
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' });
-          }
-        `}} />
       </head>
-      <body className="bg-[#050816] text-white antialiased flex flex-col min-h-screen">
+      <body className="bg-[#000000] text-white antialiased flex flex-col min-h-dvh">
         <ClientLayout>
           <AuthBridgeInit />
           {children}

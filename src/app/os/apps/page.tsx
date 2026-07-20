@@ -8,7 +8,7 @@ const ALL_APPS = [
   { name: "Mi Perfil", icon: Diamond, href: "/zafiro/perfil", color: "from-[#00D9FF] to-blue-600", desc: "Gestiona tu identidad y membresía", offline: true },
   { name: "ELIANA", icon: MessageCircle, href: "/eliana", color: "from-violet-500 to-purple-600", desc: "Asistente inteligente del ecosistema", offline: true },
   { name: "Marketplace", icon: ShoppingBag, href: "https://msmmystore.com", color: "from-emerald-500 to-teal-600", desc: "Compra y venta en MSM", offline: false, external: true },
-  { name: "Editorial", icon: BookOpen, href: "/ecosystem", color: "from-amber-500 to-orange-600", desc: "Artículos, libros y devocionales", offline: false },
+  { name: "Editorial", icon: BookOpen, href: "/editorial", color: "from-amber-500 to-orange-600", desc: "Artículos, libros y devocionales", offline: false },
   { name: "Economía", icon: DollarSign, href: "/economia", color: "from-green-500 to-emerald-600", desc: "Caja, inventario y operaciones", offline: false },
   { name: "Universo", icon: Globe, href: "/universo", color: "from-cyan-500 to-blue-600", desc: "Explora la comunidad MSM", offline: true },
   { name: "Familia", icon: Users, href: "/familia", color: "from-pink-500 to-rose-600", desc: "Árbol genealógico y encuentros", offline: true },

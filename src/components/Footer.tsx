@@ -39,6 +39,20 @@ export default function Footer() {
             </div>
           </div>
           <div>
+            <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-3">Imperio MSM</h4>
+            <div className="space-y-1.5">
+              <Link href="/imperio" className="block text-[11px] text-amber-400 hover:text-amber-300 transition-colors font-bold">👑 Centro de Mando</Link>
+              <Link href="/marketplace" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">🏪 Marketplace</Link>
+              <Link href="/editorial" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">📖 MSM Editorial</Link>
+              <Link href="/economia" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">💰 MSM Econom&iacute;a</Link>
+              <Link href="/trading" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">📈 Trading 1%</Link>
+              <Link href="/zafiro/biblioteca" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">📚 Biblioteca</Link>
+              <Link href="/admin/ledger" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">📊 Ledger Maestro</Link>
+              <Link href="/admin/tasas" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">💱 Tasas Cuba</Link>
+              <Link href="/admin/bpa" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">🏦 BPA Mirror</Link>
+            </div>
+          </div>
+          <div>
             <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-3">Comunidad</h4>
             <div className="space-y-1.5">
               <Link href="/help" className="block text-[11px] text-slate-500 hover:text-[#00D9FF] transition-colors">Centro de Ayuda</Link>

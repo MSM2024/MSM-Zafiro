@@ -2,14 +2,16 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
-import ZafiroHeroIntro from "@/components/zafiro/ZafiroHeroIntro"
+import { usePageTitle } from "@/lib/usePageTitle"
+import HeroZafiro3D from "@/components/HeroZafiro3D"
 import ZafiroUniverse from "@/components/ZafiroUniverse"
 
 export default function Home() {
+  usePageTitle("ZAFIRO — Inicio")
   const [showIntro, setShowIntro] = useState(true)
 
   return (
-    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#050816' }}>
+    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#000000' }}>
       <AnimatePresence mode="wait">
         {showIntro && (
           <motion.div
@@ -18,10 +20,7 @@ export default function Home() {
             exit={{ opacity: 0, scale: 1.03, filter: 'blur(3px)' }}
             transition={{ duration: 0.7, ease: 'easeInOut' }}
           >
-            <ZafiroHeroIntro
-              onEnter={() => setShowIntro(false)}
-              onExplore={() => setShowIntro(false)}
-            />
+            <HeroZafiro3D onEnter={() => setShowIntro(false)} />
           </motion.div>
         )}
       </AnimatePresence>

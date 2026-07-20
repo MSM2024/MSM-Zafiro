@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback } from "react"
 import { usePathname } from "next/navigation"
 import Footer from "@/components/Footer"
 import NetworkBackground from "@/components/ui/NetworkBackground"
-import PresenciaInstantanea from "@/components/PresenciaInstantanea"
 import ZafiroLockScreen from "@/components/ZafiroLockScreen"
-import ElianaSplashScreen from "@/components/eliana3d/ElianaSplashScreen"
+import ZafiroSplashScreen from "@/components/zafiro/ZafiroSplashScreen"
+import ZafiroErrorBoundary from "@/components/ZafiroErrorBoundary"
 import ElianaChatWidget from "@/components/eliana3d/ElianaChatWidget"
-import HoloCompanion from "@/components/HoloCompanion"
+import ElianaFloating from "@/components/ElianaFloating"
+import { injectBuildInfo } from "@/lib/build-info"
 
 const SPLASH_SEEN_KEY = 'zafiro_splash_seen'
 
@@ -19,6 +20,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [splashReady, setSplashReady] = useState(false)
 
   useEffect(() => {
+    injectBuildInfo()
     const seen = sessionStorage.getItem(SPLASH_SEEN_KEY)
     if (!seen && pathname === '/') {
       setShowSplash(true)
@@ -27,30 +29,42 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [pathname])
 
   const handleSplashComplete = useCallback(() => {
-    sessionStorage.setItem(SPLASH_SEEN_KEY, 'true')
+    try {
+      sessionStorage.setItem(SPLASH_SEEN_KEY, 'true')
+    } catch { /* storage unavailable */ }
     setShowSplash(false)
   }, [])
 
+  // Splash overlay instead of full unmount
   if (showSplash) {
-    return <ElianaSplashScreen onComplete={handleSplashComplete} />
+    return <ZafiroSplashScreen onComplete={handleSplashComplete} />
   }
 
   if (!splashReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#050816' }} />
+      <div className="min-h-dvh flex items-center justify-center" style={{ backgroundColor: '#000000' }}>
+        <svg viewBox="0 0 100 120" className="w-10 h-12 animate-pulse" style={{ filter: 'drop-shadow(0 0 20px rgba(0,217,255,0.2))' }}>
+          <polygon points="50,2 26,26 50,36" fill="#1a4b8c" opacity="0.9"/>
+          <polygon points="50,2 74,26 50,36" fill="#1e3a5f" opacity="0.85"/>
+          <polygon points="12,44 32,41 50,44 68,41 88,44" fill="#6366f1" opacity="0.8"/>
+          <polygon points="12,48 32,49 50,108 50,118" fill="#2563eb" opacity="0.8"/>
+          <polygon points="88,48 68,49 50,108 50,118" fill="#7c3aed" opacity="0.75"/>
+        </svg>
+      </div>
     )
   }
 
   return (
-    <ZafiroLockScreen>
-      <NetworkBackground />
-      <div className="relative z-10">
-        {children}
-      </div>
-      {!isHome && <Footer />}
-      <PresenciaInstantanea />
-      <ElianaChatWidget />
-      <HoloCompanion />
-    </ZafiroLockScreen>
+    <ZafiroErrorBoundary>
+      <ZafiroLockScreen>
+        <NetworkBackground />
+        <div className="relative z-10">
+          {children}
+        </div>
+        {!isHome && <Footer />}
+        <ElianaFloating />
+        <ElianaChatWidget />
+      </ZafiroLockScreen>
+    </ZafiroErrorBoundary>
   )
 }

@@ -1,81 +1,125 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { motion } from 'motion/react'
 import { usePageTitle } from '@/lib/usePageTitle'
-import { getIdentityStats } from '@/lib/identity'
-import { getAuditLog, getRecentSecurityEvents, getSecurityAlerts } from '@/lib/angel-security'
+import { getProfiles, getIdentityStats } from '@/lib/identity'
+import { getActiveProducts, getOrders } from '@/lib/marketplace'
+import { getLedgerEntries, getNodeBalance, getDailyCloses } from '@/lib/ledger'
+import { getDevocionales, getWriters, getEditorialStats } from '@/lib/editorial'
+import { getBooks } from '@/lib/biblioteca/storage'
+import { getBalance } from '@/lib/bpa-mirror'
+import { getPublishedSeals } from '@/lib/seals-data'
 import {
-  Globe, Shield, Users, AlertTriangle,
-  CheckCircle, XCircle, Server, DollarSign,
-  LucideIcon, ArrowUpRight, ArrowDownRight, RefreshCw, FileText,
+  Globe, Shield, Users, AlertTriangle, CheckCircle, XCircle,
+  ShoppingCart, BookOpen, DollarSign, Crown, BarChart3, Gem,
+  TrendingUp, Sparkles, Package, Wallet, Activity, ArrowUpRight, Bell, ExternalLink,
+  Stamp, Download, HeartHandshake,
 } from 'lucide-react'
+import { getAllNotifications, PILLAR_LABELS, getPillarColor } from '@/lib/notifications'
+import type { AppNotification } from '@/lib/notifications'
+import { ActivityTimeline } from '@/components/ActivityTimeline'
 
-function StatCard({ icon: Icon, label, value, sub, color, trend }: {
-  icon: LucideIcon; label: string; value: string; sub?: string; color: string; trend?: { up: boolean; pct: string }
-}) {
-  return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
-      <div className="flex items-start justify-between">
-        <div className={`p-2 rounded-lg bg-opacity-10 ${color} bg-current`}>
-          <Icon className={`w-5 h-5 ${color}`} />
-        </div>
-        {trend && (
-          <span className={`flex items-center gap-0.5 text-xs ${trend.up ? 'text-emerald-400' : 'text-red-400'}`}>
-            {trend.up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-            {trend.pct}
-          </span>
-        )}
-      </div>
-      <p className="text-2xl font-bold text-white mt-3">{value}</p>
-      <p className="text-xs text-slate-400 mt-0.5">{label}</p>
-      {sub && <p className="text-[10px] text-slate-500 mt-1">{sub}</p>}
-    </motion.div>
-  )
+const PILLARS = [
+  { key: "zafiro", label: "ZAFIRO Identity", icon: Gem, href: "/admin", color: "from-[#00D9FF] to-blue-600" },
+  { key: "marketplace", label: "Marketplace", icon: ShoppingCart, href: "/admin/marketplace", color: "from-amber-400 to-amber-600" },
+  { key: "editorial", label: "Editorial", icon: BookOpen, href: "/admin/editorial", color: "from-indigo-400 to-indigo-600" },
+  { key: "economy", label: "Economía", icon: DollarSign, href: "/admin/ledger", color: "from-emerald-400 to-emerald-600" },
+  { key: "sellos", label: "Sellos 369", icon: Stamp, href: "/admin/sellos", color: "from-purple-400 to-purple-600" },
+]
+
+const HEALTH_KEY = "zafiro_health_snapshot"
+
+function getHealthChecks(stats: ReturnType<typeof computeStats>) {
+  return [
+    { label: "Identidad", ok: stats.usuarios > 0, detail: `${stats.usuarios} usuarios` },
+    { label: "Marketplace", ok: stats.productos > 0, detail: `${stats.productos} productos` },
+    { label: "Editorial", ok: stats.libros > 0, detail: `${stats.libros} libros` },
+    { label: "Economía", ok: stats.ledgerEntries > 0, detail: `${stats.ledgerEntries} movimientos` },
+    { label: "Sellos", ok: stats.sellos > 0, detail: `${stats.sellos} sellos` },
+    { label: "KYC", ok: stats.kycAprobados > 0, detail: `${stats.kycAprobados} aprobados` },
+    { label: "Ventas", ok: stats.ventas > 0, detail: `$${stats.ventas.toFixed(0)}` },
+    { label: "Ledger", ok: stats.ledgerPending === 0, detail: `${stats.ledgerPending} pendientes` },
+  ]
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    healthy: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    critical: 'bg-red-500/10 text-red-400 border-red-500/20',
-    active: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    inactive: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
-    error: 'bg-red-500/10 text-red-400 border-red-500/20',
-    pending: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+function computeStats() {
+  const idStats = getIdentityStats()
+  const profiles = getProfiles()
+  const products = getActiveProducts()
+  const orders = getOrders()
+  const entries = getLedgerEntries()
+  const bpa = getBalance()
+  const books = getBooks().filter(b => b.status === "PUBLICADO")
+  const devs = getDevocionales()
+  const writers = getWriters()
+  const seals = getPublishedSeals()
+  const sales = orders.reduce((s, o) => s + o.total, 0)
+  return {
+    usuarios: profiles.length,
+    vip: idStats?.vip || 0,
+    kycAprobados: idStats?.kycApproved || 0,
+    productos: products.length,
+    pedidos: orders.length,
+    ventas: sales,
+    ledgerEntries: entries.length,
+    ledgerPending: entries.filter(e => e.status === "PENDIENTE").length,
+    bpaCup: bpa.cup,
+    libros: books.length,
+    devocionales: devs.length,
+    escritores: writers.length,
+    sellos: seals.length,
   }
-  const c = colors[status.toLowerCase()] || 'bg-slate-500/10 text-slate-400'
-  return <span className={`text-[10px] px-2 py-0.5 rounded-full border ${c}`}>{status}</span>
+}
+
+function diffTrend(current: number, prev: number): { icon: string; color: string; text: string } {
+  if (prev === 0) return { icon: "—", color: "text-slate-500", text: "nuevo" }
+  const pct = ((current - prev) / prev * 100).toFixed(1)
+  if (current > prev) return { icon: "▲", color: "text-emerald-400", text: `+${pct}%` }
+  if (current < prev) return { icon: "▼", color: "text-red-400", text: `${pct}%` }
+  return { icon: "—", color: "text-slate-500", text: "0%" }
 }
 
 export default function Dashboard360Page() {
   usePageTitle('Dashboard 360 — ZAFIRO')
 
-  const [stats] = useState(() => getIdentityStats())
-  const [auditEntries] = useState(() => getAuditLog({ limit: 20 }))
-  const [securityEvents] = useState(() => getRecentSecurityEvents(20))
-  const [alerts] = useState(() => getSecurityAlerts())
+  const [notifications, setNotifications] = useState<AppNotification[]>([])
+  const [stats, setStats] = useState(computeStats())
+  const [prevStats, setPrevStats] = useState<Record<string, number> | null>(null)
+  const [exporting, setExporting] = useState(false)
 
-  const deployments = [
-    { name: 'ZAFIRO OS', url: 'zafiro.msmmystore.com', status: 'healthy', uptime: '99.9%', build: 'v1.0.11' },
-    { name: 'MSM My Store', url: 'msm-five.vercel.app', status: 'active', uptime: '99.8%', build: 'v1.0.0' },
-    { name: 'MSM LegacyBook', url: 'msmlegacybook.com', status: 'pending', uptime: '—', build: '—' },
-  ]
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HEALTH_KEY)
+      if (raw) setPrevStats(JSON.parse(raw))
+    } catch { /* */ }
+    const snap: Record<string, number> = {}
+    const s = computeStats()
+    for (const [k, v] of Object.entries(s)) snap[k] = v
+    localStorage.setItem(HEALTH_KEY, JSON.stringify(snap))
+    setStats(s)
+    setNotifications(getAllNotifications().slice(0, 6))
+  }, [])
 
-  const domains = [
-    { name: 'msmmystore.com', provider: 'Cloudflare', status: 'active', ssl: true },
-    { name: 'msmlegacybook.com', provider: 'Cloudflare', status: 'active', ssl: true },
-    { name: 'zafiro.msmmystore.com', provider: 'Cloudflare → Vercel', status: 'active', ssl: true },
-    { name: 'market.msmmystore.com', provider: 'Vercel (DNS pendiente)', status: 'pending', ssl: false },
-  ]
+  const health = getHealthChecks(stats)
+  const healthyCount = health.filter(h => h.ok).length
+  const trend = (key: keyof typeof stats) => prevStats ? diffTrend(stats[key], prevStats[key] ?? 0) : null
 
-  const securityMetrics = [
-    { label: 'MFA Activo', value: '1 usuario' },
-    { label: 'Eventos de seguridad (24h)', value: String(securityEvents.length) },
-    { label: 'Alertas críticas', value: String(alerts.filter(a => a.severity === 'CRITICAL').length) },
-    { label: 'Rate limit hits', value: String(securityEvents.filter(e => e.type === 'RATE_LIMIT_HIT').length) },
-  ]
+  const handleExport = () => {
+    setExporting(true)
+    const rows = [
+      ["Metric", "Value", "Health"],
+      ...health.map(h => [h.label, h.detail, h.ok ? "OK" : "ALERT"]),
+    ]
+    const csv = rows.map(r => r.join(",")).join("\n")
+    const blob = new Blob([csv], { type: "text/csv" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url; a.download = `dashboard-360-${new Date().toISOString().slice(0, 10)}.csv`; a.click()
+    URL.revokeObjectURL(url)
+    setTimeout(() => setExporting(false), 1000)
+  }
 
   return (
     <div className="min-h-screen bg-[#050816] text-white p-4 md:p-6">
@@ -85,135 +129,173 @@ export default function Dashboard360Page() {
             <h1 className="text-2xl font-bold bg-gradient-to-r from-[#00D9FF] to-purple-400 bg-clip-text text-transparent">
               Dashboard 360
             </h1>
-            <p className="text-sm text-slate-400 mt-1">Don Miguel — Estado completo del ecosistema</p>
+            <p className="text-sm text-slate-400 mt-1">Imperio MSM — Los 5 Pilares en Tiempo Real</p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <RefreshCw className="w-3 h-3" />
-            <span>Auto-actualizable</span>
+          <button onClick={handleExport} disabled={exporting}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] bg-slate-800/50 border border-slate-700/50 hover:border-[#00D9FF]/30 text-slate-400 hover:text-white transition-all cursor-pointer">
+            <Download className="w-3 h-3" /> {exporting ? "Exportando..." : "Exportar CSV"}
+          </button>
+        </div>
+
+        {/* 5 Pillar Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {PILLARS.map(p => {
+            const Icon = p.icon
+            const vals: Record<string, { v: string; sub: string }> = {
+              zafiro: { v: String(stats.usuarios), sub: `${stats.vip} VIP · ${stats.kycAprobados} KYC` },
+              marketplace: { v: String(stats.productos), sub: `${stats.pedidos} pedidos · $${stats.ventas.toFixed(0)}` },
+              editorial: { v: String(stats.libros), sub: `${stats.devocionales} devs · ${stats.escritores} escritores` },
+              economy: { v: String(stats.ledgerEntries), sub: `${stats.ledgerPending} pend. · BPA $${stats.bpaCup.toLocaleString()}` },
+              sellos: { v: String(stats.sellos), sub: "sellos publicados" },
+            }
+            const v = vals[p.key]
+            return (
+              <Link key={p.key} href={p.href}
+                className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/60 hover:border-amber-500/20 transition-all group">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${p.color} flex items-center justify-center`}>
+                    <Icon className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-xs font-bold text-white group-hover:text-amber-400 transition-colors">{p.label}</span>
+                </div>
+                <p className="text-xl font-black text-white">{v.v}</p>
+                <p className="text-[9px] text-slate-500">{v.sub}</p>
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Health Monitor */}
+        <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800/60">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <HeartHandshake className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-sm font-bold text-white">Health Monitor</h2>
+            </div>
+            <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full ${
+              healthyCount === health.length ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"
+            }`}>
+              {healthyCount}/{health.length} saludables
+            </span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+            {health.map(h => (
+              <div key={h.label} className={`p-2 rounded-lg text-center border ${
+                h.ok ? "bg-emerald-500/5 border-emerald-500/20" : "bg-red-500/5 border-red-500/20"
+              }`}>
+                {h.ok
+                  ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mx-auto mb-0.5" />
+                  : <XCircle className="w-3.5 h-3.5 text-red-400 mx-auto mb-0.5" />
+                }
+                <p className="text-[9px] font-medium text-white">{h.label}</p>
+                <p className="text-[7px] text-slate-500 truncate">{h.detail}</p>
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Cross-pillar metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard icon={Server} label="Deployments" value={String(deployments.length)} color="text-[#00D9FF]"
-            sub={`${deployments.filter(d => d.status === 'healthy' || d.status === 'active').length} activos`} />
-          <StatCard icon={Globe} label="Dominios" value={String(domains.length)} color="text-emerald-400"
-            sub={`${domains.filter(d => d.status === 'active').length} resuelven`} />
-          <StatCard icon={Shield} label="Seguridad" value={String(securityMetrics[1].value)} color="text-amber-400"
-            sub={`${securityMetrics[2].value} críticas`}
-            trend={{ up: false, pct: '—' }} />
-          <StatCard icon={Users} label="Usuarios" value={String(stats?.totalUsers || 0)} color="text-purple-400"
-            sub={`${stats?.vip || 0} VIP`} />
+          {[
+            { label: "Usuarios", key: "usuarios" as const, icon: Users, color: "text-[#00D9FF]" },
+            { label: "Pedidos", key: "pedidos" as const, icon: Package, color: "text-amber-400" },
+            { label: "Ledger", key: "ledgerEntries" as const, icon: BarChart3, color: "text-emerald-400" },
+            { label: "Sellos", key: "sellos" as const, icon: Stamp, color: "text-purple-400" },
+            { label: "Ventas", key: "ventas" as const, icon: Wallet, color: "text-emerald-400" },
+            { label: "BPA CUP", key: "bpaCup" as const, icon: DollarSign, color: "text-blue-400" },
+            { label: "Devocionales", key: "devocionales" as const, icon: Sparkles, color: "text-amber-400" },
+            { label: "Escritores", key: "escritores" as const, icon: Users, color: "text-purple-400" },
+          ].map((s, i) => {
+            const Icon = s.icon
+            const t = trend(s.key)
+            return (
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.02 }}
+                className="p-3 rounded-xl bg-slate-900/50 border border-slate-800/60 text-center relative">
+                <Icon className={`w-4 h-4 ${s.color} mx-auto mb-1`} />
+                <p className="text-base font-black text-white">{stats[s.key]?.toLocaleString?.() ?? stats[s.key]}</p>
+                <p className="text-[8px] text-slate-500">{s.label}</p>
+                {t && <span className={`absolute top-1 right-1.5 text-[7px] font-mono ${t.color}`}>{t.icon}{t.text}</span>}
+              </motion.div>
+            )
+          })}
         </div>
 
+        {/* Notifications + Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <Server className="w-4 h-4 text-[#00D9FF]" /> Estado de Deployments
-            </h2>
-            <div className="space-y-3">
-              {deployments.map(d => (
-                <div key={d.name} className="flex items-center justify-between py-2 border-b border-[#1A1B3A] last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-white">{d.name}</p>
-                    <p className="text-xs text-slate-400">{d.url}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-slate-500">{d.build} · {d.uptime}</span>
-                    <StatusBadge status={d.status} />
-                  </div>
-                </div>
-              ))}
+            className="bg-slate-900/50 border border-slate-800/60 rounded-xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                <Bell className="w-4 h-4 text-[#00D9FF]" /> Notificaciones del Imperio
+              </h2>
+              <Link href="/os/notifications" className="text-[9px] text-[#00D9FF] hover:underline">Ver todas</Link>
             </div>
+            {notifications.length === 0 ? (
+              <div className="space-y-2 text-[10px] text-slate-500">
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />{stats.pedidos} pedidos creados en el Marketplace</p>
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" />{stats.ledgerEntries} movimientos en el Ledger Maestro</p>
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#00D9FF]" />{stats.usuarios} perfiles registrados en ZAFIRO</p>
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-purple-400" />{stats.libros} libros publicados en MSM Editorial</p>
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />{stats.devocionales} devocionales escritos</p>
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />{stats.escritores} escritores en el Imperio</p>
+                <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-pink-400" />{stats.sellos} sellos publicados</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {notifications.map(n => {
+                  const colorClass = getPillarColor(n.pillar)
+                  return (
+                    <Link key={n.id} href={n.actionUrl || "#"}
+                      className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-800/40 transition-all group">
+                      <span className={`w-1.5 h-1.5 rounded-full mt-1 shrink-0 ${n.read ? 'bg-slate-600' : 'bg-[#00D9FF]'}`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`text-[7px] font-mono px-1 py-0.5 rounded ${colorClass}`}>
+                            {PILLAR_LABELS[n.pillar] || n.pillar}
+                          </span>
+                          <p className={`text-[10px] ${n.read ? 'text-slate-500' : 'text-white font-medium'}`}>{n.title}</p>
+                        </div>
+                        <p className="text-[9px] text-slate-500 truncate">{n.message}</p>
+                      </div>
+                      <ExternalLink className="w-3 h-3 text-slate-600 opacity-0 group-hover:opacity-100 transition-all" />
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
+            <Link href="/imperio" className="mt-4 flex items-center gap-1.5 text-[10px] text-amber-400 hover:underline">
+              <ArrowUpRight className="w-3 h-3" /> Centro de Mando Completo
+            </Link>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <Globe className="w-4 h-4 text-emerald-400" /> Dominios
-            </h2>
-            <div className="space-y-3">
-              {domains.map(d => (
-                <div key={d.name} className="flex items-center justify-between py-2 border-b border-[#1A1B3A] last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-white">{d.name}</p>
-                    <p className="text-xs text-slate-400">{d.provider}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {d.ssl ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-red-400" />}
-                    <StatusBadge status={d.status} />
-                  </div>
-                </div>
-              ))}
-            </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <ActivityTimeline max={10} />
+            <Link href="/actividad" className="mt-2 flex items-center justify-center gap-1 text-[9px] text-slate-500 hover:text-[#00D9FF] transition-colors">
+              <ExternalLink className="w-3 h-3" /> Ver toda la actividad
+            </Link>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="lg:col-span-2 bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-amber-400" /> Auditoría Reciente
-            </h2>
-            <div className="space-y-2">
-              {auditEntries.slice(0, 10).map(e => (
-                <div key={e.id} className="flex items-center justify-between py-1.5 border-b border-[#1A1B3A]/50 last:border-0 text-xs">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${e.success ? 'bg-emerald-400' : 'bg-red-400'}`} />
-                    <span className="text-slate-300 truncate">{e.action}</span>
-                  </div>
-                  <span className="text-slate-500 flex-shrink-0 ml-2">{new Date(e.timestamp).toLocaleTimeString()}</span>
+        {/* Quick Links */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {[
+            { label: "Ir al Marketplace", href: "/marketplace", icon: ShoppingCart, color: "from-amber-400 to-amber-600" },
+            { label: "Panel Económico", href: "/economia", icon: DollarSign, color: "from-emerald-400 to-emerald-600" },
+            { label: "Portal Editorial", href: "/editorial", icon: BookOpen, color: "from-indigo-400 to-indigo-600" },
+            { label: "Sellos 369", href: "/sellos", icon: Stamp, color: "from-purple-400 to-purple-600" },
+            { label: "Centro de Mando", href: "/imperio", icon: Crown, color: "from-amber-400 to-amber-600" },
+          ].map((q, i) => {
+            const Icon = q.icon
+            return (
+              <Link key={i} href={q.href}
+                className="flex items-center gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-800/60 hover:border-amber-500/20 transition-all group">
+                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${q.color} flex items-center justify-center`}>
+                  <Icon className="w-4 h-4 text-white" />
                 </div>
-              ))}
-              {auditEntries.length === 0 && <p className="text-xs text-slate-500">Sin eventos de auditoría</p>}
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-400" /> Alertas de Seguridad
-            </h2>
-            <div className="space-y-2">
-              {alerts.slice(0, 8).map(a => (
-                <div key={a.id} className="flex items-start gap-2 py-1.5 border-b border-[#1A1B3A]/50 last:border-0">
-                  <Shield className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${a.severity === 'CRITICAL' ? 'text-red-400' : 'text-amber-400'}`} />
-                  <div className="min-w-0">
-                    <p className="text-xs text-slate-300 truncate">{a.type}</p>
-                    <p className="text-[10px] text-slate-500">{new Date(a.timestamp).toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-              {alerts.length === 0 && <p className="text-xs text-slate-500">Sin alertas activas</p>}
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-1">Villa Esperanza</p>
-            <p className="text-lg font-bold text-[#00D9FF]">$0</p>
-            <p className="text-[10px] text-slate-500">de $5,000,000 meta</p>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-1">KYC Aprobados</p>
-            <p className="text-lg font-bold text-emerald-400">{stats?.kycApproved || 0}</p>
-            <p className="text-[10px] text-slate-500">{stats?.kycPending || 0} pendientes</p>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-1">Operaciones</p>
-            <p className="text-lg font-bold text-amber-400">—</p>
-            <p className="text-[10px] text-slate-500">Por implementar</p>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-1">ELIANA</p>
-            <p className="text-lg font-bold text-purple-400">ACTIVA</p>
-            <p className="text-[10px] text-slate-500">38 docs de conocimiento</p>
-          </motion.div>
+                <span className="text-[10px] font-bold text-white group-hover:text-amber-400 transition-colors">{q.label}</span>
+              </Link>
+            )
+          })}
         </div>
       </div>
     </div>

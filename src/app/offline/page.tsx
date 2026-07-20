@@ -1,6 +1,9 @@
 'use client'
 
+import { usePageTitle } from "@/lib/usePageTitle"
+
 export default function OfflinePage() {
+  usePageTitle("Sin Conexión — ZAFIRO")
   return (
     <div className="min-h-screen bg-[#050816] text-white flex flex-col items-center justify-center px-4">
       <div className="w-16 h-16 rounded-full border-2 border-[#00D9FF] flex items-center justify-center mb-6">

@@ -6,7 +6,7 @@ import {
   Sparkles, Gem, Sun, Moon, Wifi, Battery, Search, Flame, MessageSquare, Users, Award,
   Plus, Send, X, Eye, MessageCircle, Signal, Globe, User, Heart,
   CheckCircle, BookOpen, CreditCard, Sliders, Activity,
-  Home as HomeIcon, FlaskConical, ScrollText, Settings
+  Home as HomeIcon, FlaskConical, ScrollText, Settings, Crown
 } from "lucide-react"
 import Link from "next/link"
 
@@ -36,7 +36,7 @@ import SponsorDetailModal from "@/components/SponsorDetailModal"
 import SponsorAnalyticsChart from "@/components/SponsorAnalyticsChart"
 import BottomNav from "@/components/BottomNav"
 import { getSession } from "@/lib/auth"
-import { openElianaChat } from "@/components/ElianaFloatingButton"
+import { openElianaChat } from "@/components/ElianaFloating"
 
 export default function ZafiroUniverse() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -375,6 +375,7 @@ export default function ZafiroUniverse() {
             { id: "Comunidades", label: "Círculos", icon: Users },
             { id: "Gemología", label: "Gemología", icon: Gem },
             { id: "Sponsors", label: "Sponsors", icon: Award },
+            { id: "Imperio", label: "Imperio", icon: Crown, href: "/imperio" },
             { id: "Universo", label: "Universo", icon: Activity, href: "/universo" },
             { id: "Perfil", label: "Mi Perfil", icon: User },
           ].map(item => {

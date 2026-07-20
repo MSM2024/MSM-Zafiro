@@ -153,10 +153,114 @@ export default function SettingsPage() {
                 </div>
               </div>
             )}
-            {(activeSection === "idioma" || activeSection === "seguridad" || activeSection === "accesibilidad" || activeSection === "audio") && (
-              <div className="space-y-4">
-                <h2 className="text-lg font-bold">{sections.find(s => s.id === activeSection)?.label}</h2>
-                <p className="text-xs text-slate-400">Configuración disponible próximamente.</p>
+            {activeSection === "idioma" && (
+              <div className="space-y-5">
+                <h2 className="text-lg font-bold">Idioma y Región</h2>
+                <div>
+                  <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Idioma</label>
+                  <select className="w-full mt-1 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-[#00D9FF]">
+                    <option value="es">Español (ES)</option>
+                    <option value="en">English (US)</option>
+                    <option value="pt">Português (BR)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Zona Horaria</label>
+                  <select className="w-full mt-1 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-[#00D9FF]">
+                    <option value="America/Havana">La Habana (GMT-4)</option>
+                    <option value="America/New_York">Nueva York (GMT-4)</option>
+                    <option value="America/Miami">Miami (GMT-4)</option>
+                    <option value="Europe/Madrid">Madrid (GMT+2)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Moneda</label>
+                  <select className="w-full mt-1 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-[#00D9FF]">
+                    <option value="USD">USD ($)</option>
+                    <option value="CUP">CUP (₱)</option>
+                    <option value="EUR">EUR (€)</option>
+                  </select>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Formato 24h</p><p className="text-xs text-slate-400">Mostrar hora en formato 24 horas</p></div>
+                  <div className="w-9 h-5 rounded-full bg-[#00D9FF]/80 relative cursor-pointer"><div className="w-3.5 h-3.5 rounded-full bg-white absolute right-0.5 top-0.5" /></div>
+                </div>
+              </div>
+            )}
+            {activeSection === "seguridad" && (
+              <div className="space-y-5">
+                <h2 className="text-lg font-bold">Seguridad</h2>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Autenticación de Dos Factores</p><p className="text-xs text-slate-400">Añade una capa extra de seguridad a tu cuenta</p></div>
+                  <button className="px-4 py-1.5 rounded-lg bg-[#00D9FF]/10 border border-[#00D9FF]/20 text-[10px] font-bold text-[#00D9FF] hover:bg-[#00D9FF]/20 transition-all cursor-pointer">Activar</button>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Dispositivos Conectados</p><p className="text-xs text-slate-400">Gestiona sesiones activas en otros dispositivos</p></div>
+                  <Link href="/zafiro/owner/dispositivos" className="px-4 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-[10px] font-bold text-slate-300 hover:text-white transition-all">Ver</Link>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Cambiar Contraseña</p><p className="text-xs text-slate-400">Actualiza tu contraseña actual</p></div>
+                  <button className="px-4 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-[10px] font-bold text-slate-300 hover:text-white transition-all cursor-pointer">Cambiar</button>
+                </div>
+                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                  <p className="text-xs text-amber-400 font-bold">Sesiones Activas</p>
+                  <p className="text-[10px] text-slate-400 mt-1">No hay otras sesiones activas detectadas.</p>
+                </div>
+              </div>
+            )}
+            {activeSection === "accesibilidad" && (
+              <div className="space-y-5">
+                <h2 className="text-lg font-bold">Accesibilidad</h2>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Alto Contraste</p><p className="text-xs text-slate-400">Mejora la legibilidad con colores de alto contraste</p></div>
+                  <div className="w-9 h-5 rounded-full bg-slate-700 relative cursor-pointer"><div className="w-3.5 h-3.5 rounded-full bg-white absolute left-0.5 top-0.5" /></div>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Reducir Animaciones</p><p className="text-xs text-slate-400">Desactiva animaciones y transiciones</p></div>
+                  <div className="w-9 h-5 rounded-full bg-slate-700 relative cursor-pointer"><div className="w-3.5 h-3.5 rounded-full bg-white absolute left-0.5 top-0.5" /></div>
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Tamaño de Texto</label>
+                  <select className="w-full mt-1 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-[#00D9FF]">
+                    <option value="normal">Normal</option>
+                    <option value="large">Grande</option>
+                    <option value="xlarge">Extra Grande</option>
+                  </select>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Subtítulos</p><p className="text-xs text-slate-400">Mostrar subtítulos en contenido multimedia</p></div>
+                  <div className="w-9 h-5 rounded-full bg-[#00D9FF]/80 relative cursor-pointer"><div className="w-3.5 h-3.5 rounded-full bg-white absolute right-0.5 top-0.5" /></div>
+                </div>
+              </div>
+            )}
+            {activeSection === "audio" && (
+              <div className="space-y-5">
+                <h2 className="text-lg font-bold">Audio y Voz</h2>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">ELIANA Voz</p><p className="text-xs text-slate-400">Activar respuestas de voz de ELIANA</p></div>
+                  <div className="w-9 h-5 rounded-full bg-[#00D9FF]/80 relative cursor-pointer"><div className="w-3.5 h-3.5 rounded-full bg-white absolute right-0.5 top-0.5" /></div>
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Volumen de Voz</label>
+                  <input type="range" min="0" max="100" defaultValue="70" className="w-full mt-2 accent-[#00D9FF]" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Velocidad de Reproducción</label>
+                  <select className="w-full mt-1 bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-[#00D9FF]">
+                    <option value="0.75">0.75x — Lento</option>
+                    <option value="1">1x — Normal</option>
+                    <option value="1.25">1.25x — Rápido</option>
+                    <option value="1.5">1.5x — Muy Rápido</option>
+                  </select>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <div><p className="text-sm font-bold">Notificaciones Sonoras</p><p className="text-xs text-slate-400">Reproducir sonido al recibir notificaciones</p></div>
+                  <div className="w-9 h-5 rounded-full bg-[#00D9FF]/80 relative cursor-pointer"><div className="w-3.5 h-3.5 rounded-full bg-white absolute right-0.5 top-0.5" /></div>
+                </div>
+                <div className="p-4 rounded-xl bg-slate-900/30 border border-slate-800">
+                  <p className="text-xs text-slate-400 font-bold">Prueba de Voz</p>
+                  <button className="mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#00D9FF] to-blue-600 text-[10px] font-bold text-white cursor-pointer hover:opacity-90 transition-all">Reproducir</button>
+                </div>
               </div>
             )}
           </div>

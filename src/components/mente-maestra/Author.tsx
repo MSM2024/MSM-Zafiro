@@ -32,7 +32,7 @@ export default function Author() {
               <ExternalLink className="w-4 h-4" /> Perfil ZAFIRO
             </Link>
             <Link
-              href="/ecosystem"
+              href="/editorial"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/50 text-slate-300 hover:text-white hover:bg-slate-700/50 text-sm transition-all"
             >
               <BookOpen className="w-4 h-4" /> MSM Editorial

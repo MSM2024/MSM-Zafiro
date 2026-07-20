@@ -10,7 +10,7 @@ import { ELIANA_VERSION } from '@/lib/eliana/system-prompt'
 import {
   Activity, Globe, Smartphone, Database, AlertTriangle,
   XCircle, Clock, Users, DollarSign, Shield,
-  FileText, UserPlus, Package, BarChart3,
+  FileText, UserPlus, Package, BarChart3, Brain,
 } from 'lucide-react'
 
 export default function PanelPage() {
@@ -185,6 +185,7 @@ export default function PanelPage() {
             { href: '/zafiro/admin/eliana/expedientes', icon: FileText, label: 'Expedientes', color: 'text-amber-400' },
             { href: '/zafiro/admin/eliana/inventario', icon: Package, label: 'Inventario', color: 'text-emerald-400' },
             { href: '/zafiro/admin/eliana/conocimiento', icon: Shield, label: 'Conocimiento', color: 'text-[#00D9FF]' },
+            { href: '/zafiro/admin/eliana/conexiones', icon: Brain, label: 'Conexiones IA', color: 'text-purple-400' },
           ].map((btn, i) => (
             <a key={i} href={btn.href}
               className="flex items-center gap-1.5 text-xs bg-[#0A0B1A] border border-[#1A1B3A] rounded-lg px-4 py-2 hover:border-[#00D9FF]/30 transition-colors">

@@ -1,3 +1,5 @@
+import { addNotification } from '@/lib/notifications'
+
 // FLUJO ECONÓMICO CENTRALIZADO — Ledger Maestro de ZAFIRO
 // Matemáticas de Dios: ningún centavo se mueve sin registro, auditoría y bendición
 // Frecuencias: 369 (Manifestación) · 777 (Perfección)
@@ -65,6 +67,18 @@ export function addLedgerEntry(entry: Omit<LedgerEntry, "id" | "createdAt" | "up
   }
   entries.unshift(newEntry)
   localStorage.setItem(LEDGER_KEY, JSON.stringify(entries))
+
+  try {
+    addNotification({
+      title: `Movimiento en Ledger: ${entry.direction}`,
+      message: `${entry.concept} — ${entry.node} $${entry.amount}`,
+      type: "info",
+      pillar: "economy",
+      read: false,
+      actionUrl: "/admin/ledger",
+    })
+  } catch {}
+
   return newEntry
 }
 

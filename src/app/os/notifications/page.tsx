@@ -1,45 +1,49 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import { usePageTitle } from "@/lib/usePageTitle"
-import { Bell, CheckCircle, AlertTriangle, Info, X, Trash2, Diamond } from "lucide-react"
+import { Bell, X, ExternalLink, ShoppingBag, BookOpen, PiggyBank, User, Stamp } from "lucide-react"
+import {
+  getAllNotifications,
+  markNotificationRead,
+  markAllRead,
+  deleteNotification,
+  PILLAR_LABELS,
+  getPillarColor,
+  type AppNotification,
+} from "@/lib/notifications"
 
-interface Notification {
-  id: string
-  title: string
-  message: string
-  type: 'info' | 'success' | 'warning' | 'system'
-  read: boolean
-  timestamp: string
-}
-
-const INITIAL: Notification[] = [
-  { id: '1', title: 'Bienvenido a ZAFIRO OS', message: 'Tu universo digital está listo. Explora las aplicaciones y descubre todo lo que ZAFIRO tiene para ti.', type: 'info', read: false, timestamp: '2026-07-18T17:00:00Z' },
-  { id: '2', title: 'Membresía activa', message: 'Tu membresía LIFETIME_UNLIMITED está activa. Disfruta de todos los beneficios.', type: 'success', read: false, timestamp: '2026-07-18T16:00:00Z' },
-  { id: '3', title: 'Actualización disponible', message: 'Nuevas funciones disponibles en ZAFIRO OS. Revisa el panel de novedades.', type: 'system', read: true, timestamp: '2026-07-17T10:00:00Z' },
-]
-
-const typeStyles: Record<string, string> = {
-  info: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-  success: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
-  warning: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
-  system: 'bg-violet-500/10 border-violet-500/20 text-violet-400',
-}
-
-const typeIcons: Record<string, typeof Bell> = {
-  info: Info, success: CheckCircle, warning: AlertTriangle, system: Diamond,
+const PILLAR_ICONS: Record<string, typeof Bell> = {
+  marketplace: ShoppingBag,
+  editorial: BookOpen,
+  economy: PiggyBank,
+  identity: User,
+  sellos: Stamp,
+  system: Bell,
 }
 
 export default function OsNotificationsPage() {
   usePageTitle("ZAFIRO OS — Notificaciones")
-  const [notifications, setNotifications] = useState(INITIAL)
+  const [notifications, setNotifications] = useState<AppNotification[]>([])
 
-  const markRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n))
+  const refresh = () => setNotifications(getAllNotifications())
+
+  useEffect(() => { refresh() }, [])
+
+  const handleMarkRead = (id: string) => {
+    markNotificationRead(id)
+    refresh()
   }
 
-  const deleteNotif = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id))
+  const handleMarkAllRead = () => {
+    markAllRead()
+    refresh()
+  }
+
+  const handleDelete = (id: string) => {
+    deleteNotification(id)
+    refresh()
   }
 
   const unread = notifications.filter(n => !n.read).length
@@ -53,49 +57,73 @@ export default function OsNotificationsPage() {
               <Bell className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-black text-white">Notificaciones</h1>
-              <p className="text-xs text-slate-400">{unread} sin leer · {notifications.length} total</p>
+              <h1 className="text-xl font-black text-white">Centro de Notificaciones</h1>
+              <p className="text-xs text-slate-400">{unread} sin leer · {notifications.length} total — Imperio MSM</p>
             </div>
           </div>
-          {unread > 0 && (
-            <button onClick={() => setNotifications(prev => prev.map(n => ({ ...n, read: true })))}
-              className="px-3 py-1.5 rounded-xl bg-[#00D9FF]/10 text-[#00D9FF] text-xs font-medium hover:bg-[#00D9FF]/20 transition-all">
-              Marcar todo leído
+          <div className="flex gap-2">
+            {unread > 0 && (
+              <button onClick={handleMarkAllRead}
+                className="px-3 py-1.5 rounded-xl bg-[#00D9FF]/10 text-[#00D9FF] text-xs font-medium hover:bg-[#00D9FF]/20 transition-all">
+                Marcar todo leído
+              </button>
+            )}
+            <button onClick={refresh}
+              className="px-3 py-1.5 rounded-xl bg-slate-800/60 text-slate-400 text-xs font-medium hover:bg-slate-700/60 transition-all">
+              Actualizar
             </button>
-          )}
+          </div>
         </div>
 
         <div className="space-y-2">
           {notifications.length === 0 ? (
-            <div className="p-8 rounded-2xl glass text-center">
+            <div className="p-8 rounded-2xl bg-slate-900/50 border border-slate-800/60 text-center">
               <Bell className="w-8 h-8 text-slate-600 mx-auto mb-3" />
-              <p className="text-sm text-slate-500">No hay notificaciones</p>
+              <p className="text-sm text-slate-500">No hay notificaciones del Imperio</p>
             </div>
           ) : (
             notifications.map(n => {
-              const Icon = typeIcons[n.type] || Bell
-              return (
-                <div key={n.id}
-                  className={`p-4 rounded-2xl glass border transition-all ${n.read ? 'border-slate-800/60 opacity-60' : 'border-slate-700/60'} ${!n.read ? 'cursor-pointer' : ''}`}
-                  onClick={() => !n.read && markRead(n.id)}>
+              const Icon = PILLAR_ICONS[n.pillar] || Bell
+              const colorClass = getPillarColor(n.pillar)
+              const content = (
+                <div className={`p-4 rounded-2xl border transition-all ${n.read ? 'border-slate-800/60 opacity-60' : 'border-slate-700/60'} ${!n.read ? 'cursor-pointer' : ''}`}
+                  onClick={() => !n.read && handleMarkRead(n.id)}>
                   <div className="flex items-start gap-3">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${typeStyles[n.type]}`}>
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${colorClass}`}>
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${colorClass}`}>
+                          {PILLAR_LABELS[n.pillar] || n.pillar}
+                        </span>
                         <p className={`text-sm ${n.read ? 'text-slate-400' : 'text-white font-medium'}`}>{n.title}</p>
                         {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-[#00D9FF]" />}
                       </div>
                       <p className="text-xs text-slate-500 mt-0.5">{n.message}</p>
                       <p className="text-[10px] text-slate-600 mt-1">{new Date(n.timestamp).toLocaleString('es-ES')}</p>
                     </div>
-                    <button onClick={(e) => { e.stopPropagation(); deleteNotif(n.id) }}
-                      className="p-1 rounded-lg hover:bg-slate-700 text-slate-500 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      {n.actionUrl && (
+                        <Link href={n.actionUrl} onClick={e => e.stopPropagation()}
+                          className="p-1.5 rounded-lg hover:bg-slate-700 text-slate-500 hover:text-[#00D9FF] transition-all">
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
+                      <button onClick={(e) => { e.stopPropagation(); handleDelete(n.id) }}
+                        className="p-1.5 rounded-lg hover:bg-slate-700 text-slate-500 hover:text-red-400 transition-all">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
+              )
+              return n.actionUrl ? (
+                <Link key={n.id} href={n.actionUrl} className="block group">
+                  {content}
+                </Link>
+              ) : (
+                <div key={n.id}>{content}</div>
               )
             })
           )}

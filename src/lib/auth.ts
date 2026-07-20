@@ -5,6 +5,7 @@ import { createProfile as createV1Profile, seedMiguelProfile } from "./profile"
 import { createProfile as createV2Profile } from "./identity"
 import { getSupabaseClient, isSupabaseAvailable } from "./supabase"
 import { sendEmail } from "./email-service"
+import { addNotification } from "@/lib/notifications"
 import type { ZafiroUser, ZafiroSession, LegacyUserRole } from "../../packages/types/src/zafiro"
 
 const USERS_KEY = "zafiro_users"
@@ -49,6 +50,16 @@ export async function registerUser(name: string, email: string, password: string
     if (referralCode) applyReferralCode(referralCode, sbId, email)
     createV1Profile(sbId, email, name)
     createV2Profile(sbId, name, email)
+    try {
+      addNotification({
+        title: "Nuevo miembro registrado",
+        message: `${name} se unió al Imperio MSM (${email})`,
+        type: "success",
+        pillar: "identity",
+        read: false,
+        actionUrl: "/admin/usuarios",
+      })
+    } catch {}
     return { ok: true }
   }
 
@@ -64,6 +75,16 @@ export async function registerUser(name: string, email: string, password: string
   if (referralCode) applyReferralCode(referralCode, user.id, email)
   createV1Profile(user.id, email, name)
   createV2Profile(user.id, name, email)
+  try {
+    addNotification({
+      title: "Nuevo miembro registrado",
+      message: `${name} se unió al Imperio MSM (${email})`,
+      type: "success",
+      pillar: "identity",
+      read: false,
+      actionUrl: "/admin/usuarios",
+    })
+  } catch {}
   return { ok: true }
 }
 

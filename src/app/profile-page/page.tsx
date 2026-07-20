@@ -13,6 +13,7 @@ import { type ConnectedPlatform, getPlatforms, PLATFORM_META } from "@/lib/unive
 import { getPTSAccount, getStreak } from "@/lib/rewards"
 import { DEFAULT_ECOSYSTEM } from "@/lib/ecosistema"
 import ElianaDiamond from "@/components/ElianaDiamond"
+import { BadgesDisplay } from "@/components/BadgesDisplay"
 
 function renderSafeMessage(msg: string) {
   if (msg.startsWith("ELIANA:")) {
@@ -539,6 +540,9 @@ export default function ProfileFullPage() {
                       </div>
                     ))}
                   </div>
+                </div>
+                <div className="p-5 rounded-2xl glass">
+                  <BadgesDisplay max={16} />
                 </div>
               </div>
             )}

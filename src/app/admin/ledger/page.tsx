@@ -2,10 +2,13 @@
 
 import { useState, useCallback } from 'react'
 import { motion } from 'motion/react'
+import { useRouter } from 'next/navigation'
 import { usePageTitle } from '@/lib/usePageTitle'
+import { getSession } from '@/lib/auth'
+import { isOwnerEmail } from '@/lib/owner'
 import { getLedgerEntries, addLedgerEntry, validateEntry, syncEntry, distributeEntry, executeDailyClose, getDailyCloses, getNodeBalance } from '@/lib/ledger'
 import type { LedgerEntry, LedgerNode, DailyClose } from '@/lib/ledger'
-import { DollarSign, Plus, Send, CheckCircle, ArrowRight, TrendingUp, TrendingDown, Shield, Clock, XCircle, Search } from 'lucide-react'
+import { DollarSign, Plus, Send, CheckCircle, ArrowRight, TrendingUp, TrendingDown, Shield, Clock, XCircle, Search, AlertTriangle } from 'lucide-react'
 
 const nodeColors: Record<LedgerNode, string> = {
   CAJA_ROCIO: 'text-rose-400',
@@ -27,6 +30,23 @@ const FLOW_STEPS = ['Entrada', 'Validación', 'Sincronización', 'Distribución'
 
 export default function LedgerPage() {
   usePageTitle('Ledger Maestro — Admin ZAFIRO')
+  const router = useRouter()
+
+  const session = typeof window !== "undefined" ? getSession() : null
+  const isOwner = session ? isOwnerEmail(session.email || '') : false
+
+  if (typeof window !== "undefined" && !isOwner) {
+    return (
+      <div className="min-h-screen bg-[#050816] flex items-center justify-center p-4">
+        <div className="text-center max-w-sm">
+          <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+          <h1 className="text-lg font-bold text-white mb-2">Acceso Denegado</h1>
+          <p className="text-sm text-slate-400 mb-4">Solo el owner puede acceder al Ledger Maestro.</p>
+          <button onClick={() => router.push('/auth/login')} className="text-[#00D9FF] text-sm hover:underline">Iniciar sesión</button>
+        </div>
+      </div>
+    )
+  }
 
   const [entries, setEntries] = useState<LedgerEntry[]>(() => getLedgerEntries())
   const [balances] = useState(() => ({ CAJA_ROCIO: getNodeBalance('CAJA_ROCIO'), LIQUIDACION_VIP: getNodeBalance('LIQUIDACION_VIP'), FONDO_MSM: getNodeBalance('FONDO_MSM'), GENERAL: getNodeBalance('GENERAL') }))

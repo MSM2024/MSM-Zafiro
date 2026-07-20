@@ -73,21 +73,8 @@ export function getEstadoPuente(): AuthBridgeState {
 export function initAuthBridge(): void {
   const state = getState()
   if (state.historial.length > 0) return
-  const codigosIniciales: Record<string, string> = {
-    "Vercel": "400 140",
-    "Stripe": "018 311",
-    "PayPal": "726 817",
-    "Amazon": "440 609",
-    "MSM_Remodeling": "176 136",
-    "Google (cm8msm)": "136 498",
-    "Facebook": "611 782",
-    "Binance US": "945 716",
-    "Kucoin": "836 483",
-    "Robinhood": "150 226",
-  }
-  for (const [plat, cod] of Object.entries(codigosIniciales)) {
-    registrarCodigo(plat, cod)
-  }
+  // Los códigos se cargan dinámicamente vía input del usuario en el monitor de ELIANA
+  // No se almacenan códigos reales en el bundle del cliente por seguridad
 }
 
 export function getMensajeELIANA(): string {

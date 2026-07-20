@@ -7,7 +7,13 @@ import { Gem, Mail, CheckCircle, AlertCircle } from "lucide-react"
 import { usePageTitle } from "@/lib/usePageTitle"
 import { getSession } from "@/lib/auth"
 
-const VALID_CODE = "000000"
+const VALID_CODE = typeof window !== "undefined"
+  ? (localStorage.getItem("zafiro_verify_code") || (() => {
+      const code = Math.floor(100000 + Math.random() * 900000).toString()
+      localStorage.setItem("zafiro_verify_code", code)
+      return code
+    })())
+  : "123456"
 
 export default function VerifyPage() {
   usePageTitle("Verificar Cuenta")
@@ -108,7 +114,7 @@ export default function VerifyPage() {
                 ¿No recibiste el código?{" "}
                 <button onClick={handleResend} className="text-[#00D9FF] hover:underline cursor-pointer">Reenviar</button>
               </p>
-              <p className="text-[10px] text-slate-600 mt-2">Demo: usa 000000</p>
+              <p className="text-[10px] text-slate-600 mt-2">Demo: usa <span className="text-[#00D9FF] font-mono">{VALID_CODE}</span></p>
             </>
           )}
         </div>

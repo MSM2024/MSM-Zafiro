@@ -9,9 +9,10 @@ import { ELIANA_VERSION, ELIANA_LAST_UPDATED } from '@/lib/eliana/system-prompt'
 import { getRecentTraces } from '@/lib/eliana/correlation'
 import type { TraceStep } from '@/lib/eliana/correlation'
 import { getStoredTraining } from '@/lib/eliana/owner-firewall'
+import { getActiveProviders, getRoutingRule, type ProviderConfig } from '@/lib/ai-providers'
 import {
-  Send, Bot, User, Sparkles, AlertTriangle, CheckCircle,
-  RefreshCw, Wifi, Globe, Smartphone, Clock, Shield, Copy, Check,
+  Send, Bot, User, Sparkles, AlertTriangle, CheckCircle, Brain,
+  RefreshCw, Wifi, Globe, Smartphone, Clock, Shield, Copy, Check, ChevronDown,
 } from 'lucide-react'
 import ElianaPortrait from '@/components/eliana3d/ElianaPortrait'
 import ElianaAvatarCard from '@/components/eliana3d/ElianaAvatarCard'
@@ -52,8 +53,17 @@ function ElianaChat() {
   const [tab, setTab] = useState<'chat' | 'info' | 'traces'>('chat')
   const [error, setError] = useState('')
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [activeProviders, setActiveProviders] = useState<ProviderConfig[]>([])
+  const [routingRule, setRoutingRuleState] = useState<'manual' | 'auto' | 'fallback'>('manual')
+  const [selectedProvider, setSelectedProvider] = useState<string>('')
+  const [showProviderDropdown, setShowProviderDropdown] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  const refreshProviders = useCallback(() => {
+    setActiveProviders(getActiveProviders())
+    setRoutingRuleState(getRoutingRule())
+  }, [])
 
   const copyToClipboard = async (text: string, id: string) => {
     try {
@@ -80,6 +90,7 @@ function ElianaChat() {
   }, [])
 
   useEffect(() => { checkStatus() }, [checkStatus])
+  useEffect(() => { refreshProviders() }, [tab, refreshProviders])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -100,7 +111,7 @@ function ElianaChat() {
       const res = await fetch('/api/eliana/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, session: session ? { email: session.email } : undefined }),
+        body: JSON.stringify({ message: text, session: session ? { email: session.email } : undefined, ...(selectedProvider ? { provider: selectedProvider } : {}) }),
       })
       const data = await res.json()
       const assistantMsg: ChatMessage = {
@@ -176,6 +187,7 @@ function ElianaChat() {
               <ElianaHologramBeta />
               <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
                 <h3 className="text-xs font-semibold text-white mb-3">Estado en Tiempo Real</h3>
+                <button onClick={refreshProviders} className="float-right -mt-6 text-slate-500 hover:text-white"><RefreshCw className="w-3 h-3" /></button>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-400">ELIANA</span>
@@ -200,6 +212,31 @@ function ElianaChat() {
                 </div>
               </div>
 
+              {activeProviders.length > 0 && (
+                <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
+                  <h3 className="text-xs font-semibold text-white mb-3 flex items-center gap-1.5">
+                    <Brain className="w-3 h-3 text-[#00D9FF]" /> Proveedores IA
+                  </h3>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] mb-1.5">
+                      <span className="text-slate-500">Routing</span>
+                      <span className={`font-mono ${
+                        routingRule === 'auto' ? 'text-emerald-400' :
+                        routingRule === 'fallback' ? 'text-amber-400' : 'text-slate-400'
+                      }`}>{routingRule}</span>
+                    </div>
+                    {activeProviders.map(p => (
+                      <div key={p.id} className="flex items-center justify-between text-[11px]">
+                        <span className="flex items-center gap-1">
+                          <span>{p.icon}</span>
+                          <span className="text-slate-300">{p.name}</span>
+                        </span>
+                        <span className="text-emerald-400 text-[10px]">{p.models[0].split('-').slice(0,2).join(' ')}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl p-4">
                 <h3 className="text-xs font-semibold text-white mb-3">Comandos Rápidos</h3>
                 <div className="space-y-1.5 text-xs">
@@ -227,6 +264,37 @@ function ElianaChat() {
             {/* Chat */}
             <div className="lg:col-span-3 flex flex-col">
               <div className="bg-[#0A0B1A] border border-[#1A1B3A] rounded-xl flex flex-col h-[60vh]">
+                {/* Provider Selector */}
+                <div className="flex items-center justify-between px-4 pt-3 pb-1 border-b border-[#1A1B3A]/50">
+                  <div className="relative">
+                    <button onClick={() => setShowProviderDropdown(p => !p)}
+                      className="flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-white transition-colors">
+                      <Brain className="w-3 h-3" />
+                      {selectedProvider
+                        ? activeProviders.find(p => p.id === selectedProvider)?.name || selectedProvider
+                        : 'Auto'}
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                    {showProviderDropdown && (
+                      <>
+                        <div className="fixed inset-0 z-10" onClick={() => setShowProviderDropdown(false)} />
+                        <div className="absolute top-full left-0 mt-1 w-44 bg-[#0A0B1A] border border-[#1A1B3A] rounded-lg shadow-xl z-20 py-1">
+                          <button onClick={() => { setSelectedProvider(''); setShowProviderDropdown(false) }}
+                            className={`w-full text-left px-3 py-1.5 text-xs ${!selectedProvider ? 'text-[#00D9FF] bg-[#00D9FF]/5' : 'text-slate-400 hover:text-white hover:bg-[#1A1B3A]/50'}`}>
+                            Auto (routing por defecto)
+                          </button>
+                          {activeProviders.map(p => (
+                            <button key={p.id} onClick={() => { setSelectedProvider(p.id); setShowProviderDropdown(false) }}
+                              className={`w-full text-left px-3 py-1.5 text-xs ${selectedProvider === p.id ? 'text-[#00D9FF] bg-[#00D9FF]/5' : 'text-slate-400 hover:text-white hover:bg-[#1A1B3A]/50'}`}>
+                              {p.icon} {p.name}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-slate-600">routing: <span className="text-slate-500">{routingRule}</span></span>
+                </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {messages.length === 0 && (
                     <div className="text-center py-12">

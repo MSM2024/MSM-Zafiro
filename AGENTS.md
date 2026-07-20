@@ -17,48 +17,28 @@
 - **Build**: `cmd.exe /c "npm run build"`
 - **Backup**: `git bundle create "..\ZAFIRO_BACKUP_$(Get-Date -Format yyyyMMdd)\full.bundle" --all`
 
-## Estado Actual (2026-07-18)
-- **Build**: 0 errores, 153 rutas
+## Estado Actual (2026-07-19)
+- **Build**: 0 errores, 165 rutas
 - **Último commit**: `278b81c` — main, deployeado en Vercel
-- **ORDEN POST LIBRO ELIANA 3D**: Nueva identidad visual de ELIANA — 5 componentes (SplashScreen, Portrait, AvatarCard, ChatWidget, HologramBeta), assets SVG (`eliana-face.svg`, `eliana-ui-icons.svg`), splash+chat reemplazados en `ClientLayout.tsx`, integración visual en `/eliana`
-- **Book "De Cero a Dueño Digital"**: PUBLICADO via `seedDeCeroADuenoDigital(true)`, sync a ELIANA knowledge, accesible en `/zafiro/biblioteca`
-- **ELIANA 3D components**: `ElianaPortrait` (SVG reutilizable, size/animated/aura/reduced), `ElianaAvatarCard` (3 variantes: default/compact/full, status dot, CTAs), `ElianaChatWidget` (FAB+panel completo con avatar, burbujas, typing indicator, 4 sugerencias), `ElianaSplashScreen` (partículas, geometría sagrada, 4 fases animación), `ElianaHologramBeta` (canvas 60 partículas, 3 anillos, diamante central)
-- **Libs nuevas**: `eliana3d/` — 5 componentes en `src/components/eliana3d/`
-- **Assets nuevos**: `public/assets/eliana/eliana-face.svg`, `public/assets/eliana/eliana-ui-icons.svg`
-- **Logística Contenedores**: `/admin/logistica` — módulo nuevo USA/Panamá→Cuba, Frecuencia 369, sincronizado con Ledger Maestro
-- **Sponsors**: Limpiados — ahora solo `msmmystore.com`, `wa.me/17723015523`, `WhatsApp Channel`
-- **Perfiles**: Cache invalidado al guardar — cambios reflejados al instante entre páginas
-- **Nube Familiar**: `/familia/*` (7 rutas) — Encuentro Soria Martínez 16-ago-2026, árbol genealógico, galería, cronología, historias, invitación WhatsApp
-- **Módulos económicos**: `/admin/tasas` (tasas Cuba + calculadora MSM), `/admin/bpa` (BPA Mirror v1.0)
-- **Libs nuevas**: `ledger.ts`, `firma-369.ts`, `tasas.ts`, `bpa-mirror.ts`, `familia.ts`, `owner.ts`, `logistica-contenedores.ts`
-- **Frecuencia 369 + Nodo Único**: inyectados en ELIANA (web + WhatsApp), sin errores
-- **Migraciones**: 00006 (17 tablas familia), 00007 (exchange_rate_snapshots)
-- **Dominio**: https://zafiro.msmmystore.com — CNAME → Vercel, HTTPS 200 OK
-- **Auth**: localStorage fallback — Supabase sin credenciales
-- **Datos**: localStorage (15+ keys) — migraciones SQL listas (2 archivos)
-- **Monorepo**: 13 packages, solo `types/` usado (12 muertos)
-- **Assets**: 15 WebP en `public/assets/zafiro/`, JPG originales eliminados, 5 SVGs Next.js eliminados
-- **Onboarding**: `ONBOARDING_NUEVO_COLABORADOR.md` + `EQUIPO_ZAFIRO.md` + script invites
-- **Rama sync**: `sync-20260717` con ARCHIVO_DE_CONTINUIDAD.md (pendientes 23-jul)
-- **Owner Profile**: `owner.ts` + `bootstrapOwnerProfile()` reconoce com8msm@gmail.com → OWNER_SUPERADMIN, LIFETIME_UNLIMITED, badges FUNDADOR
-- **Owner Devices**: `owner-devices.ts` — registro, confianza, revocación, sync localStorage, 4 API routes, panel `/zafiro/owner/dispositivos`
-- **Migraciones nuevas**: `00008_owner_profiles.sql`, `00009_owner_devices.sql`
-- **Limpieza**: 10 packages muertos eliminados → solo quedan `eliana/`, `holo-cinema/`, `types/`
-- **Fix React 19 lint**: 6 errores `set-state-in-effect` corregidos a lazy initialization
-- **Fix tipos**: 8 `no-explicit-any`, 6 `purity`, 2 `immutability`, 1 `unescaped-entities` corregidos
-- **ELIANA knowledge**: 38 docs (+2: protocolo owner, sincronización dispositivos)
-- **Avatar component**: `Avatar.tsx` con fallback initials para profile images
-- **ZafiroShell OS**: `ClientLayout.tsx` renderiza `ZafiroShell` para todas las rutas `/os/*` — escritorio con dock, top bar, launcher
-- **OS Pages**: `/os` (widgets), `/os/apps` (12 apps grid), `/os/files` (gestor archivos), `/os/notifications` (centro notificaciones), `/os/search` (búsqueda global)
-- **Email Cleaner persistencia**: `src/lib/email-cleaner/persistence.ts` (12 funciones localStorage), página actualizada con handlers reales
-- **Admin leads**: `/admin/mente-maestra-leads` — filtros, búsqueda, export CSV, localStorage persistence
-- **Admin campañas**: `/admin/campanas` — edición inline, ciclo estados, métricas
-- **LeadForm persistente**: `LeadForm.tsx` guarda leads en localStorage tras API success
-- **QR Holográfico**: `src/lib/payments/config.ts`, `src/components/payments/QrCode.tsx` (qrcode library), `src/components/payments/HolographicQrCard.tsx` (marco holográfico, QR plano escaneable, 5 estados), `src/app/pagar/page.tsx` (selector USDT/Venmo)
-- **Seguidores holograma**: `src/lib/followers/types.ts` (10 plataformas), `storage.ts` (10 localStorage keys), `adapters.ts` (10 adaptadores), `HolographicFollowersScene.tsx` (8 botones, 4 modos), `FollowersOrbit.tsx`, `PlatformNode.tsx`, `WorldFollowerMap.tsx`, `GrowthTimeline.tsx`, `TargetProjection.tsx`, `/admin/seguidores-holograma`
-- **Velocidad Luz 369/777**: `src/lib/performance/` (network-mode, connection-monitor, request-cache, adaptive-loader, sync-engine, performance-budget), componentes UI (NetworkModeIndicator, AdaptiveImage, DeferredModule, OfflineStatus), `/admin/rendimiento`, docs (3 archivos)
+- **CONECTAR 5 PILARES (INTEGRACIÓN COMPLETA)**: Editorial→Marketplace bridge, cross-pillar notification center, search, leaderboard, export, stats widget, activity timeline, broadcast sync, API endpoint
+- **Editorial→Marketplace bridge**: `marketplace-bridge.ts` con syncBookToMarketplace / unsync / getBookMarketplaceProduct, botones "Comprar" en biblioteca pública y perfiles de escritores
+- **Cross-pillar notifications**: `src/lib/notifications.ts` — motor que agrega eventos de los 5 pilares, localStorage, notificaciones auto-generadas por acción
+- **Auto-notificaciones 5 pilares**: `registerUser` (Identity), `createOrder`/`updateOrderStatus` (Marketplace), `addBook`/`updateBook→PUBLICADO`/`addWriter`/`addDevocional` (Editorial), `addLedgerEntry` (Economy), `markSealProgress→completed` (Sellos)
+- **Notification bell**: ZafiroShell con contador real no-leídos, polling 10s + BroadcastChannel cross-tab sync
+- **Cross-pillar search**: `src/lib/search.ts` — busca productos, libros, devocionales, escritores, perfiles, sellos
+- **Cross-pillar leaderboard**: `src/lib/leaderboard.ts` + `CrossPillarLeaderboard.tsx` — ranking multi-pilar con badges
+- **Cross-pillar export**: `src/lib/export.ts` + `/admin/exportar` — CSV/JSON, por sección, descarga individual o completa
+- **Cross-pillar stats**: `src/lib/cross-pillar-stats.ts` + `CrossPillarStatsWidget.tsx` — estadísticas agregadas de los 5 pilares
+- **Cross-pillar timeline**: `src/lib/activity-timeline.ts` + `ActivityTimeline.tsx` — feed cronológico unificado multi-pilar
+- **Cross-pillar API**: `/api/cross-pillar` — endpoint JSON con stats, timeline, notifications
+- **BroadcastChannel sync**: `src/lib/broadcast.ts` — sincronización cross-tab para notificaciones y datos
+- **Páginas actualizadas con datos multi-pilar**: `/ecosystem` (stats+vivo, leaderboard, timeline + link a /actividad), `/imperio` (timeline + link a /actividad), `/os` (stats widget + timeline + link a /actividad), `/admin/dashboard-360` (timeline + link a /actividad), `/perfil/[username]` (timeline + link a /actividad), `/zafiro/perfil` (timeline + link a /actividad), `/admin` (stats widget + actividad tab), `/admin/metricas` (cross-pillar stats widget agregado)
+- **Admin Editorial mejorado**: tab de Libros con CRUD completo (crear, editar, eliminar), tab de Escritores con edición y eliminación, tab de Devocionales con CRUD completo
+- **Admin Marketplace mejorado**: modal "Crear Producto" con formulario completo (nombre, descripción, precio, stock, categoría)
+- **Página de actividad dedicada**: `/actividad` con timeline completo multi-pilar y filtros por pilar, linkeada desde todas las páginas con timeline
+- **Crear Producto en admin**: modal con nombre, descripción, precio, stock, categoría
 
-## Routes (153)
+## Routes (165)
 - **App**: `/` (SPA: Inicio, Explorar, Gemología, Círculos, Sponsors, Perfil)
 - **Auth**: `/auth/login`, `/auth/register`, `/auth/recover`, `/auth/verify`
 - **Identidad**: `/mi-perfil`, `/mi-perfil/seguridad`, `/mi-perfil/membresia`, `/mi-perfil/verificacion`
@@ -66,11 +46,11 @@
 - **KYC**: `/kyc/inicio`, `/kyc/consentimiento`, `/kyc/datos`, `/kyc/documento`, `/kyc/estado`
 - **Emprendedor**: `/emprendedor`, `/emprendedor/registro`, `/emprendedor/verificacion`, `/emprendedor/equipo`, `/emprendedor/beneficiarios`
 - **Sellos**: `/sellos`, `/sellos/[numero]`, `/sellos/aleatorio`, `/sellos/hoy`, `/sellos/favoritos`, `/sellos/diario`, `/admin/sellos`
-- **Admin**: `/admin`, `/admin/usuarios`, `/admin/vip`, `/admin/kyc`, `/admin/kyb`, `/admin/riesgos`, `/admin/auditoria`, `/admin/cripto`, `/admin/knowledge-import`, `/admin/tasas`, `/admin/bpa`, `/admin/logistica`, `/admin/ratings`, `/admin/email-cleaner`, `/admin/mente-maestra-leads`, `/admin/campanas`, `/admin/seguidores-holograma`, `/admin/rendimiento`
+- **Admin**: `/admin`, `/admin/usuarios`, `/admin/vip`, `/admin/kyc`, `/admin/kyb`, `/admin/riesgos`, `/admin/auditoria`, `/admin/cripto`, `/admin/knowledge-import`, `/admin/tasas`, `/admin/bpa`, `/admin/logistica`, `/admin/ratings`, `/admin/email-cleaner`, `/admin/mente-maestra-leads`, `/admin/campanas`, `/admin/seguidores-holograma`, `/admin/rendimiento`, `/admin/dashboard-360`, `/admin/exportar`, `/admin/marketplace`, `/admin/editorial`, `/admin/metricas`, `/admin/ledger`
 - **Documentación**: `/about`, `/what-we-do`, `/how-it-works`, `/eliana`, `/ecosystem`, `/vision`, `/mission`, `/values`, `/help`, `/terms`, `/privacy`, `/rules`
 - **OS**: `/os`, `/os/apps`, `/os/files`, `/os/notifications`, `/os/search`
-- **Extras**: `/universo`, `/perfil/[username]`, `/galaxia`, `/holo-cinema`, `/dashboard`, `/economia`, `/trading`, `/constitucion`, `/impacto`, `/imperio`, `/offline`, `/visual-preview`, `/memberships`, `/messages`, `/settings`, `/rewards`, `/referidos`, `/profile-page`, `/profile-page/edit`, `/profile-page/connections`, `/profile-page/projects`, `/sponsors-page`, `/gemologia`, `/contact`, `/zafiro/owner/dispositivos`, `/pagar`
-- **API**: `/api/chat`, `/api/economia/cierre`, `/api/sync`, `/api/whatsapp/webhook`, `/api/owner/devices/register`, `/api/owner/devices/trust`, `/api/owner/devices/revoke`, `/api/owner/devices/sync`, `/api/email-cleaner/analyze`, `/api/email-cleaner/audit`, `/api/email-cleaner/connect`, `/api/email-cleaner/execute`, `/api/email-cleaner/revoke`, `/api/email-cleaner/trusted-senders`, `/api/mente-maestra/leads`, `/api/feature-flags`, `/api/eliana/chat`, `/api/eliana/audit`, `/api/eliana/feedback`, `/api/eliana/knowledge/search`, `/api/eliana/knowledge/upload`
+- **Extras**: `/universo`, `/perfil/[username]`, `/galaxia`, `/holo-cinema`, `/dashboard`, `/economia`, `/trading`, `/constitucion`, `/impacto`, `/imperio`, `/offline`, `/visual-preview`, `/memberships`, `/messages`, `/settings`, `/rewards`, `/referidos`, `/profile-page`, `/profile-page/edit`, `/profile-page/connections`, `/profile-page/projects`, `/sponsors-page`, `/gemologia`, `/contact`, `/zafiro/owner/dispositivos`, `/pagar`, `/editorial`, `/editorial/biblioteca`, `/editorial/devocionales`, `/editorial/escritores`, `/marketplace`, `/marketplace/cart`, `/marketplace/orders`, `/actividad`
+- **API**: `/api/chat`, `/api/cross-pillar`, `/api/economia/cierre`, `/api/sync`, `/api/whatsapp/webhook`, `/api/owner/devices/register`, `/api/owner/devices/trust`, `/api/owner/devices/revoke`, `/api/owner/devices/sync`, `/api/email-cleaner/analyze`, `/api/email-cleaner/audit`, `/api/email-cleaner/connect`, `/api/email-cleaner/execute`, `/api/email-cleaner/revoke`, `/api/email-cleaner/trusted-senders`, `/api/mente-maestra/leads`, `/api/feature-flags`, `/api/eliana/chat`, `/api/eliana/audit`, `/api/eliana/feedback`, `/api/eliana/knowledge/search`, `/api/eliana/knowledge/upload`, `/api/profiles/create`, `/api/stripe/create-checkout-session`, `/api/stripe/customer-portal`, `/api/stripe/webhook`, `/api/legal/privacy`, `/api/legal/terms`
 
 ## Conventions
 - All pages `'use client'` — use `usePageTitle("Name")` from `@/lib/usePageTitle`

@@ -11,6 +11,7 @@ import { computeUserMetrics, trackError } from "@/lib/analytics/users"
 import { getPerfStats, capturePerfSample } from "@/lib/analytics/performance"
 import { checkRateLimit, getRateLimitStatus } from "@/lib/analytics/rate-limiter"
 import type { UserMetrics } from "@/lib/analytics/users"
+import CrossPillarStatsWidget from "@/components/CrossPillarStatsWidget"
 
 export default function AdminMetricasPage() {
   usePageTitle("Métricas Reales — Admin ZAFIRO")
@@ -153,6 +154,15 @@ export default function AdminMetricasPage() {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Cross-pillar stats */}
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-amber-400" />
+            Estadísticas Multi-Pilar
+          </h2>
+          <CrossPillarStatsWidget />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

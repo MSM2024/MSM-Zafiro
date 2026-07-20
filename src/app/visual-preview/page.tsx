@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { usePageTitle } from "@/lib/usePageTitle"
 import { ZAFIRO_ASSETS } from "@/config/zafiro-assets"
 
 const ASSET_ENTRIES = Object.entries(ZAFIRO_ASSETS).map(([key, val]) => ({
@@ -22,6 +23,7 @@ function getCategory(id: string): string {
 }
 
 export default function VisualPreviewPage() {
+  usePageTitle("Visual Preview — ZAFIRO")
   const [filter, setFilter] = useState<string>("all")
 
   const filtered = filter === "all" ? ASSET_ENTRIES : ASSET_ENTRIES.filter((a) => getCategory(a.id) === filter)

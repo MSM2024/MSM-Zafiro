@@ -3,11 +3,7 @@ import { processQuery, getCoreStatus } from '@/lib/eliana/core/eliana-core'
 import { executeSyncFlow } from '@/lib/eliana/core/sync-protocol'
 import { formatRulesForPrompt, type RuleSource } from '@/lib/eliana/core/rules-engine'
 import type { AgentId } from '@/lib/eliana/core/agent-registry'
-import { buildOwnerSystemPrompt, ELIANA_VERSION, ELIANA_LAST_UPDATED } from '@/lib/eliana/system-prompt'
-import { formatLegalForPrompt } from '@/lib/legal/terms-engine'
-import { filterResponse } from '@/lib/eliana/response-filter'
-import { callAI } from '@/lib/ai/providers'
-import { getAvailableProviders } from '@/lib/eliana/core/fallback-manager'
+import { ELIANA_VERSION, ELIANA_LAST_UPDATED } from '@/lib/eliana/system-prompt'
 import { authenticateRequest } from '@/lib/security-middleware'
 import { isFeatureEnabled } from '@/lib/feature-flags'
 
@@ -51,35 +47,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ text: 'El campo message es obligatorio.' }, { status: 400 })
     }
 
-    // ─── ELIANA_CORE: Procesar con el nuevo Response Router ───
-    const coreResult = processQuery(message, 'eliana', session)
-    const correlationId = coreResult.correlationId
-
-    // ─── AI Synthesis (async, no bloquea la respuesta inmediata) ───
-    if (coreResult.provider === 'knowledge' || coreResult.provider === 'local') {
-      const availableProviders = getAvailableProviders()
-      if (availableProviders.length > 0) {
-        const isOwner = !!session?.email && session.email === 'com8msm@gmail.com'
-        const rulesContext = formatRulesForPrompt('eliana')
-        const legalContext = formatLegalForPrompt()
-        const combinedContext = [rulesContext, legalContext].filter(Boolean).join('\n\n')
-        const systemPrompt = buildOwnerSystemPrompt(isOwner, combinedContext)
-        const knowledgeContext = coreResult.knowledgeUsed && coreResult.text
-          ? `Información de ZAFIRO:\n${coreResult.text.slice(0, 1500)}`
-          : ''
-
-        callAI(message, history || [], `${systemPrompt}\n\n${knowledgeContext}\n\nResponde directamente al usuario en lenguaje natural. No menciones tu contexto interno. Usa español.`).then(result => {
-          if (result.text) {
-            const filtered = filterResponse(result.text)
-            if (!filtered.blocked && filtered.filteredText) {
-              const traces = JSON.parse(localStorage?.getItem?.('zafiro_eliana_traces') || '[]')
-              traces.push({ step: 'ai_synthesis', result: 'ok', correlationId, timestamp: new Date().toISOString() })
-              localStorage?.setItem?.('zafiro_eliana_traces', JSON.stringify(traces.slice(-500)))
-            }
-          }
-        }).catch(() => {})
-      }
-    }
+    // ─── ELIANA_CORE: procesar con Response Router (ahora incluye AI synthesis await) ───
+    const coreResult = await processQuery(message, 'eliana', session)
 
     return NextResponse.json({
       text: coreResult.text,
@@ -89,7 +58,7 @@ export async function POST(request: NextRequest) {
       sources: coreResult.sources,
       confidence: coreResult.confidence,
       knowledgeUsed: coreResult.knowledgeUsed,
-      correlationId,
+      correlationId: coreResult.correlationId,
       version: ELIANA_VERSION,
     })
   } catch {

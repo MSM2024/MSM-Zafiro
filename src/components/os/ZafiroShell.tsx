@@ -1,8 +1,13 @@
 'use client'
 
-import { useState, type ReactNode } from "react"
+import { useState, useEffect, type ReactNode } from "react"
+import Link from "next/link"
 import { motion } from "motion/react"
 import { Search, Grid3X3, Bell, User, Settings, ChevronRight, Command } from "lucide-react"
+import { getAllNotifications } from "@/lib/notifications"
+import type { BroadcastMessage } from "@/lib/broadcast"
+import { useBadgeChecker } from "@/hooks/useBadgeChecker"
+import { NewBadgesAlert } from "@/components/BadgesDisplay"
 
 interface Props {
   children: ReactNode
@@ -19,7 +24,7 @@ const QUICK_APPS: AppEntry[] = [
   { id: 'profile', name: 'Mi Perfil', icon: '👤', route: '/zafiro/perfil' },
   { id: 'eliana', name: 'ELIANA', icon: '💎', route: '/eliana' },
   { id: 'marketplace', name: 'Marketplace', icon: '🏪', route: 'https://msmmystore.com' },
-  { id: 'editorial', name: 'Editorial', icon: '📖', route: '/ecosystem' },
+  { id: 'editorial', name: 'Editorial', icon: '📖', route: '/editorial' },
   { id: 'economia', name: 'Economía', icon: '💰', route: '/economia' },
   { id: 'comunidad', name: 'Comunidad', icon: '🌐', route: '/universo' },
   { id: 'familia', name: 'Familia', icon: '👨‍👩‍👧‍👦', route: '/familia' },
@@ -28,12 +33,49 @@ const QUICK_APPS: AppEntry[] = [
   { id: 'cinema', name: 'Holo Cinema', icon: '🎬', route: '/holo-cinema' },
 ]
 
+function NotificationBell() {
+  const [unread, setUnread] = useState(0)
+
+  useEffect(() => {
+    const update = () => {
+      const all = getAllNotifications()
+      setUnread(all.filter(n => !n.read).length)
+    }
+    update()
+    const interval = setInterval(update, 10000)
+    try {
+      const { onBroadcastMessage } = require("@/lib/broadcast")
+      const unsub = onBroadcastMessage((msg: BroadcastMessage) => {
+        if (msg.type === "notification:new" || msg.type === "data:changed") {
+          update()
+        }
+      })
+      return () => { clearInterval(interval); unsub() }
+    } catch {
+      return () => clearInterval(interval)
+    }
+  }, [])
+
+  return (
+    <Link href="/os/notifications" className="relative w-8 h-8 rounded-lg bg-slate-900/60 flex items-center justify-center hover:bg-slate-800/60 transition-all group">
+      <Bell className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+      {unread > 0 && (
+        <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#00D9FF] text-[9px] font-bold text-white flex items-center justify-center">
+          {unread > 99 ? '99+' : unread}
+        </span>
+      )}
+    </Link>
+  )
+}
+
 export default function ZafiroShell({ children }: Props) {
   const [launcherOpen, setLauncherOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const newBadges = useBadgeChecker()
 
   return (
     <div className="min-h-screen bg-[#050816] flex flex-col">
+      <NewBadgesAlert newBadges={newBadges} />
       <header className="h-12 bg-[#0A0B1A]/90 backdrop-blur-xl border-b border-slate-800/50 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={() => setLauncherOpen(!launcherOpen)}
@@ -49,13 +91,10 @@ export default function ZafiroShell({ children }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="relative w-8 h-8 rounded-lg bg-slate-900/60 flex items-center justify-center hover:bg-slate-800/60 transition-all">
-            <Bell className="w-4 h-4 text-slate-400" />
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#00D9FF]" />
-          </button>
-          <button className="w-8 h-8 rounded-lg bg-slate-900/60 flex items-center justify-center hover:bg-slate-800/60 transition-all">
+          <NotificationBell />
+          <Link href="/settings" className="w-8 h-8 rounded-lg bg-slate-900/60 flex items-center justify-center hover:bg-slate-800/60 transition-all">
             <Settings className="w-4 h-4 text-slate-400" />
-          </button>
+          </Link>
           <div className="h-5 w-px bg-slate-800" />
           <button className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D9FF] to-violet-600 flex items-center justify-center text-xs font-bold text-white">
             MS

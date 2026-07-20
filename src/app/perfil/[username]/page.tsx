@@ -26,6 +26,7 @@ function renderSafeMessage(msg: string) {
 import { getCreatorProfile, PLATFORM_META, CONTENT_LABELS, getPlatforms, type ConnectedPlatform } from "@/lib/universo"
 import { DEFAULT_ECOSYSTEM, type EcosystemProject } from "@/lib/ecosistema"
 import { getDefaultPublicaciones, getPublicaciones, type Publicacion } from "@/lib/comentarios"
+import { ActivityTimeline } from "@/components/ActivityTimeline"
 
 const PLATFORM_ICONS: Record<string, typeof Globe> = {
   youtube: Video, instagram: Camera, twitter: MessageCircle, linkedin: Briefcase,
@@ -371,24 +372,12 @@ export default function PublicCreatorProfile() {
                       </div>
                     )
                   })}
-                  {[
-                    { type: "question", text: "¿Cómo funciona la criptografía de red cristalina?", date: "hace 3 días", icon: MessageSquare, color: "text-blue-400" },
-                    { type: "answer", text: "Respuesta sobre sistemas holográficos en IA", date: "hace 5 días", icon: MessageCircle, color: "text-amber-400" },
-                    { type: "project", text: "Nuevo proyecto: MSM Music en desarrollo", date: "hace 1 semana", icon: Layers, color: "text-cyan-400" },
-                    { type: "reward", text: "Logro desbloqueado: 'Maestro del Conocimiento'", date: "hace 1 semana", icon: Trophy, color: "text-yellow-400" },
-                    { type: "achievement", text: "Ganó +500 PTS por campaña sponsor", date: "hace 2 semanas", icon: Gem, color: "text-[#00D9FF]" },
-                  ].map((a, i) => {
-                    const AIcon = a.icon
-                    return (
-                      <div key={i} className="flex items-start gap-3 px-3 py-2.5 rounded-xl border border-slate-800 bg-[#0B1220]/40 hover:border-slate-700 transition-all">
-                        <AIcon className={`w-3.5 h-3.5 ${a.color} mt-0.5 shrink-0`} />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[9px] text-slate-300">{a.text}</p>
-                          <p className="text-[7px] text-slate-600 mt-0.5">{a.date}</p>
-                        </div>
-                      </div>
-                    )
-                  })}
+                  <div className="mt-4">
+                    <ActivityTimeline max={8} />
+                    <Link href="/actividad" className="mt-2 flex items-center justify-center gap-1 text-[9px] text-slate-500 hover:text-[#00D9FF] transition-colors">
+                      <ExternalLink className="w-3 h-3" /> Ver toda la actividad
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}

@@ -62,13 +62,13 @@ export function getCoreStatus(): CoreStatus {
   }
 }
 
-export function processQuery(
+export async function processQuery(
   message: string,
   agentId: AgentId = 'eliana',
   session?: { email?: string },
-): CoreQueryResult {
+): Promise<CoreQueryResult> {
   const rules = getActiveRulesForAgent(agentId)
-  const routed = routeResponse(message, session)
+  const routed = await routeResponse(message, session)
 
   const correlationId = routed.correlationId
 

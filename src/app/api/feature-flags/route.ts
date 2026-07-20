@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getFeatureFlags, setFeatureFlag, resetFeatureFlags, type FeatureFlag } from '@/lib/feature-flags'
-import { getSession } from '@/lib/auth'
-import { isOwnerEmail } from '@/lib/owner'
+
+const OWNER_EMAIL = 'com8msm@gmail.com'
+
+function isOwnerFromRequest(request: NextRequest): boolean {
+  const header = request.headers.get('x-zafiro-session')
+  if (!header) return false
+  try {
+    const session = JSON.parse(Buffer.from(header, 'base64url').toString())
+    return session?.email === OWNER_EMAIL
+  } catch { return false }
+}
 
 export async function GET() {
   const flags = getFeatureFlags()
@@ -10,8 +19,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = getSession()
-    if (!session || !session.email || !isOwnerEmail(session.email)) {
+    if (!isOwnerFromRequest(request)) {
       return NextResponse.json({ error: 'Solo el OWNER puede modificar feature flags' }, { status: 403 })
     }
 
@@ -34,8 +42,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: NextRequest) {
   try {
+    if (!isOwnerFromRequest(request)) {
+      return NextResponse.json({ error: 'Solo el OWNER puede resetear feature flags' }, { status: 403 })
+    }
     resetFeatureFlags()
     return NextResponse.json({ success: true, message: 'Feature flags reseteados a valores por defecto' })
   } catch {
