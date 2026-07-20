@@ -6,6 +6,7 @@ import { usePageTitle } from '@/lib/usePageTitle'
 import { useRouter } from 'next/navigation'
 import { getQuestionsList, getQaStats, createQuestion } from '@/lib/qa'
 import { getSession } from '@/lib/auth'
+import { PageShell } from '@/components/ui/PageShell'
 import { Plus, Search, HelpCircle, CheckCircle, MessageSquare, TrendingUp } from 'lucide-react'
 
 export default function PreguntasPage() {
@@ -34,7 +35,7 @@ export default function PreguntasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050816] text-white p-4 md:p-6">
+    <PageShell>
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -139,6 +140,6 @@ export default function PreguntasPage() {
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   )
 }

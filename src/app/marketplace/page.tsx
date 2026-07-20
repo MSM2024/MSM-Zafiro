@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { usePageTitle } from "@/lib/usePageTitle"
+import { PageShell } from "@/components/ui/PageShell"
 import { getActiveProducts, getProductsByCategory, getCart, getCartTotal, addToCart, type ProductCategory, type Product } from "@/lib/marketplace"
 import { ShoppingCart, Search, Filter, Grid3X3, List, Star, ArrowLeft, Plus, Check, Tags, Package, Store } from "lucide-react"
 
@@ -78,7 +79,7 @@ export default function MarketplacePage() {
   }, [category, search])
 
   return (
-    <div className="min-h-screen bg-[#050816] text-white">
+    <PageShell>
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -179,6 +180,6 @@ export default function MarketplacePage() {
           </p>
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }

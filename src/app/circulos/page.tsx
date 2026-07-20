@@ -6,6 +6,7 @@ import { usePageTitle } from '@/lib/usePageTitle'
 import { useRouter } from 'next/navigation'
 import { getCirclesList, createCircle, getCategories, getCircleStats, getCircleCover } from '@/lib/circles'
 import { getSession } from '@/lib/auth'
+import { PageShell } from '@/components/ui/PageShell'
 import { Plus, Search, Users, Globe, Lock, Hash, UserPlus } from 'lucide-react'
 
 export default function CirculosPage() {
@@ -36,7 +37,7 @@ export default function CirculosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050816] text-white p-4 md:p-6">
+    <PageShell>
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold bg-gradient-to-r from-[#00D9FF] to-purple-400 bg-clip-text text-transparent">
@@ -149,6 +150,6 @@ export default function CirculosPage() {
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   )
 }

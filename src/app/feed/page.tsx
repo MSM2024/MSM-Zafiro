@@ -5,6 +5,7 @@ import { usePageTitle } from '@/lib/usePageTitle'
 import { getFeed, getFeedStats } from '@/lib/feed'
 import FeedPost from '@/components/FeedPost'
 import FeedComposer from '@/components/FeedComposer'
+import { PageShell } from '@/components/ui/PageShell'
 import { MessageCircle, TrendingUp } from 'lucide-react'
 
 export default function FeedPage() {
@@ -18,7 +19,7 @@ export default function FeedPage() {
   const stats = getFeedStats()
 
   return (
-    <div className="min-h-screen bg-[#050816] text-white p-4 md:p-6">
+    <PageShell>
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold bg-gradient-to-r from-[#00D9FF] to-purple-400 bg-clip-text text-transparent">
@@ -72,6 +73,6 @@ export default function FeedPage() {
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   )
 }
