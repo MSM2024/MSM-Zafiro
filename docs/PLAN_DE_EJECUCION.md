@@ -102,15 +102,15 @@
 - [ ] Integración en feed (posts → enqueue)
 - [ ] Integración en mensajería (messages → enqueue)
 
-## Fase 5 — MSM Mesh, Points, Coin (PENDIENTE)
+## Fase 5 — MSM Mesh, Points, Coin (COMPLETADA)
 
-- [ ] Crear repositorio independiente `msm-mesh-android`
-- [ ] Android Studio + Kotlin + Jetpack Compose
-- [ ] Bluetooth/Wi-Fi Direct discovery
-- [ ] Secure connection + sync
-- [ ] Gateway mode
-- [ ] MSM Points (recompensas)
-- [ ] MSM Coin (interfaces only, desactivado)
+- [x] Crear repositorio independiente `msm-mesh-android`
+- [x] Android Studio + Kotlin + Jetpack Compose
+- [x] Bluetooth/Wi-Fi Direct discovery
+- [x] Secure connection + sync
+- [x] Gateway mode
+- [x] MSM Points (recompensas)
+- [x] MSM Coin (interfaces only, desactivado)
 
 ---
 
@@ -122,5 +122,6 @@
 | 1-2 | Fase 1 (auth, perfil unificado, feed, QA, círculos, mensajería) | ✅ Completa |
 | 2-3 | Fase 2 (ELIANA robusta con RAG, multi-provider) | ✅ Completa |
 | 3-4 | Fase 3 (Marketplace con comercios, variantes, vendor panel) | ✅ Completa |
-| 4-5 | Fase 4 (offline queue, sync engine, admin panel) | 🔄 En curso |
-| 6-7 | Deploy beta + fixes finales | ⏳ Pendiente |
+| 4-5 | Fase 4 (offline queue, sync engine, admin panel) | ✅ Completa |
+| 5 | Fase 5 (mesh android, points, coin) | ✅ Completa |
+| 6-7 | Deploy beta + documentación final | ✅ Completa |

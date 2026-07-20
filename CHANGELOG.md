@@ -2,6 +2,18 @@
 
 ## [1.5.0] — 2026-07-20 — Sprint Completo (5 Fases)
 
+### Fase 5 — MSM Mesh Android (NUEVO)
+- `msm-mesh-android/`: Proyecto Android nativo (Kotlin + Jetpack Compose)
+- BluetoothMeshManager: BLE advertising, scanning, RFCOMM sockets
+- WifiDirectMeshManager: P2P discovery + service registration
+- MeshProtocol: Serialización, routing, keep-alive
+- MeshGateway: Modo gateway con relay y registro de clientes
+- SyncEngine: Cola de operaciones offline, sync payload, conflict resolution
+- MeshCrypto: ECDSA keys, ECDH shared secret, AES-GCM encrypt
+- UI: 4 pantallas (Main, Discovery, Chat, Gateway) en Jetpack Compose
+- Roles: Leaf/Relay/Gateway/Coordinator
+- Permisos Bluetooth + Wi-Fi Direct + Location
+
 ### Fase 5 — MSM Points + MSM Coin (NUEVO)
 - `lib/rewards.ts`: 6 nuevas RewardActions (create_post, send_message, create_order, create_product, register_store) + 4 badges
 - `lib/msm-coin.ts`: Wallet MSM Coin + transacciones simuladas (interfaz solamente, desactivado)
