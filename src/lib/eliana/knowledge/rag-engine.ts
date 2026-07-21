@@ -1,6 +1,7 @@
 // RAG Engine — Pipeline completo: clasificar, buscar, priorizar, responder
 // Frecuencia 369-777
 // Implementa la regla madre: nunca responder con frases genéricas si hay información disponible
+// Ahora con scoring TF-IDF para búsqueda semántica sin dependencias externas
 
 import { DOMAIN_ENTRIES, type DomainEntry } from './domain-data'
 import { getDomains, getSourcePriorityWeight, isDomainCovered, type SourcePriority } from './knowledge-registry'
@@ -15,37 +16,63 @@ export interface RAGResult {
   confidence: 'high' | 'medium' | 'low'
 }
 
+function tokenize(text: string): string[] {
+  return text.toLowerCase().split(/[^a-záéíóúñ0-9]+/).filter(w => w.length > 2)
+}
+
+function computeTFIDF(query: string, corpus: string[]): number {
+  const qTokens = tokenize(query)
+  if (qTokens.length === 0) return 0
+  const qFreq: Record<string, number> = {}
+  qTokens.forEach(t => { qFreq[t] = (qFreq[t] || 0) + 1 })
+
+  let totalScore = 0
+  let anyTokenFound = false
+  const N = corpus.length
+
+  for (const qToken of Object.keys(qFreq)) {
+    const tf = qFreq[qToken] / qTokens.length
+    let df = 0
+    for (const doc of corpus) {
+      if (doc.toLowerCase().includes(qToken)) df++
+    }
+    if (df > 0) anyTokenFound = true
+    const idf = df > 0 ? Math.log((N + 1) / (df + 1)) + 1 : 0
+    totalScore += tf * idf * 10
+  }
+
+  return anyTokenFound ? totalScore : 0
+}
+
 function findDomainEntries(query: string): DomainEntry[] {
   const lower = query.toLowerCase()
-  const words = lower.split(/\s+/).filter(w => w.length > 2)
+  const corpus = DOMAIN_ENTRIES.map(e => `${e.title} ${e.content} ${e.tags.join(' ')}`)
+  const tfidfScores = DOMAIN_ENTRIES.map((_, i) => computeTFIDF(query, [corpus[i]]))
 
-  const scored = DOMAIN_ENTRIES.map(entry => {
-    let score = 0
+  const scored = DOMAIN_ENTRIES.map((entry, i) => {
+    let score = tfidfScores[i]
 
-    // Title match
-    if (entry.title.toLowerCase().includes(lower)) score += 15
+    // Title exact match bonus
+    if (entry.title.toLowerCase().includes(lower)) score += 10
 
     // Domain match
-    if (entry.domain && lower.includes(entry.domain.replace(/_/g, ' '))) score += 10
+    if (entry.domain && lower.includes(entry.domain.replace(/_/g, ' '))) score += 5
 
     // Tag matches
     for (const tag of entry.tags) {
-      if (lower.includes(tag.toLowerCase())) score += 5
+      if (lower.includes(tag.toLowerCase())) score += 3
     }
 
-    // Keyword matches in content
-    for (const word of words) {
-      if (entry.content.toLowerCase().includes(word)) score += 2
+    // Priority boost (only if there's already a match)
+    if (tfidfScores[i] > 0 || entry.title.toLowerCase().includes(lower)) {
+      score += entry.priority * 0.3
     }
-
-    // Priority boost
-    score += entry.priority * 0.5
 
     return { entry, score }
   })
 
   return scored
-    .filter(s => s.score > 3)
+    .filter(s => s.score > 2)
     .sort((a, b) => b.score - a.score)
     .slice(0, 5)
     .map(s => s.entry)
@@ -54,24 +81,20 @@ function findDomainEntries(query: string): DomainEntry[] {
 function findKnowledgeDocs(query: string): KnowledgeDocument[] {
   const docs = getDocuments()
   const lower = query.toLowerCase()
-  const words = lower.split(/\s+/).filter(w => w.length > 2)
+  const corpus = docs.map(d => `${d.title} ${d.content} ${d.category}`)
+  const tfidfScores = docs.map((_, i) => computeTFIDF(query, [corpus[i]]))
 
-  const scored = docs.map(doc => {
-    let score = 0
+  const scored = docs.map((doc, i) => {
+    let score = tfidfScores[i]
 
-    if (doc.title.toLowerCase().includes(lower)) score += 10
-    if (doc.category && lower.includes(doc.category.toLowerCase())) score += 5
-
-    for (const word of words) {
-      if (doc.title.toLowerCase().includes(word)) score += 3
-      if (doc.content.toLowerCase().includes(word)) score += 1
-    }
+    if (doc.title.toLowerCase().includes(lower)) score += 8
+    if (doc.category && lower.includes(doc.category.toLowerCase())) score += 3
 
     return { doc, score }
   })
 
   return scored
-    .filter(s => s.score > 2)
+    .filter(s => s.score > 1.5)
     .sort((a, b) => b.score - a.score)
     .slice(0, 5)
     .map(s => s.doc)

@@ -71,14 +71,17 @@ export function classifyIntent(message: string, isOwner: boolean): Intent {
     if (/https?:\/\/[^\s]+/.test(trimmed)) return 'training_link'
   }
 
+  // Greeting
+  if (/^(hola|buenas|saludos|hey|hi|hello|buen[oa]s?\s*$)/i.test(trimmed)) return 'greeting'
+
+  // Knowledge query — check early before specific intents trigger on substrings
+  if (/qué es|qué son|cómo funciona|explícame|dime sobre|qué sabes/i.test(trimmed)) return 'knowledge_query'
+
   // Frecuencia 369
   if (/\b369\b/.test(lower) || lower.includes('3 6 9') || lower.includes('tres seis nueve') || lower.includes('frecuencia maestra')) return 'frecuencia_369'
 
-  // Nodo único
-  if (lower.includes('nodo unico') || lower.includes('nodo único') || lower.includes('reordenamiento')) return 'nodo_unico'
-
   // Saludo espiritual
-  if (lower.includes('shalon') || lower.includes('bendiciones')) return 'greeting_spiritual'
+  if (lower.includes('shalom') || lower.includes('shalon') || lower.includes('bendiciones')) return 'greeting_spiritual'
 
   // Status
   if (lower.includes('status') || lower.includes('estado del sistema') || lower.includes('cómo está el sistema')) return 'status'
@@ -100,8 +103,14 @@ export function classifyIntent(message: string, isOwner: boolean): Intent {
   // Venmo
   if (lower.includes('venmo') || lower.includes('ven')) return 'venmo'
 
+  // Remesas — check before financial (which has overlapping patterns like "enviar dinero")
+  if (lower.includes('remesa') || lower.includes('enviar dinero') || lower.includes('giro') || lower.includes('cambio de moneda') || lower.includes('usd a cup') || lower.includes('cup a usd')) return 'remesas'
+
+  // Financial
+  if (FINANCIAL_PATTERNS.some(p => p.test(trimmed))) return 'financial'
+
   // Comprobante
-  if (lower.includes('comprobante') || lower.includes('pago') || lower.includes('transferencia') || lower.includes('deposito')) return 'comprobante'
+  if (lower.includes('comprobante') || lower.includes('transferencia') || lower.includes('deposito')) return 'comprobante'
 
   // Autónomo
   if (lower.includes('solo atiende') || lower.includes('solo eliana')) return 'autonomous'
@@ -133,26 +142,14 @@ export function classifyIntent(message: string, isOwner: boolean): Intent {
   // Frecuencia (general)
   if (lower.includes('8k') || lower.includes('velocidad luz') || lower.includes('wifi') || lower.includes('señal') || lower.includes('tv')) return 'frecuencia'
 
-  // Remesas
-  if (lower.includes('remesa') || lower.includes('enviar dinero') || lower.includes('giro') || lower.includes('cambio de moneda') || lower.includes('usd a cup') || lower.includes('cup a usd')) return 'remesas'
-
   // Membership
   if (/mi\s*membres[ií]a|mi\s*plan|qu[eé]\s*plan\s*tengo|estado\s*membres[ií]a/.test(lower)) return 'membership_query'
 
   // Report request
   if (REPORT_PATTERNS.some(p => p.test(trimmed))) return 'report_request'
 
-  // Financial
-  if (FINANCIAL_PATTERNS.some(p => p.test(trimmed))) return 'financial'
-
   // System commands
   if (SYSTEM_PATTERNS.some(p => p.test(trimmed))) return 'system_command'
-
-  // Greeting
-  if (/^(hola|buenas|saludos|hey|hi|hello|buen[oa]s?\s*$)/i.test(trimmed)) return 'greeting'
-
-  // Knowledge query
-  if (/qué es|qué son|cómo funciona|explícame|dime sobre|qué sabes/i.test(trimmed)) return 'knowledge_query'
 
   return 'chat_normal'
 }

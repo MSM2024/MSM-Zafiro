@@ -86,27 +86,35 @@ export default function ElianaChatWidget() {
     setLoading(true)
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("/api/eliana/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg }),
       })
       const data = await res.json()
-      const reply = data.response || data.message || "No pude procesar tu solicitud."
+      const reply = data.text || data.response || data.message || "No pude procesar tu solicitud."
       setMessages((prev) => [...prev, { role: "assistant", content: reply }])
     } catch {
+      const rag = await fetch("/api/eliana/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMsg, mode: "rag" }),
+      })
+      if (rag.ok) {
+        const data = await rag.json()
+        if (data.text) {
+          setMessages((prev) => [...prev, { role: "assistant", content: data.text }])
+          return
+        }
+      }
       const lower = userMsg.toLowerCase()
-      let reply = "Lo siento, no tengo una respuesta para eso ahora. Intenta preguntar de otra forma."
+      let reply = "No tengo una respuesta para eso ahora. Intenta preguntar de otra forma."
       if (lower.includes("qué es zafiro") || lower.includes("que es zafiro")) {
         reply = "ZAFIRO es el Universo Digital Soberano de MSM my store — un ecosistema de identidad, comercio, conocimiento y economía."
       } else if (lower.includes("don miguel") || lower.includes("quién es")) {
         reply = "Don Miguel Soria Martínez es el Fundador y Owner del ecosistema MSM."
       } else if (lower.includes("frecuencia 369") || lower.includes("369")) {
         reply = "La Frecuencia 369 es el ciclo de sincronización del ecosistema MSM — 3 días de reflexión, 6 de acción, 9 de cosecha."
-      } else if (lower.includes("hola") || lower.includes("buenas")) {
-        reply = "¡Hola! Soy ELIANA, tu asistente digital. ¿En qué puedo ayudarte?"
-      } else if (lower.includes("libro")) {
-        reply = "El libro 'DE CERO A DUEÑO DIGITAL' está disponible en la Biblioteca ZAFIRO. Puedes acceder desde /zafiro/biblioteca."
       }
       setMessages((prev) => [...prev, { role: "assistant", content: reply }])
     }

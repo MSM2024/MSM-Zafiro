@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { addKnowledgeDocument } from '@/lib/eliana/knowledge/retrieval'
+
+const VALID_CATEGORIES = ['MSM', 'ZAFIRO', 'CAJEROS', 'MENTE_MAESTRA', 'LA_SUIZA', 'VILLA_ESPERANZA', 'ECONOMIA', 'WHATSAPP']
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,6 +13,11 @@ export async function POST(request: NextRequest) {
 
     if (!title || !category) {
       return NextResponse.json({ success: false, error: 'title y category son obligatorios' }, { status: 400 })
+    }
+
+    const normalizedCat = category.toUpperCase().replace(/[\s-]+/g, '_')
+    if (!VALID_CATEGORIES.includes(normalizedCat)) {
+      return NextResponse.json({ success: false, error: `Categoría inválida. Válidas: ${VALID_CATEGORIES.join(', ')}` }, { status: 400 })
     }
 
     let textContent = content || ''
@@ -29,21 +37,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'El contenido debe tener al menos 10 caracteres.' }, { status: 400 })
     }
 
-    // TODO: Integrar con Supabase cuando haya credenciales
-    // Por ahora, endpoint listo para recibir y almacenar
+    const result = addKnowledgeDocument(title, textContent, normalizedCat as any)
 
     return NextResponse.json({
       success: true,
-      message: 'Conocimiento recibido. Pendiente de integración con Supabase + embeddings.',
+      message: 'Documento almacenado localmente y disponible para consultas RAG.',
       document: {
-        title,
-        category,
+        id: result.document.id,
+        title: result.document.title,
+        category: result.document.category,
         contentLength: textContent.length,
-        chunkCount: Math.ceil(textContent.length / 1800),
-        timestamp: new Date().toISOString(),
+        chunkCount: result.chunks.length,
+        timestamp: result.document.createdAt,
       },
     })
   } catch {
     return NextResponse.json({ success: false, error: 'Error interno del servidor' }, { status: 500 })
   }
+}
+
+export async function GET() {
+  const { getDocuments } = await import('@/lib/eliana/knowledge/retrieval')
+  return NextResponse.json({ documents: getDocuments() })
 }
