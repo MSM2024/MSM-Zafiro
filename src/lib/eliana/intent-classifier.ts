@@ -80,6 +80,9 @@ export function classifyIntent(message: string, isOwner: boolean): Intent {
   // Frecuencia 369
   if (/\b369\b/.test(lower) || lower.includes('3 6 9') || lower.includes('tres seis nueve') || lower.includes('frecuencia maestra')) return 'frecuencia_369'
 
+  // Nodo único
+  if (lower.includes('nodo unico') || lower.includes('nodo único') || lower.includes('reordenamiento')) return 'nodo_unico'
+
   // Saludo espiritual
   if (lower.includes('shalom') || lower.includes('shalon') || lower.includes('bendiciones')) return 'greeting_spiritual'
 

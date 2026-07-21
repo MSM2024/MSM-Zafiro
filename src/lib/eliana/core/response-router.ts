@@ -250,28 +250,44 @@ async function synthesizeWithAI(
 function synthesizeKnowledgeLocally(rawKnowledge: string, originalQuery: string): string {
   let clean = sanitizeOutput(rawKnowledge)
   clean = clean.replace(/^#+\s*/gm, '')
+    .replace(/\\(?:tags|priority|source|domain):[^\n]+/gi, '')
+    .replace(/\b(?:priority|tags|fuente|source):\s*[^\n,.]+/gi, '')
 
   const queryLower = originalQuery.toLowerCase()
 
+  // Extract relevant sentences when content is long
   if (clean.length > 600) {
     const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean]
-    const relevant = sentences.filter(s => {
-      const words = queryLower.split(/\s+/).filter(w => w.length > 3)
-      return words.length === 0 || words.some(w => s.toLowerCase().includes(w))
-    })
-    if (relevant.length > 0) {
-      clean = relevant.join(' ')
+    const words = queryLower.split(/\s+/).filter(w => w.length > 3)
+    if (words.length > 0) {
+      const relevant = sentences.filter(s =>
+        words.some(w => s.toLowerCase().includes(w))
+      )
+      if (relevant.length > 0) clean = relevant.join(' ')
     }
     if (clean.length > 800) {
       clean = clean.slice(0, 800).replace(/[^.!?]*$/, '')
     }
   }
 
-  if (/qué es|qué son/i.test(queryLower) && !/es un|es una|se refiere/i.test(clean)) {
+  // Natural intro for definition questions
+  if (/qué es|qué son/i.test(queryLower)) {
     const lines = clean.split('\n').filter(l => l.trim().length > 0)
     if (lines.length > 0) {
-      clean = lines[0]
-      if (lines.length > 1) clean += ' ' + lines.slice(1, 3).join(' ')
+      const first = lines[0].replace(/^(es|son)\s+/i, '')
+      const rest = lines.slice(1, 3).join(' ').replace(/^(es|son)\s+/i, '')
+      clean = first + (rest ? '. ' + rest : '')
+    }
+    if (!/^[A-ZÁÉÍÓÚÑ]/i.test(clean)) {
+      clean = clean.charAt(0).toUpperCase() + clean.slice(1)
+    }
+  }
+
+  // Natural intro for "who is" questions
+  if (/quién es|quiénes son/i.test(queryLower)) {
+    const lines = clean.split('\n').filter(l => l.trim().length > 0)
+    if (lines.length > 0) {
+      clean = lines.slice(0, 2).join(' ').replace(/^(es|son)\s+/i, '')
     }
   }
 

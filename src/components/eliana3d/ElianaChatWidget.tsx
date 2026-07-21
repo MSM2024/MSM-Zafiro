@@ -91,33 +91,27 @@ export default function ElianaChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg }),
       })
-      const data = await res.json()
-      const reply = data.text || data.response || data.message || "No pude procesar tu solicitud."
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }])
+      if (res.ok) {
+        const data = await res.json()
+        const reply = data.text || "No pude procesar tu solicitud."
+        setMessages((prev) => [...prev, { role: "assistant", content: reply }])
+        return
+      }
     } catch {
-      const rag = await fetch("/api/eliana/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg, mode: "rag" }),
-      })
-      if (rag.ok) {
-        const data = await rag.json()
-        if (data.text) {
-          setMessages((prev) => [...prev, { role: "assistant", content: data.text }])
-          return
-        }
-      }
-      const lower = userMsg.toLowerCase()
-      let reply = "No tengo una respuesta para eso ahora. Intenta preguntar de otra forma."
-      if (lower.includes("qué es zafiro") || lower.includes("que es zafiro")) {
-        reply = "ZAFIRO es el Universo Digital Soberano de MSM my store — un ecosistema de identidad, comercio, conocimiento y economía."
-      } else if (lower.includes("don miguel") || lower.includes("quién es")) {
-        reply = "Don Miguel Soria Martínez es el Fundador y Owner del ecosistema MSM."
-      } else if (lower.includes("frecuencia 369") || lower.includes("369")) {
-        reply = "La Frecuencia 369 es el ciclo de sincronización del ecosistema MSM — 3 días de reflexión, 6 de acción, 9 de cosecha."
-      }
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }])
+      /* network error — use offline fallback below */
     }
+
+    const lower = userMsg.toLowerCase()
+    const fallbacks: [string, string][] = [
+      ["qué es zafiro", "ZAFIRO es el Universo Digital Soberano de MSM my store — un ecosistema de identidad, comercio, conocimiento y economía."],
+      ["don miguel", "Don Miguel Soria Martínez es el Fundador y Owner del ecosistema MSM."],
+      ["frecuencia 369", "La Frecuencia 369 es el ciclo de sincronización del ecosistema MSM — 3 días de reflexión, 6 de acción, 9 de cosecha."],
+      ["marketplace", "El Marketplace MSM es la plataforma de comercio donde puedes comprar y vender productos dentro del ecosistema."],
+      ["qué es eliana", "Soy ELIANA, el núcleo sintético de ZAFIRO — tu asistente digital soberano basado en la Frecuencia 369."],
+    ]
+    const match = fallbacks.find(([kw]) => lower.includes(kw))
+    const reply = match ? match[1] : "No tengo conexión en este momento. Intenta de nuevo más tarde o pregúntame directamente en ZAFIRO."
+    setMessages((prev) => [...prev, { role: "assistant", content: reply }])
     setLoading(false)
   }, [input, loading])
 
